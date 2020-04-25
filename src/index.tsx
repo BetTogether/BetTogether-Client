@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 import { createGlobalStyle } from "styled-components";
 import App from "./App";
 
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
+import "./index.css";
+
 const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
@@ -15,10 +19,18 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
+// This is the official Aave subgraph. You can replace it with your own, if you need to.
+// See all subgraphs: https://thegraph.com/explorer/
+const client = new ApolloClient({
+  uri: "https://api.thegraph.com/subgraphs/name/aave/protocol",
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyle />
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>,
   </React.StrictMode>,
   document.getElementById("root")
 );
