@@ -1,11 +1,9 @@
 import React from "react";
-import logo from "./ethereumLogo.png";
 import { MAINNET_ID, addresses, abis } from "./contracts";
 import { gql } from "apollo-boost";
 import { ethers } from "ethers";
 import { useQuery } from "@apollo/react-hooks";
-import Button from "react-bulma-components/lib/components/button";
-import MyComponent from "./components/MyComponent";
+import TopNav from "./components/TopNav";
 import "./App.css";
 
 const GET_LENDING_POOL_CONFIGURATION_HISTORY_ITEMS = gql`
@@ -59,26 +57,8 @@ function App() {
 
   return (
     <div className="App">
-      <MyComponent />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="react-logo" />
-        <p>
-          Edit <code>packages/react-app/src/App.js</code> and save to reload.
-        </p>
-        <button onClick={() => readOnChainData()}>Read On-Chain Balance</button>
-
-        <a
-          className="App-link"
-          href="https://developers.aave.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Aave
-        </a>
-        <div>
-          <Button color="primary">My Bulma button</Button>
-        </div>
-      </header>
+      <TopNav />
+      <button onClick={() => readOnChainData()}>Read On-Chain Balance</button>
     </div>
   );
 }

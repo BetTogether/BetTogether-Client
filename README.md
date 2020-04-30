@@ -6,6 +6,7 @@
 <br/>
 
 [![Build Status](https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master)](https://travis-ci.com/BetTogether/BetTogether-Client)
+[![codecov](https://codecov.io/gh/TechnionYP5777/project-name/branch/master/graph/badge.svg)](https://codecov.io/gh/TechnionYP5777/project-name)
 
 ## [Corresponding Contract](https://github.com/BetTogether/BetTogether-Contracts)
 
