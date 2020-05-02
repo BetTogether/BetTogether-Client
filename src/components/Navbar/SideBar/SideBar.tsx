@@ -10,7 +10,7 @@ const SidebarMenu = styled.div<IProps>`
   position: fixed;
   left: 0;
   width: 250px;
-  margin-top: 40px;
+  margin-top: 60px;
   transform: ${(props) =>
     props.isExpanded ? "translateX(0px)" : "translateX(-250px)"};
   transition: transform 250ms ease-in-out;

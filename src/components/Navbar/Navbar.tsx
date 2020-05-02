@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { DAI_ABI } from "../../abi/daiABI";
+import React, { useState } from "react";
+import { IconContext } from "react-icons";
+import { AiFillGithub } from "react-icons/ai";
 import ethIcon from "../../assets/icons/eth.svg";
 import daiIcon from "../../assets/icons/dai.svg";
 import MenuIcon from "./MenuIcon";
 import SideBar from "./SideBar";
-import { IconContext } from "react-icons";
-import { AiFillGithub } from "react-icons/ai";
-import { ethers, Contract } from "ethers";
 import { ShortenAddress } from "../../utils/ShortenAddress";
 import {
   Header,
@@ -21,8 +19,6 @@ import {
   UserSpan,
   IconButton,
 } from "./Navbar.style";
-import web3 from "web3";
-const providers = require("ethers/providers");
 
 const Navbar = ({
   activeAddress,
@@ -31,23 +27,6 @@ const Navbar = ({
   daiBalance,
 }: any) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const DAI_ADDRESS = "0x2448eE2641d78CC42D7AD76498917359D961A783";
-
-  const options = {
-    address: activeAddress,
-    provider: providers.getDefaultProvider("rinkeby"),
-  };
-
-  useEffect(() => {
-    (async () => {
-      if (activeAddress) {
-        const contract = new Contract(DAI_ADDRESS, DAI_ABI, options.provider);
-        const balance = await contract.balanceOf(activeAddress);
-        // ethers.utils.formatEther(balance)
-        return balance.toString();
-      }
-    })();
-  }, [activeAddress, options.provider]);
 
   return (
     <Header>

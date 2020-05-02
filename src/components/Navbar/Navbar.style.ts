@@ -37,14 +37,14 @@ export const Wallet = styled.div`
 `;
 
 export const Buttons = styled.div`
-  border-left: 0.0625rem solid #553580;
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding-left: 1.8rem;
 `;
 
 export const Button = styled.button`
   display: flex;
-  justify-content: center;
   margin-right: 2rem;
   width: 1.25rem;
 `;
@@ -70,6 +70,7 @@ export const IconButton = styled.button`
   width: 40px;
   border: none;
   background: none;
+  display: flex;
   cursor: pointer;
   &:focus {
     outline: 2px dashed #17171d;
