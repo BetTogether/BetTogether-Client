@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { ethers, Contract } from "ethers";
+import { ethers } from "ethers";
 import Navbar from "./components/Navbar";
-import { DAI_ABI } from "./abi/daiABI";
+import styled from "styled-components";
+import ConnectionBanner from "@rimble/connection-banner";
+
+const NetworkNotification = styled(ConnectionBanner)`
+  background-color: #fbe9e7;
+  border: 1px solid #dc2c10;
+  border-radius: 4px;
+  color: #841a09;
+  padding: 1rem;
+  position: relative;
+  width: 100%;
+`;
 
 const connectWallet = () => (window as any).ethereum.enable();
 
 function App() {
   const [activeAddress, setActiveAddress] = useState("");
   const [ethBalance, setEthBalance] = useState(0);
-  const [daiBalance, setDaiBalance] = useState(0);
-  const DAI_ADDRESS = "0x2448eE2641d78CC42D7AD76498917359D961A783";
+  const [networkId, setNetworkId] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -28,10 +38,8 @@ function App() {
         ).toFixed(2);
         setEthBalance(ethBalanceFormatted);
 
-        const contract = new Contract(DAI_ADDRESS, DAI_ABI, provider);
-        const daiBalance = await contract.balanceOf(activeAddress);
-        const daiBalanceFormatted = +parseFloat(daiBalance);
-        setDaiBalance(daiBalanceFormatted);
+        let networkId = await provider.getNetwork();
+        setNetworkId(networkId.chainId);
       } catch (error) {
         console.log("error:", error);
       }
@@ -40,14 +48,25 @@ function App() {
 
   return (
     <>
-      <Navbar
-        activeAddress={activeAddress}
-        connectWallet={connectWallet}
-        ethBalance={ethBalance}
-        daiBalance={daiBalance}
-      />
+      {networkId !== 4 && (
+        <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
+      )}
+      <Navbar activeAddress={false} connectWallet={connectWallet} />
+      <h1>{ethBalance}</h1>
     </>
   );
 }
 
 export default App;
+
+// export const Backdrop = styled.div`
+//   background-color: rgba(17,51,83,.6);
+//   bottom: 0;
+//   left: 0;
+//   opacity: 1;
+//   position: absolute;
+//   right: 0;
+//   top: 0;
+//   transition: opacity .5s, z-index .5s;
+//   z-index: 999;
+// `

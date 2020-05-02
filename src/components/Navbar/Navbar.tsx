@@ -1,84 +1,62 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IconContext } from "react-icons";
-import { AiFillGithub } from "react-icons/ai";
-import { ethers } from "ethers";
-import ethIcon from "../../assets/icons/eth.svg";
-import daiIcon from "../../assets/icons/dai.svg";
+import { AiFillGithub, AiFillBell } from "react-icons/ai";
+import templogo from "../../assets/images/temp-logo.png";
 import MenuIcon from "./MenuIcon";
-import SideBar from "./SideBar";
+import MobileDropdown from "./MobileDropdown";
 import { ShortenAddress } from "../../utils/ShortenAddress";
 import {
   Header,
+  Link,
+  Logo,
+  RightContent,
   ExpandButton,
-  Wallet,
-  Buttons,
-  Button,
-  ConnectWalletButton,
-  WalletWrapper,
-  WalletContent,
-  UserIcon,
-  UserSpan,
+  AddressWrapper,
+  Address,
   IconButton,
-  NetworkNotification,
 } from "./Navbar.style";
 
-const Navbar = ({
-  activeAddress,
-  connectWallet,
-  ethBalance,
-  daiBalance,
-}: any) => {
+const Navbar = ({ activeAddress, connectWallet }: any) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [networkId, setNetworkId] = useState(0);
-  const provider = new ethers.providers.Web3Provider(
-    (window as any).web3.currentProvider
-  );
-
-  useEffect(() => {
-    (async () => {
-      let networkId = await provider.getNetwork();
-      setNetworkId(networkId.chainId);
-    })();
-  }, [provider]);
+  // const [isMobile, setIsMobile] = useState<boolean>(true);
 
   return (
-    <Header>
-      <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
-        <MenuIcon isExpanded={isExpanded} />
-      </ExpandButton>
-      <SideBar isExpanded={isExpanded} />
-
-      {networkId !== 4 && (
-        <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
-      )}
-
-      {activeAddress ? (
-        <WalletWrapper>
-          <WalletContent address>
-            <UserSpan>{ShortenAddress(activeAddress)}</UserSpan>
-          </WalletContent>
-          <WalletContent>
-            <UserIcon src={ethIcon} alt="eth icon" />
-            <UserSpan>{ethBalance}</UserSpan>
-          </WalletContent>
-          <WalletContent amount>
-            <UserIcon src={daiIcon} alt="dai icon" />
-            <UserSpan>{daiBalance ? daiBalance : 0}</UserSpan>
-          </WalletContent>
-        </WalletWrapper>
-      ) : (
-        <WalletWrapper>
-          {/* <ConnectWalletButton connectWallet={() => connectWallet()} /> */}
-        </WalletWrapper>
-      )}
-      <Buttons>
-        <IconContext.Provider value={{ color: "white", size: "2.5em" }}>
+    <>
+      <Header>
+        <Logo src={templogo}></Logo>
+        {/* DESKTOP LINKS */}
+        {/* <Link>Dashboard</Link>
+        <Link>Markets</Link>
+        <Link>Profile</Link>
+        <Link>Settings</Link> */}
+        <RightContent>
           <IconButton>
-            <AiFillGithub />
+            <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
+              <AiFillGithub />
+            </IconContext.Provider>
           </IconButton>
-        </IconContext.Provider>
-      </Buttons>
-    </Header>
+          <IconButton>
+            <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
+              <AiFillBell />
+            </IconContext.Provider>
+          </IconButton>
+
+          {activeAddress ? (
+            <AddressWrapper>
+              <Address>{ShortenAddress(activeAddress)}</Address>
+            </AddressWrapper>
+          ) : (
+            <AddressWrapper onClick={() => connectWallet()}>
+              Connect
+            </AddressWrapper>
+          )}
+          <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
+            <MenuIcon isExpanded={isExpanded} />
+          </ExpandButton>
+        </RightContent>
+      </Header>
+      {isExpanded && <MobileDropdown />}
+    </>
   );
 };
 

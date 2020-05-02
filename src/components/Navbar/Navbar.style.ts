@@ -1,15 +1,87 @@
-import styled, { css } from "styled-components";
-import ConnectionBanner from "@rimble/connection-banner";
+import styled from "styled-components";
 
 export const Header = styled.header`
   display: flex;
-  background-color: ${(props) => props.theme.palette3.red};
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  color: ${(props) => props.theme.palette3.red};
+  background-color: ${(props) => props.theme.palette3.gray};
+  border-bottom: 1px solid ${(props) => props.theme.palette3.gray};
   width: 100%;
-  max-width: 100%;
-  position: fixed;
+  max-height: 5rem; //70px
   margin: 0 auto;
+  padding: 12px 20px;
   z-index: 10;
+  @media (min-width: 600px) {
+    justify-content: left;
+  }
+`;
+
+// export const Logo = styled.svg`
+//   cursor: pointer;
+//   width: 100px;
+// `
+
+export const Logo = styled.img`
+  cursor: pointer;
+  width: 100px;
+`;
+
+export const Link = styled.a`
+  align-items: center;
+  color: ${(props) => props.theme.palette3.black};
+  cursor: pointer;
+  display: flex;
+  height: 72px;
+  margin-right: 32px;
+  position: relative;
+  text-decoration: none;
+  &:hover {
+    color: ${(props) => props.theme.palette3.red};
+  }
+`;
+
+export const Label = styled.label`
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  transition: color 80ms ease-in-out;
+`;
+
+// export const RightContent = styled.div`
+//   align-items: center;
+//   display: flex;
+//   flex: 1;
+//   flex-direction: row;
+//   justify-content: flex-end;
+// `;
+
+export const RightContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+`;
+
+export const AddressWrapper = styled.button`
+  background-color: ${(props) => props.theme.palette3.red};
+  border: 1px solid ${(props) => props.theme.palette3.red};
+  border-radius: 4px;
+  color: ${(props) => props.theme.palette3.white};
+  cursor: pointer;
+  margin: 0;
+  min-width: 120px;
+  padding: 12px 16px;
+  position: relative;
+  transition: all 80ms ease-in-out;
+  width: auto;
+  font-size: 1.1rem;
+  margin: 0;
+`;
+
+export const Address = styled.span`
+  font-weight: 500;
 `;
 
 export const ExpandButton = styled.button`
@@ -27,43 +99,6 @@ export const ExpandButton = styled.button`
   padding: 0.625rem;
   top: 0.375rem;
   z-index: 30;
-`;
-
-export const Wallet = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  height: 100%;
-  width: 100%;
-`;
-
-export const Buttons = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 1.8rem;
-`;
-
-export const Button = styled.button`
-  display: flex;
-  margin-right: 2rem;
-  width: 1.25rem;
-`;
-
-export const ConnectWalletButton = styled.button`
-  background-color: transparent;
-  border: 4px solid #3ef3d4;
-  border-radius: 9999px;
-  color: #3ef3d4;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0;
-  overflow: visible;
-  padding: 0.5rem 1.5rem;
-  pointer-events: auto;
-  text-transform: none;
-  transition: all 0.2s ease-out;
 `;
 
 export const IconButton = styled.button`
@@ -90,46 +125,8 @@ export const IconButton = styled.button`
   }
 `;
 
-export const WalletWrapper = styled.div`
-  display: inline-flex;
-  margin-right: 1rem;
-`;
-
-export const WalletContent = styled.div<{ address?: any; amount?: any }>`
-  background-color: ${(props) => props.theme.primary2};
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  padding: 0.5rem 1rem 0.5rem;
-  color: white;
-  align-items: center;
-  border-radius: 0.25rem;
-  ${(props) =>
-    props.address &&
-    css`
-      border-top-left-radius: "0.25rem";
-      border-bottom-left-radius: "0.25rem";
-      border-top-right-radius: "0.25rem";
-      border-bottom-right-radius: "0.25rem";
-    `}
-`;
-
-export const UserIcon = styled.img`
-  height: 2rem;
-  width: 2rem;
-  color: white;
-  margin: 0.5rem;
-`;
-
-export const UserSpan = styled.span`
-  color: white;
-  font-weight: 500;
-`;
-
 export const ConnectButton = styled.button`
-  background-color: white;
-  color: gray;
+  color: #f1404b;
   padding: 1rem;
   border-radius: 0.25rem;
   font-weight: 700;
@@ -141,14 +138,4 @@ export const ConnectButton = styled.button`
   &:focus {
     outline: none;
   }
-`;
-
-export const NetworkNotification = styled(ConnectionBanner)`
-  background-color: #fbe9e7;
-  border: 1px solid #dc2c10;
-  border-radius: 4px;
-  color: #841a09;
-  padding: 1rem;
-  position: relative;
-  width: 100%;
 `;
