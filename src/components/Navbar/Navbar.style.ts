@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import ConnectionBanner from "@rimble/connection-banner";
 
 export const Header = styled.header`
   display: flex;
@@ -142,7 +143,7 @@ export const ConnectButton = styled.button`
   }
 `;
 
-export const NetworkNotification = styled.div`
+export const NetworkNotification = styled(ConnectionBanner)`
   background-color: #fbe9e7;
   border: 1px solid #dc2c10;
   border-radius: 4px;

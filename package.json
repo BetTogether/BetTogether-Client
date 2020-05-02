@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
+    "@rimble/connection-banner": "^1.2.3",
     "@rimble/icons": "^1.1.0",
     "apollo-boost": "^0.4.7",
     "apollo-client": "^2.6.8",
@@ -16,6 +17,7 @@
     "react-icons": "^3.10.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "rimble-ui": "^0.14.0",
     "sass": "^1.26.5",
     "styled-components": "^5.1.0",
     "web3": "^1.2.7"

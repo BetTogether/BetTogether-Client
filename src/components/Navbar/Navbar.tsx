@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconContext } from "react-icons";
 import { AiFillGithub } from "react-icons/ai";
+import { ethers } from "ethers";
 import ethIcon from "../../assets/icons/eth.svg";
 import daiIcon from "../../assets/icons/dai.svg";
 import MenuIcon from "./MenuIcon";
@@ -18,6 +19,7 @@ import {
   UserIcon,
   UserSpan,
   IconButton,
+  NetworkNotification,
 } from "./Navbar.style";
 
 const Navbar = ({
@@ -27,6 +29,17 @@ const Navbar = ({
   daiBalance,
 }: any) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [networkId, setNetworkId] = useState(0);
+  const provider = new ethers.providers.Web3Provider(
+    (window as any).web3.currentProvider
+  );
+
+  useEffect(() => {
+    (async () => {
+      let networkId = await provider.getNetwork();
+      setNetworkId(networkId.chainId);
+    })();
+  }, [provider]);
 
   return (
     <Header>
@@ -34,6 +47,10 @@ const Navbar = ({
         <MenuIcon isExpanded={isExpanded} />
       </ExpandButton>
       <SideBar isExpanded={isExpanded} />
+
+      {networkId !== 4 && (
+        <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
+      )}
 
       {activeAddress ? (
         <WalletWrapper>
