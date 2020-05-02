@@ -51,7 +51,7 @@ function App() {
       {networkId !== 4 && (
         <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
       )}
-      <Navbar activeAddress={false} connectWallet={connectWallet} />
+      <Navbar activeAddress={activeAddress} connectWallet={connectWallet} />
       <h1>{ethBalance}</h1>
     </>
   );

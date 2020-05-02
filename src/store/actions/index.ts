@@ -1,1 +1,1 @@
-export { toggleDropdown } from "./layout";
+export { fetchEthPrice } from "./externalData";

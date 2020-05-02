@@ -4,30 +4,26 @@ export const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${(props) => props.theme.palette3.red};
-  background-color: ${(props) => props.theme.palette3.gray};
-  border-bottom: 1px solid ${(props) => props.theme.palette3.gray};
   width: 100%;
   max-height: 5rem; //70px
   margin: 0 auto;
   padding: 12px 20px;
   z-index: 10;
+  color: ${(props) => props.theme.palette3.red};
+  background-color: ${(props) => props.theme.palette3.gray};
+  border-bottom: 1px solid ${(props) => props.theme.palette3.gray};
   @media (min-width: 600px) {
     justify-content: left;
   }
 `;
 
-// export const Logo = styled.svg`
-//   cursor: pointer;
-//   width: 100px;
-// `
-
 export const Logo = styled.img`
   cursor: pointer;
   width: 100px;
+  margin-right: 1rem;
 `;
 
-export const Link = styled.a`
+export const DesktopLink = styled.a`
   align-items: center;
   color: ${(props) => props.theme.palette3.black};
   cursor: pointer;
@@ -39,6 +35,9 @@ export const Link = styled.a`
   &:hover {
     color: ${(props) => props.theme.palette3.red};
   }
+  @media (max-width: 800px) {
+    display: none;
+  }
 `;
 
 export const Label = styled.label`
@@ -48,14 +47,6 @@ export const Label = styled.label`
   line-height: 1.6;
   transition: color 80ms ease-in-out;
 `;
-
-// export const RightContent = styled.div`
-//   align-items: center;
-//   display: flex;
-//   flex: 1;
-//   flex-direction: row;
-//   justify-content: flex-end;
-// `;
 
 export const RightContent = styled.div`
   display: flex;
@@ -126,14 +117,14 @@ export const IconButton = styled.button`
 `;
 
 export const ConnectButton = styled.button`
-  color: #f1404b;
+  color: ${(props) => props.theme.palette3.white};
   padding: 1rem;
   border-radius: 0.25rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   &:hover {
-    background-color: gray;
+    background-color: ${(props) => props.theme.palette3.gray};
   }
   &:focus {
     outline: none;

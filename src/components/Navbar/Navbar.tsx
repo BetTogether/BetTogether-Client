@@ -7,7 +7,7 @@ import MobileDropdown from "./MobileDropdown";
 import { ShortenAddress } from "../../utils/ShortenAddress";
 import {
   Header,
-  Link,
+  DesktopLink,
   Logo,
   RightContent,
   ExpandButton,
@@ -16,18 +16,22 @@ import {
   IconButton,
 } from "./Navbar.style";
 
-const Navbar = ({ activeAddress, connectWallet }: any) => {
+interface INavbar {
+  activeAddress: string;
+  connectWallet: () => any;
+}
+
+const Navbar = ({ activeAddress, connectWallet }: INavbar) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   return (
     <>
       <Header>
         <Logo src={templogo}></Logo>
-        {/* DESKTOP LINKS */}
-        {/* <Link>Dashboard</Link>
-        <Link>Markets</Link>
-        <Link>Profile</Link>
-        <Link>Settings</Link> */}
+        <DesktopLink>Dashboard</DesktopLink>
+        <DesktopLink>Markets</DesktopLink>
+        <DesktopLink>Profile</DesktopLink>
+        <DesktopLink>Settings</DesktopLink>
         <RightContent>
           <IconButton>
             <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
