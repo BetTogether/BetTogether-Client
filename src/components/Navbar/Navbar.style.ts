@@ -90,6 +90,9 @@ export const ExpandButton = styled.button`
   padding: 0.625rem;
   top: 0.375rem;
   z-index: 30;
+  @media (min-width: 800px) {
+    display: none;
+  }
 `;
 
 export const IconButton = styled.button`
