@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Wrapper, List, Item, Link } from "./MobileDropdown.style";
+import { Wrapper, List, Item, StyledLink } from "./MobileDropdown.style";
 
 interface IMobileDropdownProps {
   isExpanded?: boolean;
@@ -11,24 +11,16 @@ const MobileDropdown = ({ isExpanded }: IMobileDropdownProps) => {
     <Wrapper isExpanded={isExpanded}>
       <List>
         <Item>
-          <Link href="#" target="_blank">
-            Dashboard
-          </Link>
+          <StyledLink to="/dashboard">Dashboard</StyledLink>
         </Item>
         <Item>
-          <Link href="#" target="_blank">
-            Markets
-          </Link>
+          <StyledLink to="/markets">Markets</StyledLink>
         </Item>
         <Item>
-          <Link href="#" target="_blank">
-            Profile
-          </Link>
+          <StyledLink to="/account">Account</StyledLink>
         </Item>
         <Item>
-          <Link href="#" target="_blank">
-            Settings
-          </Link>
+          <StyledLink to="/settings">Settings</StyledLink>
         </Item>
       </List>
     </Wrapper>

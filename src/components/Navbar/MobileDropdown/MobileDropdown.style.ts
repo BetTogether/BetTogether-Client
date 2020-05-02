@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 interface IProps {
   isExpanded?: boolean;
@@ -35,7 +36,8 @@ export const Item = styled.li`
   }
 `;
 
-export const Link = styled.a`
+export const StyledLink = styled(NavLink)`
   text-transform: uppercase;
   font-weight: bold;
+  cursor: pointer;
 `;

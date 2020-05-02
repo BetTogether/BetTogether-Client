@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 export const Header = styled.header`
   display: flex;
@@ -23,16 +24,19 @@ export const Logo = styled.img`
   margin-right: 1rem;
 `;
 
-export const DesktopLink = styled.a`
+export const StyledLink = styled(NavLink)`
+  display: flex;
   align-items: center;
   color: ${(props) => props.theme.palette3.black};
   cursor: pointer;
-  display: flex;
   height: 72px;
   margin-right: 32px;
   position: relative;
   text-decoration: none;
   &:hover {
+    color: ${(props) => props.theme.palette3.red};
+  }
+  &:active {
     color: ${(props) => props.theme.palette3.red};
   }
   @media (max-width: 800px) {
