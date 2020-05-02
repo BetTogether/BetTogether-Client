@@ -18,7 +18,6 @@ import {
 
 const Navbar = ({ activeAddress, connectWallet }: any) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  // const [isMobile, setIsMobile] = useState<boolean>(true);
 
   return (
     <>
