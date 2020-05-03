@@ -1,1 +1,4 @@
-export const TOGGLE_DROPDOWN = "TOGGLE_DROPDOWN";
+//
+// EXTERNAL DATA
+//
+export const FETCH_ETH_PRICE = "FETCH_ETH_PRICE";

@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { ethers } from "ethers";
 import Aave from "./components/Aave";
 import Navbar from "./components/Navbar";
 import styled from "styled-components";
 import ConnectionBanner from "@rimble/connection-banner";
+import Dashboard from "./components/Routes/Dashboard";
+import Account from "./components/Routes/Account";
+import Markets from "./components/Routes/Markets";
+import Settings from "./components/Routes/Settings";
+import NotFound from "./components/Routes/NotFound";
 
 const NetworkNotification = styled(ConnectionBanner)`
   background-color: #fbe9e7;
@@ -52,7 +58,35 @@ function App() {
       {networkId !== 42 && (
         <NetworkNotification currentNetwork={networkId} requiredNetwork={42} />
       )}
-      <Navbar activeAddress={false} connectWallet={connectWallet} />
+      <Navbar activeAddress={activeAddress} connectWallet={connectWallet} />
+      <Switch>
+        <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
+        <Route
+          path="/dashboard"
+          render={(props) => (
+            <Dashboard {...props} activeAddress={activeAddress} />
+          )}
+        />
+        <Route
+          path="/markets"
+          render={(props) => (
+            <Markets {...props} activeAddress={activeAddress} />
+          )}
+        />
+        <Route
+          path="/account"
+          render={(props) => (
+            <Account {...props} activeAddress={activeAddress} />
+          )}
+        />
+        <Route
+          path="/settings"
+          render={(props) => (
+            <Settings {...props} activeAddress={activeAddress} />
+          )}
+        />
+        <Route component={NotFound} />
+      </Switch>
       <h1>{ethBalance}</h1>
       <Aave/>
     </>
@@ -60,15 +94,3 @@ function App() {
 }
 
 export default App;
-
-// export const Backdrop = styled.div`
-//   background-color: rgba(17,51,83,.6);
-//   bottom: 0;
-//   left: 0;
-//   opacity: 1;
-//   position: absolute;
-//   right: 0;
-//   top: 0;
-//   transition: opacity .5s, z-index .5s;
-//   z-index: 999;
-// `

@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 interface IProps {
-  isExpanded: boolean;
+  isExpanded?: boolean;
 }
 
 export const Wrapper = styled.div<IProps>`
@@ -9,7 +10,7 @@ export const Wrapper = styled.div<IProps>`
   height: 100%;
   width: 100%;
   transform: ${(props) =>
-    props.isExpanded ? "translateY(0px)" : "translateY(30px)"};
+    props.isExpanded ? "translateY(0px)" : "translateY(10px)"};
   transition: transform 250ms ease-in-out;
   background: ${(props) => props.theme.palette3.white};
   position: absolute;
@@ -35,7 +36,8 @@ export const Item = styled.li`
   }
 `;
 
-export const Link = styled.a`
+export const StyledLink = styled(NavLink)`
   text-transform: uppercase;
   font-weight: bold;
+  cursor: pointer;
 `;
