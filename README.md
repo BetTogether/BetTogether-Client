@@ -6,6 +6,7 @@
 <br/>
 
 [![Build Status](https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master)](https://travis-ci.com/BetTogether/BetTogether-Client)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status)](https://app.netlify.com/sites/serene-johnson-2cf60d/deploys)
 
 ## [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
 

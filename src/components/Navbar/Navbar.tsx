@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useWeb3Context } from "web3-react";
 import { IconContext } from "react-icons";
 import { AiFillGithub, AiFillBell } from "react-icons/ai";
 import templogo from "../../assets/images/temp-logo.png";
@@ -15,14 +16,27 @@ import {
   Address,
   IconButton,
 } from "./Navbar.style";
+import { LayoutContext } from "../../store/context/LayoutContext";
 
 interface INavbar {
-  activeAddress: string;
-  connectWallet: () => any;
+  activeAddress?: any;
+  enableWallet: () => any;
+  disableWallet: () => any;
 }
 
-const Navbar = ({ activeAddress, connectWallet }: INavbar) => {
+const Navbar = () => {
+  const context = useWeb3Context();
+  const { active, error, account } = context;
+
+  const { state, dispatch } = useContext(LayoutContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  const SignIn = () => {
+    dispatch({
+      type: "TOGGLE_SIGN_IN_MODAL",
+      payload: !state.signInModalIsOpen,
+    });
+  };
 
   return (
     <>
@@ -44,14 +58,16 @@ const Navbar = ({ activeAddress, connectWallet }: INavbar) => {
             </IconContext.Provider>
           </IconButton>
 
-          {activeAddress ? (
-            <AddressWrapper>
-              <Address>{ShortenAddress(activeAddress)}</Address>
-            </AddressWrapper>
+          {active && !error ? (
+            <>
+              {account !== (undefined && null) && (
+                <AddressWrapper onClick={() => context.unsetConnector()}>
+                  <Address>{ShortenAddress(account)}</Address>
+                </AddressWrapper>
+              )}
+            </>
           ) : (
-            <AddressWrapper onClick={() => connectWallet()}>
-              Connect
-            </AddressWrapper>
+            <AddressWrapper onClick={() => SignIn()}>Connect</AddressWrapper>
           )}
           <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
             <MenuIcon isExpanded={isExpanded} />
