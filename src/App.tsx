@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import Aave from "./components/Aave";
 import Navbar from "./components/Navbar";
 import styled from "styled-components";
 import ConnectionBanner from "@rimble/connection-banner";
@@ -48,11 +49,12 @@ function App() {
 
   return (
     <>
-      {networkId !== 4 && (
-        <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
+      {networkId !== 42 && (
+        <NetworkNotification currentNetwork={networkId} requiredNetwork={42} />
       )}
       <Navbar activeAddress={false} connectWallet={connectWallet} />
       <h1>{ethBalance}</h1>
+      <Aave/>
     </>
   );
 }
