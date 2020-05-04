@@ -9,6 +9,7 @@ interface IMobileDropdownProps {
 const MobileDropdown = ({ isExpanded }: IMobileDropdownProps) => {
   return (
     <Wrapper isExpanded={isExpanded}>
+      {console.log("isExpanded:", isExpanded)}
       <List>
         <Item>
           <StyledLink to="/dashboard">Dashboard</StyledLink>

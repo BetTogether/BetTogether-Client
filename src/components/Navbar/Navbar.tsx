@@ -2,10 +2,10 @@ import React, { useState, useContext } from "react";
 import { useWeb3Context } from "web3-react";
 import { IconContext } from "react-icons";
 import { AiFillGithub, AiFillBell } from "react-icons/ai";
-import templogo from "../../assets/images/temp-logo.png";
+import templogo from "assets/images/temp-logo.png";
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
-import { ShortenAddress } from "../../utils/ShortenAddress";
+import { ShortenAddress } from "utils/ShortenAddress";
 import {
   Header,
   StyledLink,
@@ -14,20 +14,14 @@ import {
   ExpandButton,
   AddressWrapper,
   Address,
-  IconButton,
+  IconLink,
+  NetworkNotification,
 } from "./Navbar.style";
-import { LayoutContext } from "../../store/context/LayoutContext";
-
-interface INavbar {
-  activeAddress?: any;
-  enableWallet: () => any;
-  disableWallet: () => any;
-}
+import { LayoutContext } from "store/Context";
 
 const Navbar = () => {
   const context = useWeb3Context();
-  const { active, error, account } = context;
-
+  const { active, error, account, networkId } = context;
   const { state, dispatch } = useContext(LayoutContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
@@ -40,6 +34,9 @@ const Navbar = () => {
 
   return (
     <>
+      {active && networkId !== 4 && (
+        <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
+      )}
       <Header>
         <Logo src={templogo}></Logo>
         <StyledLink to="/dashboard">Dashboard</StyledLink>
@@ -47,16 +44,20 @@ const Navbar = () => {
         <StyledLink to="/profile">Profile</StyledLink>
         <StyledLink to="/settings">Settings</StyledLink>
         <RightContent>
-          <IconButton>
+          <IconLink
+            href="https://github.com/BetTogether"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
             <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
               <AiFillGithub />
             </IconContext.Provider>
-          </IconButton>
-          <IconButton>
+          </IconLink>
+          <IconLink href="#">
             <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
               <AiFillBell />
             </IconContext.Provider>
-          </IconButton>
+          </IconLink>
 
           {active && !error ? (
             <>
@@ -74,7 +75,7 @@ const Navbar = () => {
           </ExpandButton>
         </RightContent>
       </Header>
-      {isExpanded && <MobileDropdown />}
+      {isExpanded && <MobileDropdown isExpanded={isExpanded} />}
     </>
   );
 };

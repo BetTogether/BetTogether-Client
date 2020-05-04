@@ -5,15 +5,13 @@ interface IProps {
   isExpanded?: boolean;
 }
 
-export const Wrapper = styled.div<IProps>`
+export const Wrapper = styled.nav<IProps>`
   border-top: 1px solid ${(props) => props.theme.palette3.gray};
-  height: 100%;
+  height: auto;
   width: 100%;
-  transform: ${(props) =>
-    props.isExpanded ? "translateY(0px)" : "translateY(10px)"};
-  transition: transform 250ms ease-in-out;
   background: ${(props) => props.theme.palette3.white};
   position: absolute;
+  display: ${(props) => (props.isExpanded ? "block" : "none")};
 `;
 
 export const List = styled.ul`

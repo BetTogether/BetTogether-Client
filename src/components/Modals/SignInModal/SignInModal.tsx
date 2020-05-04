@@ -6,13 +6,17 @@ import {
   Buttons,
   StyledButton,
   Logo,
+  ProviderWrapper,
+  ProviderContent,
+  ProviderTitle,
+  ProviderDescription,
 } from "./SignInModal.style";
 import Spinner from "./Spinner";
-import { ReactComponent as CrossIcon } from "../../../assets/icons/cross.svg";
-import { LayoutContext } from "../../../store/context/LayoutContext";
+import { ReactComponent as CrossIcon } from "assets/icons/cross.svg";
+import { LayoutContext } from "store/Context";
 import { useWeb3Context } from "web3-react";
-import portisLogo from "../../../assets/icons/portis.svg";
-import metamaskLogo from "../../../assets/icons/metamask.svg";
+import portisLogo from "assets/icons/portis.svg";
+import metamaskLogo from "assets/icons/metamask.svg";
 
 interface ISignInModalProps {
   isOpen: boolean;
@@ -70,14 +74,28 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
               <CrossIcon />
             </IconButton>
             <Buttons>
-              <StyledButton onClick={() => setConnector("Injected")}>
-                <Logo alt="MetaMask" src={metamaskLogo} />
-                Connect with MetaMask
-              </StyledButton>
-              <StyledButton onClick={() => setConnector("Portis")}>
-                <Logo alt="Portis" src={portisLogo} />
-                Connect with Portis
-              </StyledButton>
+              <ProviderWrapper>
+                <ProviderContent>
+                  <StyledButton onClick={() => setConnector("Injected")}>
+                    <Logo alt="MetaMask" src={metamaskLogo} />
+                    <ProviderTitle>MetaMask</ProviderTitle>
+                    <ProviderDescription>
+                      Connect with your MetaMask account
+                    </ProviderDescription>
+                  </StyledButton>
+                </ProviderContent>
+              </ProviderWrapper>
+              <ProviderWrapper>
+                <ProviderContent>
+                  <StyledButton onClick={() => setConnector("Portis")}>
+                    <Logo alt="Portis" src={portisLogo} />
+                    <ProviderTitle>Portis</ProviderTitle>
+                    <ProviderDescription>
+                      Connect with your Portis account
+                    </ProviderDescription>
+                  </StyledButton>
+                </ProviderContent>
+              </ProviderWrapper>
             </Buttons>
           </>
         )}

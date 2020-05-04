@@ -65,40 +65,67 @@ export const Buttons = styled.div`
 `;
 
 export const StyledButton = styled.button`
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
   color: #333;
-  display: inline-flex;
-  font-family: "Source Sans Pro", -apple-system, sans-serif;
   font-weight: 500;
-  height: 3rem;
-  justify-content: center;
   line-height: 1;
   font-size: 1.25rem;
   margin: 0.5rem 0;
-  min-width: 3rem;
-  overflow: hidden;
-  padding: 0 2rem;
+  padding: 0 1rem;
   position: relative;
   text-align: center;
   text-decoration: none;
   transition: all 0.15s;
   user-select: none;
-  white-space: nowrap;
   width: 100%;
   &:hover {
-    background-color: #f3f2f2;
     cursor: pointer;
+    background-color: #f3f2f2;
     box-shadow: rgba(0, 0, 0, 0.2) 0 2px 4px;
   }
 `;
 
 export const Logo = styled.img`
-  height: 1.5rem;
-  margin-bottom: -2px;
-  margin-right: 0.5rem;
-  width: 1.5rem;
+  height: 3rem;
+  width: 3rem;
+  margin-top: 0.5rem;
+`;
+
+export const ProviderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0;
+  padding: 0.5rem;
+  width: 100%;
+  cursor: pointer;
+`;
+
+export const ProviderContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.8rem;
+  padding: 1.5rem 1rem;
+  width: 100%;
+  background-color: ${(props) => props.theme.palette3.white};
+`;
+
+export const ProviderTitle = styled.h1`
+  color: ${(props) => props.theme.palette3.black};
+  margin: 0;
+`;
+
+export const ProviderDescription = styled.small`
+  color: ${(props) => props.theme.palette3.gray};
+  margin-bottom: 1rem;
 `;

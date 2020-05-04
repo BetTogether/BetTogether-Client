@@ -1,9 +1,4 @@
 //
-// EXTERNAL DATA
-//
-export const FETCH_ETH_PRICE = "FETCH_ETH_PRICE";
-
-//
 // LAYOUT
 //
 export const TOGGLE_SIGN_IN_MODAL = "TOGGLE_SIGN_IN_MODAL";

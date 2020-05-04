@@ -1,5 +1,16 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import ConnectionBanner from "@rimble/connection-banner";
+
+export const NetworkNotification = styled(ConnectionBanner)`
+  background-color: #fbe9e7;
+  border: 1px solid #dc2c10;
+  border-radius: 4px;
+  color: #841a09;
+  padding: 1rem;
+  position: relative;
+  width: 100%;
+`;
 
 export const Header = styled.header`
   display: flex;
@@ -99,23 +110,17 @@ export const ExpandButton = styled.button`
   }
 `;
 
-export const IconButton = styled.button`
+export const IconLink = styled.a`
   height: 40px;
   width: 40px;
   border: none;
   background: none;
   display: flex;
   cursor: pointer;
-  &:focus {
-    outline: 2px dashed #17171d;
-  }
   &:hover {
     svg {
       transform: scale(1.3);
     }
-  }
-  &::-moz-focus-inner {
-    border: 0;
   }
   svg {
     outline: none;

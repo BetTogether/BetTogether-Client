@@ -1,6 +1,7 @@
-import { TOGGLE_SIGN_IN_MODAL } from "../actions/actionType";
+import { TOGGLE_SIGN_IN_MODAL } from "./Constants";
+import { InitialStateType } from "./Types";
 
-export default function LayoutReducer(state: any, action: any) {
+export function LayoutReducer(state: InitialStateType, action: any) {
   switch (action.type) {
     case TOGGLE_SIGN_IN_MODAL: {
       return {

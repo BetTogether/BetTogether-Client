@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ShortenAddress } from "../../utils/ShortenAddress";
+import { ShortenAddress } from "utils/ShortenAddress";
 
 const Wrapper = styled.div`
   background-color: #fafafa;
@@ -59,7 +59,7 @@ const TableRow = styled.tr`
 
 const PastMarkets = styled.div``;
 
-const Markets = ({ activeAddress }: any) => {
+const Markets = () => {
   let MarketPots = [
     {
       id: 1,
