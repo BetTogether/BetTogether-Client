@@ -6,19 +6,21 @@ interface IProps {
 }
 
 export const Wrapper = styled.nav<IProps>`
-  border-top: 1px solid ${(props) => props.theme.palette3.gray};
   height: auto;
   width: 100%;
-  background: ${(props) => props.theme.palette3.white};
   position: absolute;
+  background: ${(props) => props.theme.palette3.white};
   display: ${(props) => (props.isExpanded ? "block" : "none")};
   z-index: 100;
+  @media (min-width: 800px) {
+    display: none;
+  }
 `;
 
 export const List = styled.ul`
   margin: 0;
   padding: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
 `;
 
 export const Item = styled.li`
@@ -28,8 +30,8 @@ export const Item = styled.li`
   align-items: center;
   color: ${(props) => props.theme.palette3.black};
   font-weight: 500;
-  height: 48px;
-  padding: 0 16px;
+  height: 3rem;
+  padding: 0 1rem;
   &:hover {
     color: ${(props) => props.theme.palette3.red};
   }

@@ -4,6 +4,7 @@ import { LayoutReducer } from "./Reducers";
 
 export const initialState: InitialStateType = {
   signInModalIsOpen: false,
+  tradeModalIsOpen: false,
 };
 
 export const LayoutContext = createContext<{

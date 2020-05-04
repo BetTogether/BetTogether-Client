@@ -2,7 +2,7 @@ import React from "react";
 import {
   Wrapper,
   Container,
-  Bar,
+  Content,
   Section,
   StyledLink,
   Span,
@@ -13,7 +13,7 @@ const NavStrip = () => {
   return (
     <Wrapper>
       <Container>
-        <Bar>
+        <Content>
           <Section>
             <StyledLink to="/dashboard">
               <BsColumns />
@@ -38,7 +38,7 @@ const NavStrip = () => {
               <Span>Settings</Span>
             </StyledLink>
           </Section>
-        </Bar>
+        </Content>
       </Container>
     </Wrapper>
   );

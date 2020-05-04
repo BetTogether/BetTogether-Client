@@ -15,14 +15,14 @@ export const Container = styled.div`
   margin: 0 auto;
 `;
 
-export const Bar = styled.nav`
+export const Content = styled.nav`
   display: flex;
   justify-content: center;
 `;
 
 export const Section = styled.div<{ settings?: boolean }>`
   display: flex;
-  margin-right: ${(props) => (props.settings ? "" : "2rem")};
+  margin-right: ${(props) => (props.settings ? "0" : "2rem")};
 `;
 
 export const StyledLink = styled(NavLink)`
@@ -33,23 +33,14 @@ export const StyledLink = styled(NavLink)`
   color: ${(props) => props.theme.palette3.gray};
   border-bottom: 2px solid transparent;
   &:hover {
-    color: white;
+    color: ${(props) => props.theme.palette3.white};
     border-bottom: 2px solid white;
   }
   &.active {
-    color: white;
+    color: ${(props) => props.theme.palette3.white};
     border-bottom: 2px solid white;
   }
   cursor: pointer;
-`;
-
-export const Link = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 0;
-  text-decoration: none;
-  color: gray;
 `;
 
 export const Span = styled.span`

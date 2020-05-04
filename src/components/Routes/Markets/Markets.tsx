@@ -1,6 +1,7 @@
 import React from "react";
+import Aave from "./Aave";
 import {
-  Wrapper,
+  ActiveMarketsWrapper,
   ActiveMarkets,
   ActiveMarketsPair,
   ActiveMarket,
@@ -21,6 +22,7 @@ const Markets = () => {
       question: "How many active users will Binance receive by the end of May",
       winner: "0x8f6e73043242842f0d097bacf880a51c2f0f9642",
       winnings: 1000000000000000,
+      timestamp: 1585699200,
     },
     {
       id: 2,
@@ -28,6 +30,7 @@ const Markets = () => {
       question: "How many active users will AirSwap receive by the end of May",
       winner: "0x8f6e73043242842f0d097bacf880a51c2f0f9642",
       winnings: 1000000000000000,
+      timestamp: 1586304000,
     },
     {
       id: 3,
@@ -35,6 +38,7 @@ const Markets = () => {
       question: "How many active users will 0x receive by the end of May",
       winner: "0x8f6e73043242842f0d097bacf880a51c2f0f9642",
       winnings: 1000000000000000,
+      timestamp: 1586908800,
     },
     {
       id: 4,
@@ -42,12 +46,13 @@ const Markets = () => {
       question: "How many active users will Kyber receive by the end of May",
       winner: "0x8f6e73043242842f0d097bacf880a51c2f0f9642",
       winnings: 1000000000000000,
+      timestamp: 1587513600,
     },
   ];
 
   return (
     <>
-      <Wrapper>
+      <ActiveMarketsWrapper>
         <ActiveMarkets>
           <ActiveMarketsPair>
             <ActiveMarket>ActiveMarket 1</ActiveMarket>
@@ -58,7 +63,7 @@ const Markets = () => {
             <ActiveMarket>ActiveMarket 4</ActiveMarket>
           </ActiveMarketsPair>
         </ActiveMarkets>
-      </Wrapper>
+      </ActiveMarketsWrapper>
       <PastMarketsWrapper>
         <PastMarkets>
           <Table>
@@ -68,6 +73,7 @@ const Markets = () => {
                 <TableHead>Question</TableHead>
                 <TableHead>Winner</TableHead>
                 <TableHead>Winnings</TableHead>
+                <TableHead>Timestamp</TableHead>
               </TableRow>
 
               {MarketPots.length &&
@@ -77,8 +83,10 @@ const Markets = () => {
                     <th>{Pot.question}</th>
                     <th>{ShortenAddress(Pot.winner)}</th>
                     <th>{Pot.winnings}</th>
+                    <th>{Pot.timestamp}</th>
                   </TableRow>
                 ))}
+              <Aave />
             </TableBody>
           </Table>
         </PastMarkets>

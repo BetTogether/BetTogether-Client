@@ -1,23 +1,22 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useWeb3Context } from "web3-react";
-import { IconContext } from "react-icons";
-import { AiFillGithub, AiFillBell } from "react-icons/ai";
-import templogo from "assets/images/temp-logo.png";
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
-import { ShortenAddress } from "utils/ShortenAddress";
 import {
+  NetworkNotification,
   Head,
   Logo,
+  GitHubLink,
   RightContent,
   ExpandButton,
-  AddressWrapper,
+  ConnectionButton,
   Address,
-  IconLink,
-  NetworkNotification,
 } from "./Header.style";
+import { IconContext } from "react-icons";
+import { AiFillGithub } from "react-icons/ai";
 import { LayoutContext } from "store/Context";
+import { ShortenAddress } from "utils/ShortenAddress";
 
 const Header = () => {
   const context = useWeb3Context();
@@ -39,34 +38,31 @@ const Header = () => {
       )}
       <Head>
         <Link to="/dashboard">
-          <Logo src={templogo} alt="BetTogetherLogo" />
+          <Logo>BetTogether</Logo>
         </Link>
         <RightContent>
-          <IconLink
+          <GitHubLink
             href="https://github.com/BetTogether"
             target="_blank"
             rel="noreferrer noopener"
           >
-            <IconContext.Provider value={{ color: "white", size: "2em" }}>
+            <IconContext.Provider value={{ size: "2.5rem" }}>
               <AiFillGithub />
             </IconContext.Provider>
-          </IconLink>
-          <IconLink href="#">
-            <IconContext.Provider value={{ color: "white", size: "2em" }}>
-              <AiFillBell />
-            </IconContext.Provider>
-          </IconLink>
+          </GitHubLink>
 
           {active && !error ? (
             <>
               {account !== (undefined && null) && (
-                <AddressWrapper onClick={() => context.unsetConnector()}>
+                <ConnectionButton onClick={() => context.unsetConnector()}>
                   <Address>{ShortenAddress(account)}</Address>
-                </AddressWrapper>
+                </ConnectionButton>
               )}
             </>
           ) : (
-            <AddressWrapper onClick={() => SignIn()}>Connect</AddressWrapper>
+            <ConnectionButton onClick={() => SignIn()}>
+              Connect
+            </ConnectionButton>
           )}
           <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
             <MenuIcon isExpanded={isExpanded} />

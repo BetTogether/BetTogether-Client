@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: Cairo, sans-serif;
         margin: 0;
         position: relative;
+        background-color: #dddfe6;
     }
     @font-face {
       font-family: 'Cairo';
@@ -26,20 +27,31 @@ const GlobalStyle = createGlobalStyle`
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
     a {
-        color: inherit;
-        text-decoration: none;
+      color: inherit;
+      text-decoration: none;
     }
     a:hover {
-     color: inherit; 
-     text-decoration: none; 
-     cursor: pointer;  
-  }
+      color: inherit; 
+      text-decoration: none; 
+      cursor: pointer;  
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
 `;
 
 // This is the official Aave subgraph. You can replace it with your own, if you need to.
 // See all subgraphs: https://thegraph.com/explorer/
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/id/QmcKPoG3SueUkEbhKpf65s3CJQhVPCRbSfH6b4yWza13GY",
+  uri:
+    "https://api.thegraph.com/subgraphs/id/QmcKPoG3SueUkEbhKpf65s3CJQhVPCRbSfH6b4yWza13GY",
 });
 
 ReactDOM.render(

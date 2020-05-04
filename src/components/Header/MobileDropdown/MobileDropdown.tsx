@@ -1,15 +1,13 @@
 import React from "react";
-
 import { Wrapper, List, Item, StyledLink } from "./MobileDropdown.style";
 
 interface IMobileDropdownProps {
-  isExpanded?: boolean;
+  isExpanded: boolean;
 }
 
 const MobileDropdown = ({ isExpanded }: IMobileDropdownProps) => {
   return (
     <Wrapper isExpanded={isExpanded}>
-      {console.log("isExpanded:", isExpanded)}
       <List>
         <Item>
           <StyledLink to="/dashboard">Dashboard</StyledLink>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
-  background-color: #fafafa;
+export const ActiveMarketsWrapper = styled.div`
+  background-color: ${(props) => props.theme.palette3.gray};
   margin: 0;
   padding: 1rem;
 `;
@@ -11,7 +11,7 @@ export const ActiveMarkets = styled.div`
   flex-direction: column;
   flex-wrap: wrap;
   margin: 0 auto;
-  max-width: 1260px;
+  width: 100%;
 `;
 
 export const ActiveMarketsPair = styled.div<{ isBottom?: boolean }>`
@@ -22,19 +22,19 @@ export const ActiveMarketsPair = styled.div<{ isBottom?: boolean }>`
 `;
 
 export const ActiveMarket = styled.div`
-  background-color: white;
+  background-color: ${(props) => props.theme.palette3.white};
   box-shadow: rgba(0, 0, 0, 0.04) 0 0 1.5rem 0;
   color: #1e2026;
   flex: 1;
   font-size: 0.8rem;
-  margin: 0 1rem 0 0;
+  margin-right: 1rem;
   padding: 1rem;
   position: relative;
   text-decoration: none;
 `;
 
 export const PastMarketsWrapper = styled.div`
-  background-color: white;
+  background-color: ${(props) => props.theme.palette3.white};
   margin: 0;
   padding: 1.5rem 1rem;
 `;
@@ -48,7 +48,7 @@ export const TableBody = styled.tbody``;
 export const TableHead = styled.th`
   border-bottom: 1px solid #ddd;
   background-color: #dddddd;
-  color: white;
+  color: ${(props) => props.theme.palette3.white};
 `;
 
 export const TableRow = styled.tr`

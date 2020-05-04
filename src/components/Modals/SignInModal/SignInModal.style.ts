@@ -8,7 +8,7 @@ export const Wrapper = styled.div<{ isOpen: boolean }>`
   align-items: center;
   flex-direction: column;
   height: 100vh;
-  padding: 16px;
+  padding: 1rem;
   top: 0;
   right: 0;
   bottom: 0;
@@ -18,7 +18,9 @@ export const Wrapper = styled.div<{ isOpen: boolean }>`
 `;
 
 export const Modal = styled.div`
-  background-color: white;
+  background-color: ${(props) => props.theme.palette3.white};
+  display: flex;
+  justify-content: center;
   border-radius: 4px;
   height: auto;
   max-height: calc(100vh - 50px);
@@ -26,11 +28,10 @@ export const Modal = styled.div`
   overflow-y: auto;
   max-width: 500px;
   min-height: 1rem;
-  min-width: 1rem;
   border: 1px solid #eee;
-  padding: 24px;
+  padding: 1.5rem;
   position: relative;
-  width: 100%;
+  width: auto;
 `;
 
 export const Content = styled.div`
@@ -41,8 +42,8 @@ export const Content = styled.div`
 `;
 
 export const IconButton = styled.button`
-  height: 40px;
-  width: 40px;
+  height: 2.5rem;
+  width: 2.5rem;
   border: none;
   outline: none;
   background: none;
