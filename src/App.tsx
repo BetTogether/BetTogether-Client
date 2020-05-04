@@ -1,5 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import { ethers } from "ethers";
+import Aave from "./components/Aave";
 import Navbar from "./components/Navbar";
 import Dashboard from "./components/Routes/Dashboard";
 import Account from "./components/Routes/Account";
@@ -7,7 +9,6 @@ import Markets from "./components/Routes/Markets";
 import Settings from "./components/Routes/Settings";
 import NotFound from "./components/Routes/NotFound";
 import Web3Provider from "web3-react";
-import { ethers } from "ethers";
 import connectors from "./utils/connectors";
 import { LayoutProvider } from "./store/Context";
 import ModalContainer from "./components/Modals/Modals.container";
@@ -40,6 +41,7 @@ function App() {
           </Route>
           <Route component={NotFound} />
         </Switch>
+        <Aave />
         <ModalContainer />
       </LayoutProvider>
     </Web3Provider>
