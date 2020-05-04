@@ -1,6 +1,6 @@
 import React from "react";
 
-const Account = ({ activeAddress }: any) => {
+const Account = () => {
   return <div>Account</div>;
 };
 

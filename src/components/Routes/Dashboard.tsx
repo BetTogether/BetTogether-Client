@@ -1,7 +1,13 @@
 import React from "react";
 
-const Dashboard = ({ activeAddress }: any) => {
-  return <div>Dashboard</div>;
+import Aave from "components/Aave";
+
+const Dashboard = () => {
+  return (
+    <>
+      <Aave />
+    </>
+  );
 };
 
 export default Dashboard;

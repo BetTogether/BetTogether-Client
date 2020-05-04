@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { useWeb3Context } from "web3-react";
 import { IconContext } from "react-icons";
 import { AiFillGithub, AiFillBell } from "react-icons/ai";
@@ -7,8 +8,7 @@ import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
 import { ShortenAddress } from "utils/ShortenAddress";
 import {
-  Header,
-  StyledLink,
+  Head,
   Logo,
   RightContent,
   ExpandButton,
@@ -16,10 +16,10 @@ import {
   Address,
   IconLink,
   NetworkNotification,
-} from "./Navbar.style";
+} from "./Header.style";
 import { LayoutContext } from "store/Context";
 
-const Navbar = () => {
+const Header = () => {
   const context = useWeb3Context();
   const { active, error, account, networkId } = context;
   const { state, dispatch } = useContext(LayoutContext);
@@ -37,24 +37,22 @@ const Navbar = () => {
       {active && networkId !== 4 && (
         <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
       )}
-      <Header>
-        <Logo src={templogo}></Logo>
-        <StyledLink to="/dashboard">Dashboard</StyledLink>
-        <StyledLink to="/markets">Markets</StyledLink>
-        <StyledLink to="/profile">Profile</StyledLink>
-        <StyledLink to="/settings">Settings</StyledLink>
+      <Head>
+        <Link to="/dashboard">
+          <Logo src={templogo} alt="BetTogetherLogo" />
+        </Link>
         <RightContent>
           <IconLink
             href="https://github.com/BetTogether"
             target="_blank"
             rel="noreferrer noopener"
           >
-            <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
+            <IconContext.Provider value={{ color: "white", size: "2em" }}>
               <AiFillGithub />
             </IconContext.Provider>
           </IconLink>
           <IconLink href="#">
-            <IconContext.Provider value={{ color: "#252c41", size: "2.5em" }}>
+            <IconContext.Provider value={{ color: "white", size: "2em" }}>
               <AiFillBell />
             </IconContext.Provider>
           </IconLink>
@@ -74,10 +72,10 @@ const Navbar = () => {
             <MenuIcon isExpanded={isExpanded} />
           </ExpandButton>
         </RightContent>
-      </Header>
+      </Head>
       {isExpanded && <MobileDropdown isExpanded={isExpanded} />}
     </>
   );
 };
 
-export default Navbar;
+export default Header;

@@ -1,12 +1,13 @@
 import React from "react";
-import templogo from "../../assets/icons/aave.svg";
+import templogo from "assets/icons/aave.svg";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
-import { Table } from 'rimble-ui';
+import { Table, Image } from "rimble-ui";
+import { ShortenAddress } from "utils/ShortenAddress";
 
 const GET_LAST_DEPOSITS_FROM_USER = gql`
   {
-    deposits(where: { user: "0x15ae150d7dc03d3b635ee90b85219dbfe071ed35"}) {
+    deposits(where: { user: "0x15ae150d7dc03d3b635ee90b85219dbfe071ed35" }) {
       user {
         id
       }
@@ -21,14 +22,12 @@ const GET_LAST_DEPOSITS_FROM_USER = gql`
 
 function Aave() {
   const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_USER);
-  console.log({ data })
+  console.log({ data });
 
   return (
-    <div>
-      <div>
-        <img src={templogo} className="App-logo" alt="react-logo" />
-      </div>
-      <Table>
+    <>
+      <Image src={templogo} borderRadius={8} height="8rem" alt="AAVE-logo" />
+      <Table borderColor={"gray"} color={"gray"}>
         <thead>
           <tr>
             <th>User</th>
@@ -38,19 +37,20 @@ function Aave() {
           </tr>
         </thead>
         <tbody>
-        {
-          !loading && !error && data && data.deposits.map((item: any, index: number) =>
-            <tr key={index}>
-              <td>{ item.user.id }</td>
-              <td>{ item.pool.lendingPool }</td>
-              <td>{ `${item.amount}$` }</td>
-              <td>{new Date(1000 * item.timestamp).toUTCString()}</td>
-            </tr>
-          )
-        }
+          {!loading &&
+            !error &&
+            data &&
+            data.deposits.map((item: any, index: number) => (
+              <tr key={index}>
+                <td>{ShortenAddress(item.user.id)}</td>
+                <td>{ShortenAddress(item.pool.lendingPool)}</td>
+                <td>{`${item.amount}$`}</td>
+                <td>{new Date(1000 * item.timestamp).toUTCString()}</td>
+              </tr>
+            ))}
         </tbody>
       </Table>
-    </div>
+    </>
   );
 }
 

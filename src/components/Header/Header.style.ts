@@ -12,7 +12,7 @@ export const NetworkNotification = styled(ConnectionBanner)`
   width: 100%;
 `;
 
-export const Header = styled.header`
+export const Head = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,8 +22,7 @@ export const Header = styled.header`
   padding: 12px 20px;
   z-index: 10;
   color: ${(props) => props.theme.palette3.red};
-  background-color: ${(props) => props.theme.palette3.gray};
-  border-bottom: 1px solid ${(props) => props.theme.palette3.gray};
+  background-color: ${(props) => props.theme.palette3.black};
   @media (min-width: 600px) {
     justify-content: left;
   }

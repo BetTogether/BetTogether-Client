@@ -1,6 +1,6 @@
 import React from "react";
 
-const Settings = ({ activeAddress }: any) => {
+const Settings = () => {
   return <div>Settings</div>;
 };
 

@@ -1,14 +1,14 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import Web3Provider from "web3-react";
 import { ethers } from "ethers";
-import Aave from "./components/Aave";
-import Navbar from "./components/Navbar";
+import Header from "./components/Header";
+import NavStrip from "./components/NavStrip";
 import Dashboard from "./components/Routes/Dashboard";
 import Account from "./components/Routes/Account";
 import Markets from "./components/Routes/Markets";
 import Settings from "./components/Routes/Settings";
 import NotFound from "./components/Routes/NotFound";
-import Web3Provider from "web3-react";
 import connectors from "./utils/connectors";
 import { LayoutProvider } from "./store/Context";
 import ModalContainer from "./components/Modals/Modals.container";
@@ -21,7 +21,8 @@ function App() {
       web3Api={ethers}
     >
       <LayoutProvider>
-        <Navbar />
+        <Header />
+        <NavStrip />
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
           <Route path="/dashboard">
@@ -30,18 +31,14 @@ function App() {
           <Route path="/markets">
             <Markets />
           </Route>
-          <Route path="/Account">
+          <Route path="/account">
             <Account />
-          </Route>
-          <Route path="/markets">
-            <Markets />
           </Route>
           <Route path="/settings">
             <Settings />
           </Route>
           <Route component={NotFound} />
         </Switch>
-        <Aave />
         <ModalContainer />
       </LayoutProvider>
     </Web3Provider>

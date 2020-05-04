@@ -12,6 +12,7 @@ export const Wrapper = styled.nav<IProps>`
   background: ${(props) => props.theme.palette3.white};
   position: absolute;
   display: ${(props) => (props.isExpanded ? "block" : "none")};
+  z-index: 100;
 `;
 
 export const List = styled.ul`
