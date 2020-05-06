@@ -20,9 +20,8 @@ const Kyber = () => {
     ""
   );
   const [amountEthToExchange, setAmountEthToExchange] = useState<number>(0);
-  const [potentialDai, setPotentialDai] = useState(0);
+  const [potentialDai, setPotentialDai] = useState<number>(0);
   const provider = ethers.getDefaultProvider();
-  console.log("provider:", provider);
   const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
   const DAI_ADDRESS = "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa";
   const KyberNetworkProxyAddress = "0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D";
@@ -32,6 +31,7 @@ const Kyber = () => {
     provider
   );
 
+  console.log("KyberNetworkProxyInstance:", KyberNetworkProxyInstance);
   useEffect(() => {
     if (context.active) {
       setActiveAccount(context.account);
