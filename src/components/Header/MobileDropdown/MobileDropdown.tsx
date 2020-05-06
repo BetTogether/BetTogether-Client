@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Wrapper, List, Item, StyledLink } from "./MobileDropdown.style";
 
 interface IMobileDropdownProps {

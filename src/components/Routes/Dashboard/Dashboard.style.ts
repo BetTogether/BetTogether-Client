@@ -11,10 +11,6 @@ export const Content = styled.div`
   padding-bottom: 1rem;
 `;
 
-export const Border = styled.div`
-  border-bottom-width: 1px;
-`;
-
 export const Top = styled.div`
   display: flex;
   margin-bottom: -1px;
@@ -32,9 +28,8 @@ export const Title = styled.h3`
 export const SVG = styled.svg`
   height: 1.5rem;
   width: 1.5rem;
-  fill: currentColor;
+  fill: ${(props) => props.theme.palette3.red};
   color: #edf2f7;
-  margin-right: 0.5rem;
   &:hover {
     fill: ${(props) => props.theme.palette3.black};
   }
