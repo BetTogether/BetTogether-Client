@@ -118,7 +118,7 @@ const Card = ({ marketContractName, owner }: any) => {
               <CountUp
                 start={0}
                 end={gross}
-                decimals={8}
+                decimals={4}
                 preserveValue={true}
               />{" "}
               Dai
