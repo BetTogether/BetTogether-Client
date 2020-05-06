@@ -1,25 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { Wrapper, List, Item, StyledLink } from "./MobileDropdown.style";
 
 interface IMobileDropdownProps {
   isExpanded: boolean;
+  setIsExpanded: any;
 }
 
-const MobileDropdown = ({ isExpanded }: IMobileDropdownProps) => {
+const MobileDropdown = ({
+  isExpanded,
+  setIsExpanded,
+}: IMobileDropdownProps) => {
   return (
     <Wrapper isExpanded={isExpanded}>
       <List>
         <Item>
-          <StyledLink to="/dashboard">Dashboard</StyledLink>
+          <StyledLink to="/dashboard" onClick={() => setIsExpanded(false)}>
+            Dashboard
+          </StyledLink>
         </Item>
         <Item>
-          <StyledLink to="/markets">Markets</StyledLink>
+          <StyledLink to="/markets" onClick={() => setIsExpanded(false)}>
+            Markets
+          </StyledLink>
         </Item>
         <Item>
-          <StyledLink to="/account">Account</StyledLink>
+          <StyledLink to="/account" onClick={() => setIsExpanded(false)}>
+            Account
+          </StyledLink>
         </Item>
         <Item>
-          <StyledLink to="/settings">Settings</StyledLink>
+          <StyledLink to="/settings" onClick={() => setIsExpanded(false)}>
+            Settings
+          </StyledLink>
         </Item>
       </List>
     </Wrapper>

@@ -69,7 +69,7 @@ const Header = () => {
           </ExpandButton>
         </RightContent>
       </Head>
-      {isExpanded && <MobileDropdown isExpanded={isExpanded} />}
+      <MobileDropdown isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
     </>
   );
 };

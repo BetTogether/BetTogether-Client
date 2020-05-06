@@ -10,8 +10,8 @@ export const Wrapper = styled.nav<IProps>`
   width: 100%;
   position: absolute;
   background: ${(props) => props.theme.palette3.white};
-  display: ${(props) => (props.isExpanded ? "block" : "none")};
   z-index: 100;
+  display: ${(props) => (props.isExpanded ? "block" : "none")};
   @media (min-width: 800px) {
     display: none;
   }
