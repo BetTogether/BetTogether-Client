@@ -10,7 +10,7 @@
     <img src="https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master" alt="Travis CI badge"/>
   </a>
 
-  <a href="https://app.netlify.com/sites/serene-johnson-2cf60d/deploys">
+  <a href="https://bettogether.netlify.app/dashboard">
     <img src="https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status" alt="netlify badge"/>
   </a>
 
