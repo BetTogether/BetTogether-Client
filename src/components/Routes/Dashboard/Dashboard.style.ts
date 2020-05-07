@@ -46,7 +46,16 @@ export const Wrapper = styled.div`
 `;
 
 export const Button = styled.button`
-  height: 1rem;
+  background-color: ${(props) => props.theme.palette3.black};
+  border: none;
+  color: ${(props) => props.theme.palette3.white};
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  &:hover {
+    background-color: ${(props) => props.theme.palette3.red};
+  }
 `;
 
 export const GetDaiButton = styled.button`

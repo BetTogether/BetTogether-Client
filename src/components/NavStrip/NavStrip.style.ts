@@ -34,11 +34,11 @@ export const StyledLink = styled(NavLink)`
   border-bottom: 2px solid transparent;
   &:hover {
     color: ${(props) => props.theme.palette3.white};
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid ${(props) => props.theme.palette3.white};
   }
   &.active {
     color: ${(props) => props.theme.palette3.white};
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid ${(props) => props.theme.palette3.white};
   }
   cursor: pointer;
 `;

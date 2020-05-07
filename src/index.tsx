@@ -45,6 +45,10 @@ const GlobalStyle = createGlobalStyle`
     input[type=number] {
       -moz-appearance: textfield;
     }
+
+    textarea:focus, input:focus{
+        outline: none;
+    }
 `;
 
 // This is the official Aave subgraph. You can replace it with your own, if you need to.

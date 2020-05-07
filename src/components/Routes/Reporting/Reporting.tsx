@@ -1,14 +1,14 @@
 import React from "react";
-import { Content, Border, Top, Title } from "./Account.style";
+import { Content, Border, Top, Title } from "./Reporting.style";
 import Container from "components/Routes/RoutesContainer";
 
-const Account = () => {
+const Reporting = () => {
   return (
     <Container>
       <Content>
         <Border>
           <Top>
-            <Title>Account</Title>
+            <Title>Reporting</Title>
           </Top>
         </Border>
       </Content>
@@ -16,4 +16,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Reporting;

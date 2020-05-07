@@ -27,9 +27,9 @@ const NavStrip = () => {
             </StyledLink>
           </Section>
           <Section>
-            <StyledLink to="/account">
+            <StyledLink to="/reporting">
               <BsPerson />
-              <Span>Account</Span>
+              <Span>Reporting</Span>
             </StyledLink>
           </Section>
           <Section settings>

@@ -10,14 +10,18 @@ import {
   Item,
   MarketAmount,
   ItemDescription,
-  Form,
-  Input,
-  BuyTicket,
   DaiLabel,
   DaiChildLabel,
   DaiInput,
   OwnerButton,
   OwnerButtons,
+  Options,
+  Option,
+  OptionSpan,
+  OptionsPurchaseWrapper,
+  Form,
+  Button,
+  Input,
 } from "./Card.style";
 
 const Card = ({ marketContractName, owner }: any) => {
@@ -31,8 +35,9 @@ const Card = ({ marketContractName, owner }: any) => {
   const [state, setState] = useState(null);
   const LotteryStates = ["OPEN", "COMMITTING", "REWARDING"];
   const [winnings, setWinnings] = useState(null);
-  const [accountBalance, setAccountBalance] = useState(null);
+  const [accountBalance, setAccountBalance] = useState(0);
   const activeAccount = "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707";
+  const [isActive, setIsActive] = useState(false);
 
   const handleDaiEnable = async (e: any) => {
     // await daiContract.methods
@@ -90,7 +95,10 @@ const Card = ({ marketContractName, owner }: any) => {
         <span>{"Open"}</span>
         <span>{"10:23:22"}</span>
       </Header>
-      <Question>Bitcoin's Price on June 1st, 2020</Question>
+      <Question>
+        What city will have the highest growth of GDP per capita by the end of
+        2020?
+      </Question>
       <MarketContent>
         <Section>
           <Item>
@@ -104,12 +112,8 @@ const Card = ({ marketContractName, owner }: any) => {
             <ItemDescription>In AAVE</ItemDescription>
           </Item>
           <Item>
-            <MarketAmount>{`${
-              marketsDaiBalance && accountBalance
-                ? (accountBalance! / marketsDaiBalance) * 100
-                : "-"
-            }`}</MarketAmount>
-            <ItemDescription>Chances (%)</ItemDescription>
+            <MarketAmount>Dublin, Ireland</MarketAmount>
+            <ItemDescription>Favorite</ItemDescription>
           </Item>
         </Section>
         <Section>
@@ -136,28 +140,60 @@ const Card = ({ marketContractName, owner }: any) => {
                 <DaiChildLabel isChecked={approve} />
               </DaiLabel>
             </>
-            <ItemDescription>Toggle Dai</ItemDescription>
+            <ItemDescription>Approve Dai</ItemDescription>
           </Item>
         </Section>
 
-        <Form onSubmit={submitFunds}>
-          <Input
-            type="number"
-            value={amountToSave}
-            onChange={(e: any) => setAmountToSave(e.target.value)}
-          />
-          <BuyTicket disabled={amountToSave <= 0}>Save</BuyTicket>
-        </Form>
+        <OptionsPurchaseWrapper>
+          <Options>
+            <Option isActive={isActive} onClick={() => setIsActive(!isActive)}>
+              Dublin, Ireland<OptionSpan>34%</OptionSpan>
+            </Option>
+            <Option>
+              New York, US<OptionSpan>26%</OptionSpan>
+            </Option>
+            <Option>
+              Tokyo, Japan<OptionSpan>18%</OptionSpan>
+            </Option>
+            <Option>
+              Paris, France<OptionSpan>12%</OptionSpan>
+            </Option>
+            <Option>
+              Shenzen, China<OptionSpan>10%</OptionSpan>
+            </Option>
+            <Option>
+              Berlin, Germany<OptionSpan>6%</OptionSpan>
+            </Option>
+            <Option>
+              London, England<OptionSpan>3%</OptionSpan>
+            </Option>
+            <Option>
+              Dhaka, Bangladesh<OptionSpan>>1%</OptionSpan>
+            </Option>
+          </Options>
+
+          <Form onSubmit={submitFunds}>
+            <Button disabled={amountToSave <= 0}>Enter</Button>
+            <Input
+              type="number"
+              placeholder="€0"
+              onChange={(e: any) => setAmountToSave(e.target.value)}
+            ></Input>
+          </Form>
+        </OptionsPurchaseWrapper>
 
         {checkOwner() && (
-          <OwnerButtons>
-            <OwnerButton onClick={() => incrementState()}>
-              Increment State
-            </OwnerButton>
-            <OwnerButton onClick={() => disable()}>
-              Disable Contract
-            </OwnerButton>
-          </OwnerButtons>
+          <>
+            <h1>TEST BUTTONS BELOW...</h1>
+            <OwnerButtons>
+              <OwnerButton onClick={() => incrementState()}>
+                Increment State
+              </OwnerButton>
+              <OwnerButton onClick={() => disable()}>
+                Disable Contract
+              </OwnerButton>
+            </OwnerButtons>
+          </>
         )}
       </MarketContent>
     </Content>

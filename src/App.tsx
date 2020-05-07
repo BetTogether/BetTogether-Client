@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import Header from "./components/Header";
 import NavStrip from "./components/NavStrip";
 import Dashboard from "./components/Routes/Dashboard";
-import Account from "./components/Routes/Account";
+import Reporting from "./components/Routes/Reporting";
 import Markets from "./components/Routes/Markets";
 import Settings from "./components/Routes/Settings";
 import NotFound from "./components/Routes/NotFound";
@@ -31,8 +31,8 @@ function App() {
           <Route path="/markets">
             <Markets />
           </Route>
-          <Route path="/account">
-            <Account />
+          <Route path="/reporting">
+            <Reporting />
           </Route>
           <Route path="/settings">
             <Settings />

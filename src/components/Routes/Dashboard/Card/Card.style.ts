@@ -66,18 +66,6 @@ export const ItemDescription = styled.p`
   padding: 0;
 `;
 
-export const Form = styled.form`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Input = styled.input`
-  padding: 0.5rem;
-  border: 1px solid ${(props) => props.theme.palette3.gray};
-  border-radius: 0.5rem 0 0 0.5rem;
-`;
-
 export const BuyTicket = styled.button`
   color: ${(props) => props.theme.palette3.white};
   background-color: ${(props) => props.theme.palette3.red};
@@ -143,4 +131,81 @@ export const OwnerButton = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.palette3.red};
   }
+`;
+
+export const OptionsPurchaseWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 800px) {
+    flex-direction: row;
+  }
+`;
+
+export const Options = styled.div`
+  width: 50%;
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
+export const Option = styled.div<{ isActive?: boolean }>`
+  background-color: ${(props) =>
+    props.isActive ? props.theme.palette3.red : props.theme.palette3.white};
+  border: 2px solid
+    ${(props) =>
+      props.isActive ? props.theme.palette3.red : props.theme.palette3.white};
+  color: ${(props) =>
+    props.isActive ? props.theme.palette3.white : props.theme.palette3.black};
+  border-radius: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 0.33rem 1rem;
+  cursor: pointer;
+  margin: 0.33rem 0;
+  padding: 0.67rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &:hover {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  }
+`;
+
+export const OptionSpan = styled.span`
+  font-size: 1.5rem;
+`;
+
+export const Form = styled.form`
+  width: 50%;
+  padding: 1.25rem 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
+export const Button = styled.button`
+  background-color: ${(props) => props.theme.palette3.red};
+  border: 2px solid ${(props) => props.theme.palette3.red};
+  color: ${(props) => props.theme.palette3.white};
+  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1.33rem;
+  padding: 0.67rem 2rem;
+  transition: all 0.2s;
+  margin: 0 auto;
+`;
+
+export const Input = styled.input`
+  border-style: none;
+  background-color: ${(props) => props.theme.palette3.gray};
+  color: ${(props) => props.theme.palette3.black};
+  font-size: 70px;
+  margin-bottom: 0;
+  overflow: visible;
+  text-align: center;
+  width: 100%;
 `;
