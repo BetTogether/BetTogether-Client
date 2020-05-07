@@ -88,6 +88,41 @@ const Card = ({ marketContractName, owner }: any) => {
     // }
   }, []);
 
+  const OptionsList = [
+    {
+      optionName: "Dublin, Ireland",
+      percentage: 26,
+    },
+    {
+      optionName: "New York, US",
+      percentage: 24,
+    },
+    {
+      optionName: "Tokyo, Japan",
+      percentage: 18,
+    },
+    {
+      optionName: "Paris, France",
+      percentage: 12,
+    },
+    {
+      optionName: "London, England",
+      percentage: 10,
+    },
+    {
+      optionName: "Shenzen, China",
+      percentage: 6,
+    },
+    {
+      optionName: "Berlin, Germany",
+      percentage: 3,
+    },
+    {
+      optionName: "Dhaka, Bangladesh",
+      percentage: 1,
+    },
+  ];
+
   return (
     <Content>
       <Header>
@@ -146,30 +181,16 @@ const Card = ({ marketContractName, owner }: any) => {
 
         <OptionsPurchaseWrapper>
           <Options>
-            <Option isActive={isActive} onClick={() => setIsActive(!isActive)}>
-              Dublin, Ireland<OptionSpan>34%</OptionSpan>
-            </Option>
-            <Option>
-              New York, US<OptionSpan>26%</OptionSpan>
-            </Option>
-            <Option>
-              Tokyo, Japan<OptionSpan>18%</OptionSpan>
-            </Option>
-            <Option>
-              Paris, France<OptionSpan>12%</OptionSpan>
-            </Option>
-            <Option>
-              Shenzen, China<OptionSpan>10%</OptionSpan>
-            </Option>
-            <Option>
-              Berlin, Germany<OptionSpan>6%</OptionSpan>
-            </Option>
-            <Option>
-              London, England<OptionSpan>3%</OptionSpan>
-            </Option>
-            <Option>
-              Dhaka, Bangladesh<OptionSpan>>1%</OptionSpan>
-            </Option>
+            {OptionsList.map((Opt: any) => (
+              <Option
+                key={Opt}
+                isActive={isActive}
+                onClick={() => setIsActive(!isActive)}
+              >
+                {Opt.optionName}
+                <OptionSpan>{Opt.percentage}%</OptionSpan>
+              </Option>
+            ))}
           </Options>
 
           <Form onSubmit={submitFunds}>
@@ -181,7 +202,6 @@ const Card = ({ marketContractName, owner }: any) => {
             ></Input>
           </Form>
         </OptionsPurchaseWrapper>
-
         {checkOwner() && (
           <>
             <h1>TEST BUTTONS BELOW...</h1>
