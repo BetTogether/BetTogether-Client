@@ -25,17 +25,17 @@ import {
 } from "./Card.style";
 
 const Card = ({ marketContractName, owner }: any) => {
-  const [usingDai, setUsingDai] = useState(true);
-  const [marketsDaiBalance, setMarketsDaiBalance] = useState(0);
+  // const [usingDai, setUsingDai] = useState(true);
+  const [marketsDaiBalance] = useState(0);
   const [amountToSave, setAmountToSave] = useState(0);
-  const [approve, setApprove] = useState(false);
-  const [accrued, setAccrued] = useState(0);
-  const [AAVEToken, setAAVEToken] = useState(0);
-  const [gross, setGross] = useState(3);
-  const [state, setState] = useState(null);
-  const LotteryStates = ["OPEN", "COMMITTING", "REWARDING"];
-  const [winnings, setWinnings] = useState(null);
-  const [accountBalance, setAccountBalance] = useState(0);
+  const [approve] = useState(false);
+  // const [accrued, setAccrued] = useState(0);
+  const [AAVEToken] = useState(0);
+  const [gross] = useState(3);
+  // const [state, setState] = useState(null);
+  // const LotteryStates = ["OPEN", "COMMITTING", "REWARDING"];
+  // const [winnings, setWinnings] = useState(null);
+  const [accountBalance] = useState(0);
   const activeAccount = "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707";
   const [isActive, setIsActive] = useState(false);
 
