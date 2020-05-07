@@ -33,8 +33,8 @@ const Header = () => {
 
   return (
     <>
-      {active && networkId !== 4 && (
-        <NetworkNotification currentNetwork={networkId} requiredNetwork={4} />
+      {active && networkId !== 42 && (
+        <NetworkNotification currentNetwork={networkId} requiredNetwork={42} />
       )}
       <Head>
         <Link to="/dashboard">

@@ -5,8 +5,19 @@
 
 <br/>
 
-[![Build Status](https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master)](https://travis-ci.com/BetTogether/BetTogether-Client)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status)](https://app.netlify.com/sites/serene-johnson-2cf60d/deploys)
+<p align="center">
+  <a href="https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master">
+    <img src="https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master" alt="Travis CI badge"/>
+  </a>
+
+  <a href="https://app.netlify.com/sites/serene-johnson-2cf60d/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status" alt="netlify badge"/>
+  </a>
+
+  <a href="#">
+    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="storybook badge"/>
+</a>  
+</p>
 
 ## [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
 
