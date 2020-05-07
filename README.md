@@ -6,16 +6,20 @@
 <br/>
 
 <p align="center">
+  <a href="https://github.com/Kamahl19/react-starter/actions?query=workflow%3ACI+branch%3Amaster">
+    <img src="https://github.com/Kamahl19/react-starter/workflows/CI/badge.svg?branch=master" alt="GitHub CI badge">
+  </a>
+  
   <a href="https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master">
     <img src="https://travis-ci.com/BetTogether/BetTogether-Client.svg?branch=master" alt="Travis CI badge"/>
   </a>
 
   <a href="https://bettogether.netlify.app/dashboard">
-    <img src="https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status" alt="netlify badge"/>
+    <img src="https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status" alt="Netlify badge"/>
   </a>
 
-  <a href="#">
-    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="storybook badge"/>
+  <a href="https://BetTogether.github.io/BetTogether-Client/">
+    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="Storybook badge"/>
 </a>  
 </p>
 

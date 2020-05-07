@@ -28,6 +28,9 @@ export const Logo = styled.h1`
 `;
 
 export const GitHubLink = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   background: none;
   margin-right: 1rem;

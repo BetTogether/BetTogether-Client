@@ -12,11 +12,11 @@ import {
   ProviderDescription,
 } from "./SignInModal.style";
 import Spinner from "./Spinner";
-import { ReactComponent as CrossIcon } from "assets/icons/cross.svg";
+import { ReactComponent as CrossIcon } from "assets/cross.svg";
 import { LayoutContext } from "store/Context";
 import { useWeb3Context } from "web3-react";
-import portisLogo from "assets/icons/portis.svg";
-import metamaskLogo from "assets/icons/metamask.svg";
+import portisLogo from "assets/portis.svg";
+import metamaskLogo from "assets/metamask.svg";
 
 interface ISignInModalProps {
   isOpen: boolean;

@@ -7,7 +7,7 @@ import {
   StyledLink,
   Span,
 } from "./NavStrip.style";
-import { BsGear, BsPencilSquare, BsPerson, BsColumns } from "react-icons/bs";
+import { Dashboard, PieChart, ModeEdit, FolderShared } from "@rimble/icons";
 
 const NavStrip = () => {
   return (
@@ -16,25 +16,25 @@ const NavStrip = () => {
         <Content>
           <Section>
             <StyledLink to="/dashboard">
-              <BsColumns />
+              <Dashboard />
               <Span>Dashboard</Span>
             </StyledLink>
           </Section>
           <Section>
             <StyledLink to="/markets">
-              <BsPencilSquare />
+              <PieChart />
               <Span>Markets</Span>
             </StyledLink>
           </Section>
           <Section>
             <StyledLink to="/reporting">
-              <BsPerson />
+              <ModeEdit />
               <Span>Reporting</Span>
             </StyledLink>
           </Section>
           <Section settings>
             <StyledLink to="/settings">
-              <BsGear />
+              <FolderShared />
               <Span>Settings</Span>
             </StyledLink>
           </Section>

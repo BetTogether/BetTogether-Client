@@ -8,7 +8,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { theme } from "./utils/theme";
 import App from "./App";
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box; 
     }
@@ -41,7 +41,6 @@ const GlobalStyle = createGlobalStyle`
       margin: 0;
     }
 
-    /* Firefox */
     input[type=number] {
       -moz-appearance: textfield;
     }

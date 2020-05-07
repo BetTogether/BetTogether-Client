@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import UniswapLogo from "assets/images/uniswap.svg";
+import UniswapLogo from "assets/uniswap.svg";
 import {
   Wrapper,
   Container,

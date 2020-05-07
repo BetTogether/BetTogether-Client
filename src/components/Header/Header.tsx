@@ -13,10 +13,9 @@ import {
   ConnectionButton,
   Address,
 } from "./Header.style";
-import { IconContext } from "react-icons";
-import { AiFillGithub } from "react-icons/ai";
 import { LayoutContext } from "store/Context";
 import { ShortenAddress } from "utils/ShortenAddress";
+import { ReactComponent as Github } from "assets/github.svg";
 
 const Header = () => {
   const context = useWeb3Context();
@@ -46,9 +45,7 @@ const Header = () => {
             target="_blank"
             rel="noreferrer noopener"
           >
-            <IconContext.Provider value={{ size: "2.5rem" }}>
-              <AiFillGithub />
-            </IconContext.Provider>
+            <Github />
           </GitHubLink>
 
           {active && !error ? (
