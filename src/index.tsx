@@ -7,6 +7,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { theme } from "./utils/theme";
 import App from "./App";
+import * as serviceWorker from "./serviceWorker";
 
 export const GlobalStyle = createGlobalStyle`
     * {
@@ -70,3 +71,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+serviceWorker.register();

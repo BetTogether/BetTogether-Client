@@ -1,4 +1,8 @@
-import { TOGGLE_SIGN_IN_MODAL, TOGGLE_TRADE_MODAL } from "./Constants";
+import {
+  TOGGLE_SIGN_IN_MODAL,
+  TOGGLE_TRADE_MODAL,
+  TOGGLE_EMAIL_MODAL,
+} from "./Constants";
 
 export const toggleSignInModal = (value: boolean) => {
   return {
@@ -10,6 +14,13 @@ export const toggleSignInModal = (value: boolean) => {
 export const toggleTradeModal = (value: any) => {
   return {
     type: TOGGLE_TRADE_MODAL,
+    value,
+  };
+};
+
+export const toggleEmailModal = (value: any) => {
+  return {
+    type: TOGGLE_EMAIL_MODAL,
     value,
   };
 };

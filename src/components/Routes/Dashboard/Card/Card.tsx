@@ -23,6 +23,7 @@ import {
   Button,
   Input,
 } from "./Card.style";
+import { v4 as uuidv4 } from "uuid";
 
 const Card = ({ marketContractName, owner }: any) => {
   // const [usingDai, setUsingDai] = useState(true);
@@ -183,7 +184,7 @@ const Card = ({ marketContractName, owner }: any) => {
           <Options>
             {OptionsList.map((Opt: any) => (
               <Option
-                key={Opt}
+                key={uuidv4()}
                 isActive={isActive}
                 onClick={() => setIsActive(!isActive)}
               >

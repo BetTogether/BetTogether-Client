@@ -5,6 +5,7 @@ import { LayoutReducer } from "./Reducers";
 export const initialState: InitialStateType = {
   signInModalIsOpen: false,
   tradeModalIsOpen: false,
+  emailModalIsOpen: false,
 };
 
 export const LayoutContext = createContext<{

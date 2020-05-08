@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "3box": "^1.18.1",
     "@apollo/react-hooks": "^3.1.5",
     "@portis/web3": "^2.0.0-beta.55",
     "@rimble/connection-banner": "^1.2.3",
@@ -19,6 +20,7 @@
     "react-scripts": "3.4.1",
     "rimble-ui": "^0.14.0",
     "styled-components": "^5.1.0",
+    "uuid": "^8.0.0",
     "web3": "^1.2.7",
     "web3-react": "^5.0.5"
   },

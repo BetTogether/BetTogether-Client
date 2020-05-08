@@ -1,4 +1,8 @@
-import { TOGGLE_SIGN_IN_MODAL, TOGGLE_TRADE_MODAL } from "./Constants";
+import {
+  TOGGLE_SIGN_IN_MODAL,
+  TOGGLE_TRADE_MODAL,
+  TOGGLE_EMAIL_MODAL,
+} from "./Constants";
 import { InitialStateType } from "./Types";
 
 export function LayoutReducer(state: InitialStateType, action: any) {
@@ -13,6 +17,13 @@ export function LayoutReducer(state: InitialStateType, action: any) {
       return {
         ...state,
         tradeModalIsOpen: action.payload,
+      };
+    }
+
+    case TOGGLE_EMAIL_MODAL: {
+      return {
+        ...state,
+        emailModalIsOpen: action.payload,
       };
     }
 
