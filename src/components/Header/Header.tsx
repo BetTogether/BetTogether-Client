@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useWeb3Context } from "web3-react";
 import MenuIcon from "./MenuIcon";
@@ -12,16 +12,33 @@ import {
   ExpandButton,
   ConnectionButton,
   Address,
+  Image,
+  ImageButton,
 } from "./Header.style";
 import { LayoutContext } from "store/Context";
 import { ShortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
+const Box = require("3box");
 
 const Header = () => {
   const context = useWeb3Context();
   const { active, error, account, networkId } = context;
   const { state, dispatch } = useContext(LayoutContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [imageLink, setImageLink] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      if (active) {
+        const profile = await Box.getProfile(account);
+        if (profile.image) {
+          let imageLink = profile.image[0]["contentUrl"]["/"];
+          let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;
+          setImageLink(newLink);
+        }
+      }
+    })();
+  }, [active]);
 
   const SignIn = () => {
     dispatch({
@@ -51,9 +68,24 @@ const Header = () => {
           {active && !error ? (
             <>
               {account !== (undefined && null) && (
-                <ConnectionButton onClick={() => context.unsetConnector()}>
-                  <Address>{ShortenAddress(account)}</Address>
-                </ConnectionButton>
+                <>
+                  {imageLink ? (
+                    <ImageButton onClick={() => context.unsetConnector()}>
+                      <Image src={imageLink} alt="3Box profile picture" />
+                    </ImageButton>
+                  ) : (
+                    <ImageButton onClick={() => context.unsetConnector()}>
+                      <Image
+                        src="https://www.sackettwaconia.com/wp-content/uploads/default-profile.png"
+                        alt="default profile picture"
+                      />
+                    </ImageButton>
+                  )}
+
+                  <ConnectionButton onClick={() => context.unsetConnector()}>
+                    <Address>{ShortenAddress(account)}</Address>
+                  </ConnectionButton>
+                </>
               )}
             </>
           ) : (

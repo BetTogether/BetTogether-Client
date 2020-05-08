@@ -80,3 +80,23 @@ export const ConnectionButton = styled.button`
 export const Address = styled.span`
   font-weight: 500;
 `;
+
+export const ImageButton = styled.button`
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
+export const Image = styled.img`
+  display: inline-block;
+  border: 0.2rem solid ${(props) => props.theme.palette3.white};
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+`;
