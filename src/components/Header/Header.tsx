@@ -74,17 +74,10 @@ const Header = () => {
                       <Image src={imageLink} alt="3Box profile picture" />
                     </ImageButton>
                   ) : (
-                    <ImageButton onClick={() => context.unsetConnector()}>
-                      <Image
-                        src="https://www.sackettwaconia.com/wp-content/uploads/default-profile.png"
-                        alt="default profile picture"
-                      />
-                    </ImageButton>
+                    <ConnectionButton onClick={() => context.unsetConnector()}>
+                      <Address>{ShortenAddress(account)}</Address>
+                    </ConnectionButton>
                   )}
-
-                  <ConnectionButton onClick={() => context.unsetConnector()}>
-                    <Address>{ShortenAddress(account)}</Address>
-                  </ConnectionButton>
                 </>
               )}
             </>
