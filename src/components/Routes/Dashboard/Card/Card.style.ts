@@ -161,11 +161,9 @@ export const Form = styled.form`
   width: 100%;
   padding: 1.25rem 1.25rem 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media (max-width: 800px) {
-    flex-direction: column;
-  }
 `;
 
 export const Button = styled.button`

@@ -15,12 +15,13 @@ import { ethers } from "ethers";
 import BTMarketContract from "contracts/BTMarket.json";
 import { Dai } from "@rimble/icons";
 import { Tooltip } from "rimble-ui";
-
-const Box = require("3box");
+import { DaiABI } from "contracts/DaiABI";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
   const [instance, setInstance] = useState("");
+  const [daiContractInstance, setDaiContractInstance] = useState("");
+  const DaiAddressKovan = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -33,25 +34,25 @@ const Dashboard = () => {
   //     .filter((contractName) => contractName !== "MarketFactory")
   //     .reverse();
 
-  const Example = {
-    market: "market 02314", //the last 5 digits of the contract address, acting as an ID
-    owner: "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707",
-  };
-
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
       (window as any).web3.currentProvider
     );
     const wallet = provider.getSigner();
-
     const contractAddress = "0xBECFc6F472798FD59020Eec49Df0F4799b4e0f2A";
-
     const instance: any = new ethers.Contract(
       contractAddress,
       BTMarketContract.abi,
       wallet
     );
     setInstance(instance);
+
+    const DaiInstance: any = new ethers.Contract(
+      DaiAddressKovan,
+      DaiABI,
+      wallet
+    );
+    setDaiContractInstance(DaiInstance);
   }, []);
 
   return (
@@ -80,7 +81,11 @@ const Dashboard = () => {
                 owner={owner}
               />
             ))} */}
-          <Card key={1} marketContract={instance} />
+          <Card
+            key={1}
+            daiContract={daiContractInstance}
+            marketContract={instance}
+          />
           {/* <Card
             key={1}
             marketContractName={Example.market}

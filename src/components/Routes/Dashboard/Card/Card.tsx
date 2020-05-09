@@ -24,7 +24,8 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import Chart from "./Chart";
 
-const Card = ({ marketContract }: any) => {
+const Card = ({ marketContract, daiContract }: any) => {
+  console.log("daiContract:", daiContract);
   // const [usingDai, setUsingDai] = useState(true);
   const [marketsDaiBalance] = useState(0);
   const [amountToBet, setAmountToBet] = useState(0);
@@ -32,8 +33,8 @@ const Card = ({ marketContract }: any) => {
   // const [accrued, setAccrued] = useState(0);
   const [AAVEToken] = useState(0);
   const [gross] = useState(3);
-  // const [state, setState] = useState(null);
-  // const LotteryStates = ["OPEN", "COMMITTING", "REWARDING"];
+  const [state, setState] = useState(null);
+  const LotteryStates = ["OPEN", "COMMITTING", "REWARDING"];
   // const [winnings, setWinnings] = useState(null);
   const [accountBalance] = useState(0);
   const activeAccount = "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707";
@@ -51,12 +52,11 @@ const Card = ({ marketContract }: any) => {
     })();
   }, [marketContract]);
 
-  const handleDaiEnable = async (e: any) => {
-    // await daiContract.methods
-    //   .approve(marketPotContract.address, balance)
-    //   .send({
-    //     from: activeAccount,
-    //   });
+  const enableDai = async (e: any) => {
+    const val = e.target.checked;
+    let balance = await daiContract.balanceOf(activeAccount);
+    if (!val) balance = 0;
+    await daiContract.approve(marketContract.address, balance);
   };
 
   const submitFunds = async (e: any) => {
@@ -185,7 +185,7 @@ const Card = ({ marketContract }: any) => {
           </Item>
           <Item>
             <>
-              <DaiInput type="checkbox" id="check" onChange={handleDaiEnable} />
+              <DaiInput type="checkbox" id="check" onChange={enableDai} />
               <DaiLabel htmlFor="check" isChecked={approve}>
                 <DaiChildLabel isChecked={approve} />
               </DaiLabel>
@@ -210,7 +210,8 @@ const Card = ({ marketContract }: any) => {
           />
           <Button disabled={amountToBet <= 0}>Enter</Button>
         </Form>
-        {checkOwner() && (
+
+        {/* {checkOwner() && (
           <>
             <h1>TEST BUTTONS BELOW...</h1>
             <OwnerButtons>
@@ -222,7 +223,7 @@ const Card = ({ marketContract }: any) => {
               </OwnerButton>
             </OwnerButtons>
           </>
-        )}
+        )} */}
       </MarketContent>
     </Content>
   );
