@@ -47,7 +47,7 @@ const EmailModal = ({ isOpen }: IEmailModalProps) => {
             <FormWrapper>
               <Form onSubmit={handleSubmit}>
                 <Input
-                  type="string"
+                  type="email"
                   required
                   placeholder="joe@gmail.com"
                   value={newEmail}

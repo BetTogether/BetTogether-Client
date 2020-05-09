@@ -28,3 +28,11 @@ export const Title = styled.h3`
   font-weight: 500;
   color: ${(props) => props.theme.palette3.black};
 `;
+
+export const Image = styled.img`
+  display: inline-block;
+  border: 0.5rem solid ${(props) => props.theme.palette3.white};
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+`;

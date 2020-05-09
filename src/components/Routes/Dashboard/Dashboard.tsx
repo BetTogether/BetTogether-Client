@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Content,
   Top,
@@ -11,6 +11,8 @@ import {
 import Container from "components/Routes/RoutesContainer";
 import { LayoutContext } from "store/Context";
 import Card from "./Card";
+import { ethers } from "ethers";
+import BTMarketContract from "contracts/BTMarket.json";
 import { Dai } from "@rimble/icons";
 import { Tooltip } from "rimble-ui";
 
@@ -18,6 +20,7 @@ const Box = require("3box");
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
+  const [instance, setInstance] = useState("");
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -34,6 +37,22 @@ const Dashboard = () => {
     market: "market 02314", //the last 5 digits of the contract address, acting as an ID
     owner: "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707",
   };
+
+  useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).web3.currentProvider
+    );
+    const wallet = provider.getSigner();
+
+    const contractAddress = "0xBECFc6F472798FD59020Eec49Df0F4799b4e0f2A";
+
+    const instance: any = new ethers.Contract(
+      contractAddress,
+      BTMarketContract.abi,
+      wallet
+    );
+    setInstance(instance);
+  }, []);
 
   return (
     <Container>
@@ -61,11 +80,12 @@ const Dashboard = () => {
                 owner={owner}
               />
             ))} */}
-          <Card
+          <Card key={1} marketContract={instance} />
+          {/* <Card
             key={1}
             marketContractName={Example.market}
             owner={Example.owner}
-          />
+          /> */}
 
           <Button onClick={() => console.log("createPot()")}>
             Create New Contract

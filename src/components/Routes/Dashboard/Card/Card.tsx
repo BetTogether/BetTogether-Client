@@ -15,20 +15,19 @@ import {
   DaiInput,
   OwnerButton,
   OwnerButtons,
-  Options,
   Option,
-  OptionSpan,
-  OptionsPurchaseWrapper,
+  Select,
   Form,
   Button,
   Input,
 } from "./Card.style";
 import { v4 as uuidv4 } from "uuid";
+import Chart from "./Chart";
 
-const Card = ({ marketContractName, owner }: any) => {
+const Card = ({ marketContract }: any) => {
   // const [usingDai, setUsingDai] = useState(true);
   const [marketsDaiBalance] = useState(0);
-  const [amountToSave, setAmountToSave] = useState(0);
+  const [amountToBet, setAmountToBet] = useState(0);
   const [approve] = useState(false);
   // const [accrued, setAccrued] = useState(0);
   const [AAVEToken] = useState(0);
@@ -38,7 +37,19 @@ const Card = ({ marketContractName, owner }: any) => {
   // const [winnings, setWinnings] = useState(null);
   const [accountBalance] = useState(0);
   const activeAccount = "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707";
-  const [isActive, setIsActive] = useState(false);
+  const [prompt, setPrompt] = useState("");
+  const [owner, setOwner] = useState("");
+  const [choice, setChoice] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      if (marketContract) {
+        console.log("marketContract:", marketContract);
+        const owner = await marketContract.owner();
+        console.log("owner:", owner);
+      }
+    })();
+  }, [marketContract]);
 
   const handleDaiEnable = async (e: any) => {
     // await daiContract.methods
@@ -50,6 +61,8 @@ const Card = ({ marketContractName, owner }: any) => {
 
   const submitFunds = async (e: any) => {
     e.preventDefault();
+    console.log(choice);
+    console.log(amountToBet);
   };
 
   const checkOwner = () => {
@@ -127,7 +140,7 @@ const Card = ({ marketContractName, owner }: any) => {
   return (
     <Content>
       <Header>
-        <ID>{marketContractName}</ID>
+        {/* <ID>{marketContractName}</ID> */}
         <span>{"Open"}</span>
         <span>{"10:23:22"}</span>
       </Header>
@@ -135,6 +148,7 @@ const Card = ({ marketContractName, owner }: any) => {
         What city will have the highest growth of GDP per capita by the end of
         2020?
       </Question>
+      <Chart />
       <MarketContent>
         <Section>
           <Item>
@@ -180,29 +194,22 @@ const Card = ({ marketContractName, owner }: any) => {
           </Item>
         </Section>
 
-        <OptionsPurchaseWrapper>
-          <Options>
+        <Form onSubmit={submitFunds}>
+          <Select value={choice} onChange={(e) => setChoice(e.target.value)}>
             {OptionsList.map((Opt: any) => (
-              <Option
-                key={uuidv4()}
-                isActive={isActive}
-                onClick={() => setIsActive(!isActive)}
-              >
-                {Opt.optionName}
-                <OptionSpan>{Opt.percentage}%</OptionSpan>
+              <Option key={uuidv4()} value={Opt.optionName}>
+                {Opt.optionName} - {Opt.percentage}%
               </Option>
             ))}
-          </Options>
+          </Select>
 
-          <Form onSubmit={submitFunds}>
-            <Button disabled={amountToSave <= 0}>Enter</Button>
-            <Input
-              type="number"
-              placeholder="€0"
-              onChange={(e: any) => setAmountToSave(e.target.value)}
-            ></Input>
-          </Form>
-        </OptionsPurchaseWrapper>
+          <Input
+            type="number"
+            placeholder="0"
+            onChange={(e: any) => setAmountToBet(e.target.value)}
+          />
+          <Button disabled={amountToBet <= 0}>Enter</Button>
+        </Form>
         {checkOwner() && (
           <>
             <h1>TEST BUTTONS BELOW...</h1>

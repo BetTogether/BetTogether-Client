@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Content, Border, Top, Title } from "./Settings.style";
+import { Content, Border, Top, Title, Image } from "./Settings.style";
 import Container from "components/Routes/RoutesContainer";
 import { useWeb3Context } from "web3-react";
-import styled from "styled-components";
 const Box = require("3box");
 
 const Settings = () => {
@@ -41,26 +40,6 @@ const Settings = () => {
     await (box as any).private.set("email", newEmail);
   };
 
-  const ImageWrapper = styled.button`
-    background-color: Transparent;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-    overflow: hidden;
-    &:focus {
-      outline: none;
-      box-shadow: none;
-    }
-  `;
-
-  const Image = styled.img`
-    display: inline-block;
-    border: 0.5rem solid ${(props) => props.theme.palette3.white};
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-  `;
-
   return (
     <Container>
       <Content>
@@ -68,18 +47,14 @@ const Settings = () => {
           <Top>
             <Title>Settings</Title>
           </Top>
-          {imageLink && (
-            <ImageWrapper>
-              <Image src={imageLink} alt="profile picture" />
-            </ImageWrapper>
-          )}
+          {imageLink && <Image src={imageLink} alt="profile picture" />}
 
           <h1>{name}</h1>
           <h1>{email}</h1>
           {box && (
             <form onSubmit={handeSubmit}>
               <input
-                type="string"
+                type="email"
                 value={newEmail}
                 placeholder={"email"}
                 onChange={(e: any) => setNewEmail(e.target.value)}

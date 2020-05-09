@@ -133,54 +133,38 @@ export const OwnerButton = styled.button`
   }
 `;
 
-export const OptionsPurchaseWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  @media (min-width: 800px) {
-    flex-direction: row;
-  }
-`;
-
-export const Options = styled.div`
+export const Select = styled.select`
   width: 50%;
+  height: 3rem;
+  background: ${(props) => props.theme.palette3.white};
+  color: ${(props) => props.theme.palette3.black};
+  padding-left: 0.5rem;
+  font-size: 1rem;
+  border: none;
+  outline: none;
   @media (max-width: 800px) {
     width: 100%;
   }
 `;
 
-export const Option = styled.div<{ isActive?: boolean }>`
-  background-color: ${(props) =>
-    props.isActive ? props.theme.palette3.red : props.theme.palette3.white};
-  border: 2px solid
-    ${(props) =>
-      props.isActive ? props.theme.palette3.red : props.theme.palette3.white};
-  color: ${(props) =>
-    props.isActive ? props.theme.palette3.white : props.theme.palette3.black};
-  border-radius: 0.5rem;
+export const Option = styled.option`
+  color: ${(props) => props.theme.palette3.black};
+  background: ${(props) => props.theme.palette3.white};
+  display: flex;
+  min-height: 2rem;
+  padding: 0px 2px 1px;
   box-shadow: rgba(0, 0, 0, 0.05) 0 0.33rem 1rem;
   cursor: pointer;
-  margin: 0.33rem 0;
-  padding: 0.67rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  &:hover {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
-  }
-`;
-
-export const OptionSpan = styled.span`
-  font-size: 1.5rem;
 `;
 
 export const Form = styled.form`
-  width: 50%;
+  width: 100%;
   padding: 1.25rem 1.25rem 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
   @media (max-width: 800px) {
-    width: 100%;
+    flex-direction: column;
   }
 `;
 
