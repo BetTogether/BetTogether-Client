@@ -83,7 +83,7 @@ const Uniswap = () => {
               required
               value={amountToExchange}
               onChange={handleChange}
-              onKeyDown={(e) =>
+              onKeyDown={(e: any) =>
                 (e.key === "e" && e.preventDefault()) ||
                 (e.key === "+" && e.preventDefault()) ||
                 (e.key === "-" && e.preventDefault())

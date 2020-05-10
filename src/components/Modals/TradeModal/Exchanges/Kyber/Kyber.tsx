@@ -31,7 +31,6 @@ const Kyber = () => {
     provider
   );
 
-  console.log("KyberNetworkProxyInstance:", KyberNetworkProxyInstance);
   useEffect(() => {
     if (context.active) {
       setActiveAccount(context.account);
@@ -43,10 +42,7 @@ const Kyber = () => {
       let amount = e.currentTarget.value;
       let convert = parseFloat(amount);
       setAmountEthToExchange(convert);
-      const ETH_QTY_WEI = await ethers.utils.formatUnits(
-        convert.toString(),
-        18
-      );
+      const ETH_QTY_WEI = ethers.utils.formatUnits(convert.toString(), 18);
       let rate = await KyberNetworkProxyInstance.methods
         .getExpectedRate(ETH_ADDRESS, DAI_ADDRESS, ETH_QTY_WEI)
         .call();
@@ -98,8 +94,8 @@ const Kyber = () => {
               type="number"
               required
               value={amountEthToExchange}
-              onChange={(e) => handleChange(e)}
-              onKeyDown={(e) =>
+              onChange={(e: any) => handleChange(e)}
+              onKeyDown={(e: any) =>
                 (e.key === "e" && e.preventDefault()) ||
                 (e.key === "+" && e.preventDefault()) ||
                 (e.key === "-" && e.preventDefault())

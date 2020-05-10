@@ -19,13 +19,9 @@
     <img src="https://github.com/coletiv/react-js-github-actions-example/workflows/Continuous%20Integration/badge.svg" alt="GitHub CI badge">
   </a>
 
-  <a>
-    <img src="https://github.com/coletiv/react-js-github-actions-example/workflows/Continuous%20Deployment/badge.svg" alt="GitHub CD badge">
-  </a>
-
 </p>
 
-## [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
+# [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
 
 ## Description
 

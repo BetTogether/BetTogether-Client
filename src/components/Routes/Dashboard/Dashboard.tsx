@@ -120,7 +120,6 @@ const Dashboard = () => {
             marketContractName={Example.market}
             owner={Example.owner}
           /> */}
-
           <Button onClick={() => createPot(factoryContractInstance)}>
             Create New Contract
           </Button>
