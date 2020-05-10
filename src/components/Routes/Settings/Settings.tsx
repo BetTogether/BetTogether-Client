@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Content, Border, Top, Title, Image } from "./Settings.style";
 import Container from "components/Routes/RoutesContainer";
 import { useWeb3Context } from "web3-react";
-const Box = require("3box");
+import { Loader } from "rimble-ui";
+import Box from "3box";
 
 const Settings = () => {
   const context = useWeb3Context();
@@ -12,28 +13,26 @@ const Settings = () => {
   const [email, setEmail] = useState("");
   const [box, setBox] = useState("");
   const [newEmail, setNewEmail] = useState("");
-  const [imageLink, setImageLink] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
+      let mounted = true;
       if (active) {
-        const profile = await Box.getProfile(account);
-        setName(profile.name);
-
-        if (profile.image) {
-          let imageLink = profile.image[0]["contentUrl"]["/"];
-          let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;
-          setImageLink(newLink);
-          const boxProvider = await Box.get3idConnectProvider();
-          const box = await Box.openBox(account, boxProvider);
-          setBox(box);
-          await box.syncDone;
-          const email = await (box as any).private.get("email");
-          setEmail(email);
-        }
+        // if (mounted) {
+        //   const profile = await Box.getProfile(account);
+        //   setName(profile.name);
+        //   const boxProvider = await Box.get3idConnectProvider();
+        //   const box = await Box.openBox(account, boxProvider);
+        //   setBox(box);
+        //   await box.syncDone;
+        //   const email = await (box as any).private.get("email");
+        //   setEmail(email);
+        // }
       }
+      return () => (mounted = false);
     })();
-  }, [active]);
+  }, [active, account]);
 
   const handeSubmit = async (e: any) => {
     e.preventDefault();
@@ -47,20 +46,25 @@ const Settings = () => {
           <Top>
             <Title>Settings</Title>
           </Top>
-          {imageLink && <Image src={imageLink} alt="profile picture" />}
-
-          <h1>{name}</h1>
-          <h1>{email}</h1>
-          {box && (
-            <form onSubmit={handeSubmit}>
-              <input
-                type="email"
-                value={newEmail}
-                placeholder={"email"}
-                onChange={(e: any) => setNewEmail(e.target.value)}
-              />
-              <button>Change email</button>
-            </form>
+          {active && (
+            <>
+              <h3>{name}</h3>
+              <h3>{account}</h3>
+              <h3>{email}</h3>
+              {box ? (
+                <form onSubmit={handeSubmit}>
+                  <input
+                    type="email"
+                    value={newEmail}
+                    placeholder={"email"}
+                    onChange={(e: any) => setNewEmail(e.target.value)}
+                  />
+                  <button>Change email</button>
+                </form>
+              ) : (
+                <Loader />
+              )}
+            </>
           )}
         </Border>
       </Content>

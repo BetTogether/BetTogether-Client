@@ -18,7 +18,7 @@ import {
 import { LayoutContext } from "store/Context";
 import { ShortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
-const Box = require("3box");
+import Box from "3box";
 
 const Header = () => {
   const context = useWeb3Context();
@@ -38,7 +38,7 @@ const Header = () => {
         }
       }
     })();
-  }, [active]);
+  }, [active, account]);
 
   const SignIn = () => {
     dispatch({

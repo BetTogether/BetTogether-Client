@@ -136,11 +136,13 @@ export const OwnerButton = styled.button`
 export const Select = styled.select`
   width: 50%;
   height: 3rem;
+  border-radius: 1rem;
+  white-space: normal;
   background: ${(props) => props.theme.palette3.white};
   color: ${(props) => props.theme.palette3.black};
   padding-left: 0.5rem;
   font-size: 1rem;
-  border: none;
+  border: 1px solid ${(props) => props.theme.palette3.red};
   outline: none;
   @media (max-width: 800px) {
     width: 100%;

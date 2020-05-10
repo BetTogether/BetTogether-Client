@@ -31,7 +31,6 @@ const Kyber = () => {
     provider
   );
 
-  console.log("KyberNetworkProxyInstance:", KyberNetworkProxyInstance);
   useEffect(() => {
     if (context.active) {
       setActiveAccount(context.account);

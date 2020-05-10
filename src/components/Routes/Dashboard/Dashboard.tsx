@@ -92,7 +92,7 @@ const Dashboard = () => {
             owner={Example.owner}
           /> */}
 
-          <Button onClick={() => console.log("createPot()")}>
+          <Button onClick={() => console.log("createmarket()")}>
             Create New Contract
           </Button>
           <GetDaiButton onClick={() => getDai()}>

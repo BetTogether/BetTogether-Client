@@ -11,12 +11,12 @@ import {
   ProviderTitle,
   ProviderDescription,
 } from "./SignInModal.style";
-import Spinner from "./Spinner";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
 import { LayoutContext } from "store/Context";
 import { useWeb3Context } from "web3-react";
 import portisLogo from "assets/portis.svg";
 import metamaskLogo from "assets/metamask.svg";
+import { Loader } from "rimble-ui";
 
 interface ISignInModalProps {
   isOpen: boolean;
@@ -66,7 +66,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     <Wrapper isOpen={isOpen}>
       <Modal>
         {loading ? (
-          <Spinner />
+          <Loader />
         ) : (
           <>
             <IconButton onClick={() => toggleModal()}>
