@@ -53,6 +53,7 @@ export const Button = styled.button`
   text-decoration: none;
   display: inline-block;
   font-size: 1rem;
+  cursor: pointer;
   &:hover {
     background-color: ${(props) => props.theme.palette3.red};
   }

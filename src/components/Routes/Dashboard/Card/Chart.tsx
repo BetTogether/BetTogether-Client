@@ -6,15 +6,24 @@ const Wrapper = styled.div`
   margin: 3rem;
 `;
 
-const Apex = () => {
+interface outcome {
+  name: string;
+  percentage: number;
+}
+
+interface IApex {
+  outcomes: outcome[];
+}
+
+const Apex = ({ outcomes }: IApex) => {
   const [series] = useState([
     {
-      name: "London England",
-      data: [28, 29, 33, 36],
+      name: "Donald Trump",
+      data: [68, 45, 61, 36],
     },
     {
-      name: "Dublin, Ireland",
-      data: [12, 11, 14, 18],
+      name: "Joe Biden",
+      data: [32, 55, 39, 80],
     },
   ]);
 
@@ -34,7 +43,7 @@ const Apex = () => {
         show: false,
       },
     },
-    colors: ["#77B6EA", "#545454"],
+    colors: ["#FF0000", "#0015BC"],
     dataLabels: {
       enabled: true,
     },

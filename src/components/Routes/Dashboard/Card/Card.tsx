@@ -3,66 +3,100 @@ import CountUp from "react-countup";
 import {
   Content,
   Header,
-  ID,
-  Question,
-  MarketContent,
-  Section,
+  Prompt,
+  GraphFormWrapper,
+  ChartWrapper,
+  MarketDetails,
   Item,
   MarketAmount,
+  Form,
   ItemDescription,
-  DaiLabel,
-  DaiChildLabel,
-  DaiInput,
-  OwnerButton,
-  OwnerButtons,
   Option,
   Select,
-  Form,
   Button,
   Input,
+  OwnerButton,
+  OwnerButtons,
 } from "./Card.style";
 import { v4 as uuidv4 } from "uuid";
 import Chart from "./Chart";
+import { ShortenAddress } from "utils/ShortenAddress";
 
 const Card = ({ marketContract, daiContract }: any) => {
-  console.log("daiContract:", daiContract);
+  console.log("marketContract:", marketContract);
   // const [usingDai, setUsingDai] = useState(true);
   const [marketsDaiBalance] = useState(0);
   const [amountToBet, setAmountToBet] = useState(0);
-  const [approve] = useState(false);
+  const [approve, setApprove] = useState(false);
   // const [accrued, setAccrued] = useState(0);
   const [AAVEToken] = useState(0);
   const [gross] = useState(3);
-  const [state, setState] = useState(null);
-  const LotteryStates = ["OPEN", "COMMITTING", "REWARDING"];
-  // const [winnings, setWinnings] = useState(null);
+  const [state, setState] = useState("");
+  const MarketStates = ["OPEN", "COMMITTING", "REWARDING"];
   const [accountBalance] = useState(0);
   const activeAccount = "0x1d9999be880e7e516dEefdA00a3919BdDE9C1707";
   const [prompt, setPrompt] = useState("");
   const [owner, setOwner] = useState("");
   const [choice, setChoice] = useState("");
+  const [outcomes, setOutcomes] = useState<any>([]);
 
   useEffect(() => {
     (async () => {
       if (marketContract) {
-        console.log("marketContract:", marketContract);
+        let state = await marketContract.state();
+        setState(MarketStates[state]);
+        let prompt = await marketContract.eventName();
+        setPrompt(prompt);
         const owner = await marketContract.owner();
-        console.log("owner:", owner);
+        setOwner(owner);
+
+        // const totalBets = marketContract.totalBet()
+        const totalBets = 100;
+
+        const DT = await marketContract.eventOutcomes(0);
+        // const DTNumberOfBets = await marketContract.totalBetPerOutcome(0);
+        const DTNumberOfBets = 60;
+
+        const JB = await marketContract.eventOutcomes(1);
+        // const JBNumberOfBets = await marketContract.totalBetPerOutcome(1);
+        const JBNumberOfBets = 40;
+
+        setOutcomes([
+          ...outcomes,
+          { name: DT, percentage: DTNumberOfBets / totalBets },
+          { name: JB, percentage: JBNumberOfBets / totalBets },
+        ]);
+
+        // let numberOfOutcomes = (
+        //   await marketContract.numberOfOutcomes()
+        // ).toNumber();
+        // for (let i = 0; i < numberOfOutcomes; i++) {
+        //   let newOutcomeName = await marketContract.eventOutcomes(i);
+        //   console.log("newOutcomeName:", newOutcomeName);
+        //   setOutcomes([...outcomes, { name: newOutcomeName }]);
+        // }
       }
     })();
-  }, [marketContract]);
+    /* eslint-disable */
+  }, []);
 
-  const enableDai = async (e: any) => {
-    const val = e.target.checked;
+  const enableDai = async () => {
     let balance = await daiContract.balanceOf(activeAccount);
-    if (!val) balance = 0;
     await daiContract.approve(marketContract.address, balance);
   };
 
   const submitFunds = async (e: any) => {
     e.preventDefault();
-    console.log(choice);
-    console.log(amountToBet);
+
+    if (!approve) {
+      await enableDai();
+      setApprove(true);
+      console.log(choice);
+      console.log(amountToBet);
+    } else {
+      console.log(choice);
+      console.log(amountToBet);
+    }
   };
 
   const checkOwner = () => {
@@ -102,103 +136,57 @@ const Card = ({ marketContract, daiContract }: any) => {
     // }
   }, []);
 
-  const OptionsList = [
-    {
-      optionName: "Dublin, Ireland",
-      percentage: 26,
-    },
-    {
-      optionName: "New York, US",
-      percentage: 24,
-    },
-    {
-      optionName: "Tokyo, Japan",
-      percentage: 18,
-    },
-    {
-      optionName: "Paris, France",
-      percentage: 12,
-    },
-    {
-      optionName: "London, England",
-      percentage: 10,
-    },
-    {
-      optionName: "Shenzen, China",
-      percentage: 6,
-    },
-    {
-      optionName: "Berlin, Germany",
-      percentage: 3,
-    },
-    {
-      optionName: "Dhaka, Bangladesh",
-      percentage: 1,
-    },
-  ];
-
   return (
     <Content>
       <Header>
-        {/* <ID>{marketContractName}</ID> */}
-        <span>{"Open"}</span>
+        <span>{ShortenAddress(marketContract.address)}</span>
+        <span>{state ? state : "Nil"}</span>
         <span>{"10:23:22"}</span>
       </Header>
-      <Question>
-        What city will have the highest growth of GDP per capita by the end of
-        2020?
-      </Question>
-      <Chart />
-      <MarketContent>
-        <Section>
-          <Item>
-            <MarketAmount>
-              {`${marketsDaiBalance ? marketsDaiBalance : "0"}`} Dai
-            </MarketAmount>
-            <ItemDescription>Compounding Pot</ItemDescription>
-          </Item>
-          <Item>
-            <MarketAmount>{AAVEToken} Dai</MarketAmount>
-            <ItemDescription>In AAVE</ItemDescription>
-          </Item>
-          <Item>
-            <MarketAmount>Dublin, Ireland</MarketAmount>
-            <ItemDescription>Favorite</ItemDescription>
-          </Item>
-        </Section>
-        <Section>
-          <Item>
-            <MarketAmount>
-              <CountUp
-                start={0}
-                end={gross}
-                decimals={4}
-                preserveValue={true}
-              />{" "}
-              Dai
-            </MarketAmount>
-            <ItemDescription>Potential Winnings</ItemDescription>
-          </Item>
-          <Item>
-            <MarketAmount>{accountBalance} Dai</MarketAmount>
-            <ItemDescription>Your Balance</ItemDescription>
-          </Item>
-          <Item>
-            <>
-              <DaiInput type="checkbox" id="check" onChange={enableDai} />
-              <DaiLabel htmlFor="check" isChecked={approve}>
-                <DaiChildLabel isChecked={approve} />
-              </DaiLabel>
-            </>
-            <ItemDescription>Approve Dai</ItemDescription>
-          </Item>
-        </Section>
+      <Prompt>{prompt}</Prompt>
+
+      <MarketDetails>
+        <Item>
+          <ItemDescription>Potential Winnings (in Dai)</ItemDescription>
+          <MarketAmount>
+            <CountUp
+              start={0}
+              end={gross}
+              decimals={2}
+              preserveValue={true}
+              duration={5}
+            />
+          </MarketAmount>
+        </Item>
+        <Item>
+          <ItemDescription>Your Balance</ItemDescription>
+          <MarketAmount>{accountBalance}</MarketAmount>
+        </Item>
+        <Item>
+          <ItemDescription>Compounding Pot</ItemDescription>
+          <MarketAmount>
+            {`${marketsDaiBalance ? marketsDaiBalance : "0"}`}
+          </MarketAmount>
+        </Item>
+        <Item>
+          <ItemDescription>In AAVE</ItemDescription>
+          <MarketAmount>{AAVEToken}</MarketAmount>
+        </Item>
+      </MarketDetails>
+
+      <GraphFormWrapper>
+        <ChartWrapper>
+          <Chart outcomes={outcomes} />
+        </ChartWrapper>
 
         <Form onSubmit={submitFunds}>
-          <Select value={choice} onChange={(e) => setChoice(e.target.value)}>
-            {OptionsList.map((Opt: any) => (
-              <Option key={uuidv4()} value={Opt.optionName}>
-                {Opt.optionName} - {Opt.percentage}%
+          <Select
+            value={choice}
+            onChange={(e: any) => setChoice(e.target.value)}
+          >
+            {outcomes.map((outcome: any) => (
+              <Option key={uuidv4()} value={outcome.name}>
+                {outcome.name} - {outcome.percentage * 100}%
               </Option>
             ))}
           </Select>
@@ -210,21 +198,21 @@ const Card = ({ marketContract, daiContract }: any) => {
           />
           <Button disabled={amountToBet <= 0}>Enter</Button>
         </Form>
+      </GraphFormWrapper>
 
-        {/* {checkOwner() && (
-          <>
-            <h1>TEST BUTTONS BELOW...</h1>
-            <OwnerButtons>
-              <OwnerButton onClick={() => incrementState()}>
-                Increment State
-              </OwnerButton>
-              <OwnerButton onClick={() => disable()}>
-                Disable Contract
-              </OwnerButton>
-            </OwnerButtons>
-          </>
-        )} */}
-      </MarketContent>
+      {checkOwner() && (
+        <>
+          <h1>TEST BUTTONS...</h1>
+          <OwnerButtons>
+            <OwnerButton onClick={() => incrementState()}>
+              Increment State
+            </OwnerButton>
+            <OwnerButton onClick={() => disable()}>
+              Disable Contract
+            </OwnerButton>
+          </OwnerButtons>
+        </>
+      )}
     </Content>
   );
 };

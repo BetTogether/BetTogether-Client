@@ -17,24 +17,15 @@ import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
 import { Dai } from "@rimble/icons";
 import { Tooltip } from "rimble-ui";
 import { DaiABI } from "contracts/DaiABI";
-
-import addresses, { KOVAN_ID } from "contracts/addresses"
-
-// market details DUMMY/TESTING DATA ONLY, NOT FOR MAINNET
-const marketOpeningTime = 0;
-const marketResolutionTime = 0;
-const arbitrator = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0"; 
-const eventName = "US 2020 General Election";
-const numberOfOutcomes = 2;
-const timeout = 10; 
+import addresses, { KOVAN_ID } from "contracts/addresses";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
-  const [instance, setInstance] = useState("");
   const [daiContractInstance, setDaiContractInstance] = useState("");
-  const [factoryContractInstance, setFactoryContractInstance] = useState("");
+  const [factoryContractInstance, setFactoryContractInstance] = useState(null);
   const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
   const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
+  const [marketInstance, setMarketInstance] = useState(null);
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -52,13 +43,13 @@ const Dashboard = () => {
       (window as any).web3.currentProvider
     );
     const wallet = provider.getSigner();
-    const contractAddress = "0xBECFc6F472798FD59020Eec49Df0F4799b4e0f2A";
-    const instance: any = new ethers.Contract(
-      contractAddress,
-      BTMarketContract.abi,
-      wallet
-    );
-    setInstance(instance);
+    // const contractAddress = "0xBECFc6F472798FD59020Eec49Df0F4799b4e0f2A";
+    // const instance: any = new ethers.Contract(
+    //   contractAddress,
+    //   BTMarketContract.abi,
+    //   wallet
+    // );
+    // setInstance(instance);
 
     const DaiInstance: any = new ethers.Contract(
       DaiAddressKovan,
@@ -66,23 +57,58 @@ const Dashboard = () => {
       wallet
     );
     setDaiContractInstance(DaiInstance);
-  
+
     const FactoryInstance: any = new ethers.Contract(
       marketFactoryAddressKovan,
       BTMarketFactoryContract.abi,
       wallet
     );
     setFactoryContractInstance(FactoryInstance);
-  }, []);
+  }, [DaiAddressKovan, marketFactoryAddressKovan]);
 
-  const createPot = (factory: any) => factory.createMarket(
-    marketOpeningTime,
-    marketResolutionTime,
-    arbitrator,
-    eventName,
-    numberOfOutcomes,
-    timeout
-  );
+  useEffect(() => {
+    (async () => {
+      if (factoryContractInstance) {
+        const provider = new ethers.providers.Web3Provider(
+          (window as any).web3.currentProvider
+        );
+        const wallet = provider.getSigner();
+
+        let deployedMarkets = await (factoryContractInstance as any).getMarkets();
+        let deployedMarketsLength = deployedMarkets.length;
+        let mostRecentlyDeployedAddress =
+          deployedMarkets[deployedMarketsLength - 1];
+
+        const instance: any = new ethers.Contract(
+          mostRecentlyDeployedAddress,
+          BTMarketContract.abi,
+          wallet
+        );
+        setMarketInstance(instance);
+      }
+    })();
+  }, [factoryContractInstance]);
+
+  const createMarket = async (factory: any) => {
+    console.log(factoryContractInstance);
+    const DUMMY_MARKET_OPENING_TIME = 0;
+    const DUMMY_MARKET_RESOLUTION_TIME = 0;
+    const DUMMY_ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
+    const DUMMY_EVENT_NAME = "Who will win the 2020 US General Election?";
+    const DUMMY_NUMBER_OF_OUTCOMES = 2;
+    const DUMMY_TIMEOUT = 10;
+
+    let contractInstance = await factory.createMarket(
+      DUMMY_MARKET_OPENING_TIME,
+      DUMMY_MARKET_RESOLUTION_TIME,
+      DUMMY_ARBITRATOR,
+      DUMMY_EVENT_NAME,
+      DUMMY_NUMBER_OF_OUTCOMES,
+      DUMMY_TIMEOUT
+    );
+
+    setMarketInstance(contractInstance);
+  };
 
   return (
     <Container>
@@ -110,23 +136,21 @@ const Dashboard = () => {
                 owner={owner}
               />
             ))} */}
-          <Card
-            key={1}
-            daiContract={daiContractInstance}
-            marketContract={instance}
-          />
-          {/* <Card
-            key={1}
-            marketContractName={Example.market}
-            owner={Example.owner}
-          /> */}
-          <Button onClick={() => createPot(factoryContractInstance)}>
-            Create New Contract
-          </Button>
+
+          {marketInstance ? (
+            <Card
+              key={1}
+              daiContract={daiContractInstance}
+              marketContract={marketInstance}
+            />
+          ) : (
+            <Button onClick={() => createMarket(factoryContractInstance)}>
+              Create New Contract
+            </Button>
+          )}
+
           <GetDaiButton onClick={() => getDai()}>
-            <i>
-              <Dai />
-            </i>
+            <Dai />
           </GetDaiButton>
         </Wrapper>
       </Content>

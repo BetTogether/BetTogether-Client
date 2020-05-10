@@ -15,10 +15,6 @@
     <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="Storybook badge"/>
   </a>
 
-  <a>
-    <img src="https://github.com/coletiv/react-js-github-actions-example/workflows/Continuous%20Integration/badge.svg" alt="GitHub CI badge">
-  </a>
-
 </p>
 
 # [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
