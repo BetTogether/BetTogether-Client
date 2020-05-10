@@ -3,9 +3,13 @@ import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { ShortenAddress } from "utils/ShortenAddress";
 
-const GET_LAST_DEPOSITS_FROM_USER = gql`
-  {
-    deposits(where: { user: "0x15ae150d7dc03d3b635ee90b85219dbfe071ed35" }) {
+import {
+  TableRow,
+} from "../Markets.style";
+
+const GET_LAST_DEPOSITS_FROM_MARKET = gql`
+  query deposits($market: ID!) {
+    deposits(where: { user: $market }) {
       user {
         id
       }
@@ -18,22 +22,28 @@ const GET_LAST_DEPOSITS_FROM_USER = gql`
   }
 `;
 
-function Aave() {
-  const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_USER);
+function Aave({ market }: { market: string }) {
+  const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_MARKET, {
+    variables: { market },
+  });
+
+  const totalDepositAmount = data && data.deposits.reduce((acc: number, v: any) => acc+parseInt(v.amount, 10), 0);
+
+  console.log({ market, data, totalDepositAmount })
 
   return (
     <>
       {!loading &&
         !error &&
         data &&
-        data.deposits.map((item: any, index: number) => (
-          <tr key={index}>
-            <td>{ShortenAddress(item.user.id)}</td>
-            <td>{ShortenAddress(item.pool.lendingPool)}</td>
-            <td>{`${item.amount}$`}</td>
-            <td>{new Date(1000 * item.timestamp).toUTCString()}</td>
-          </tr>
-        ))}
+        <>
+          <th>{ShortenAddress(market)}</th>
+          <th>{'TODO Question'}</th>
+          <th>{`TODO Winner`}</th>
+          <th>{`${totalDepositAmount / 1e18}$`}</th>
+          <th>{'TODO Timestamp'}</th>
+        </>
+      }
     </>
   );
 }
