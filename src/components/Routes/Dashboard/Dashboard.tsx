@@ -13,15 +13,28 @@ import { LayoutContext } from "store/Context";
 import Card from "./Card";
 import { ethers } from "ethers";
 import BTMarketContract from "contracts/BTMarket.json";
+import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
 import { Dai } from "@rimble/icons";
 import { Tooltip } from "rimble-ui";
 import { DaiABI } from "contracts/DaiABI";
+
+import addresses, { KOVAN_ID } from "contracts/addresses"
+
+// market details DUMMY/TESTING DATA ONLY, NOT FOR MAINNET
+const marketOpeningTime = 0;
+const marketResolutionTime = 0;
+const arbitrator = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0"; 
+const eventName = "US 2020 General Election";
+const numberOfOutcomes = 2;
+const timeout = 10; 
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
   const [instance, setInstance] = useState("");
   const [daiContractInstance, setDaiContractInstance] = useState("");
-  const DaiAddressKovan = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
+  const [factoryContractInstance, setFactoryContractInstance] = useState("");
+  const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
+  const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -53,7 +66,23 @@ const Dashboard = () => {
       wallet
     );
     setDaiContractInstance(DaiInstance);
+  
+    const FactoryInstance: any = new ethers.Contract(
+      marketFactoryAddressKovan,
+      BTMarketFactoryContract.abi,
+      wallet
+    );
+    setFactoryContractInstance(FactoryInstance);
   }, []);
+
+  const createPot = (factory: any) => factory.createMarket(
+    marketOpeningTime,
+    marketResolutionTime,
+    arbitrator,
+    eventName,
+    numberOfOutcomes,
+    timeout
+  );
 
   return (
     <Container>
@@ -91,8 +120,7 @@ const Dashboard = () => {
             marketContractName={Example.market}
             owner={Example.owner}
           /> */}
-
-          <Button onClick={() => console.log("createmarket()")}>
+          <Button onClick={() => createPot(factoryContractInstance)}>
             Create New Contract
           </Button>
           <GetDaiButton onClick={() => getDai()}>

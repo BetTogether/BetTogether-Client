@@ -55,7 +55,7 @@ export const GlobalStyle = createGlobalStyle`
 // See all subgraphs: https://thegraph.com/explorer/
 const client = new ApolloClient({
   uri:
-    "https://api.thegraph.com/subgraphs/id/QmcKPoG3SueUkEbhKpf65s3CJQhVPCRbSfH6b4yWza13GY",
+    "https://api.thegraph.com/subgraphs/name/aave/protocol-kovan",
 });
 
 ReactDOM.render(

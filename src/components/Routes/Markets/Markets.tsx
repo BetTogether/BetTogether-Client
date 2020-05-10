@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Aave from "./Aave";
 import {
   ActiveMarketsWrapper,
@@ -13,8 +13,14 @@ import {
   PastMarkets,
 } from "./Markets.style";
 import { ShortenAddress } from "utils/ShortenAddress";
+import { ethers } from "ethers";
+import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+
+import addresses, { KOVAN_ID } from "contracts/addresses"
 
 const Markets = () => {
+  const [markets, setMarkets] = useState([]);
+
   let MarketPots = [
     {
       id: 1,
@@ -49,6 +55,36 @@ const Markets = () => {
       timestamp: 1587513600,
     },
   ];
+
+  const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
+
+  const fetchMarkets = async (factory: any) => {
+    try {
+      const markets = await factory.getMarkets();
+      console.log({ markets });
+
+      const firstTestMarket = '0x7519b699d54fabc183fca06f3c10a5709365203f';
+      const allMarkets = [firstTestMarket, ...markets] as any;
+
+      setMarkets(allMarkets);
+    } catch(error) {
+      console.log({ error });
+    }
+  }
+
+  useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).web3.currentProvider
+    );
+    const wallet = provider.getSigner();
+    const FactoryInstance: any = new ethers.Contract(
+      marketFactoryAddressKovan,
+      BTMarketFactoryContract.abi,
+      wallet
+    );
+
+    fetchMarkets(FactoryInstance);
+  }, []);
 
   return (
     <>
@@ -86,7 +122,22 @@ const Markets = () => {
                     <th>{Pot.timestamp}</th>
                   </TableRow>
                 ))}
-              <Aave />
+            </TableBody>
+          </Table>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableHead>Address</TableHead>
+                <TableHead>Question</TableHead>
+                <TableHead>Winner</TableHead>
+                <TableHead>Winnings</TableHead>
+                <TableHead>Timestamp</TableHead>
+              </TableRow>
+              {markets.length && markets.map((market: string) => (
+                <TableRow key={market}>
+                  <Aave market={market}/>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </PastMarkets>
@@ -94,5 +145,7 @@ const Markets = () => {
     </>
   );
 };
+
+// <Aave key={market} market={market}/>
 
 export default Markets;
