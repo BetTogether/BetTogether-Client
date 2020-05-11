@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import CountUp from "react-countup";
+import { v4 as uuidv4 } from "uuid";
+import { ethers } from "ethers";
+import { useWeb3Context } from "web3-react";
+import { ShortenAddress } from "utils/ShortenAddress";
 import {
   Content,
   Header,
@@ -18,18 +22,13 @@ import {
   OwnerButton,
   OwnerButtons,
 } from "./Card.style";
-import { v4 as uuidv4 } from "uuid";
 import Chart from "./Chart";
-import { ShortenAddress } from "utils/ShortenAddress";
-import { ethers } from "ethers";
-import { useWeb3Context } from "web3-react";
 
 const Card = ({ marketContract, daiContract }: any) => {
+  console.log("marketContract:", marketContract);
   const context = useWeb3Context();
   const { active, error, account, networkId } = context;
-  console.log("marketContract:", marketContract);
-  const [usingDai, setUsingDai] = useState(true);
-  const [marketsDaiBalance] = useState(0);
+  const [totalBet, setTotalBet] = useState(0);
   const [amountToBet, setAmountToBet] = useState(0);
   const [approve, setApprove] = useState(false);
   const [accrued, setAccrued] = useState(0);
@@ -52,6 +51,9 @@ const Card = ({ marketContract, daiContract }: any) => {
         setPrompt(prompt);
         const owner = await marketContract.owner();
         setOwner(owner);
+        const totalBet = await marketContract.totalBet();
+        setTotalBet(totalBet);
+
         // const totalBets = marketContract.totalBet()
         const totalBets = 100;
         const DT = await marketContract.eventOutcomes(0);
@@ -96,29 +98,26 @@ const Card = ({ marketContract, daiContract }: any) => {
     }
   }, []);
 
-  const enableDai = async () => {
-    let balance = await daiContract.balanceOf(account);
-    await daiContract.approve(marketContract.address, balance);
-  };
-
   const submitFunds = async (e: any) => {
     e.preventDefault();
     console.log(choice);
     console.log(amountToBet);
+
     let choiceAsNumber: number;
     choice === "Donald Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
+
     if (!approve) {
-      await enableDai();
+      let balance = await daiContract.balanceOf(account);
+      await daiContract.approve(marketContract.address, balance);
       setApprove(true);
     }
     try {
-      const tx = await marketContract.placeBet(choiceAsNumber, amountToBet);
+      await marketContract.placeBet(choiceAsNumber, amountToBet);
       // .sendTransaction({
       //   to: marketContract.address,
       //   value: ethers.utils.parseEther("1.0"),
       //   chainId: networkId,
       // });
-      console.log("tx:", tx);
     } catch (error) {
       throw error;
     }
@@ -169,13 +168,11 @@ const Card = ({ marketContract, daiContract }: any) => {
           <MarketAmount>{accountBalance}</MarketAmount>
         </Item>
         <Item>
-          <ItemDescription>Compounding Pot</ItemDescription>
-          <MarketAmount>
-            {`${marketsDaiBalance ? marketsDaiBalance : "0"}`}
-          </MarketAmount>
+          <ItemDescription>Total Pot</ItemDescription>
+          <MarketAmount>{`${totalBet ? totalBet : "Nil"}`}</MarketAmount>
         </Item>
         <Item>
-          <ItemDescription>In AAVE</ItemDescription>
+          <ItemDescription>Compounding In AAVE</ItemDescription>
           <MarketAmount>{AAVEToken}</MarketAmount>
         </Item>
       </MarketDetails>

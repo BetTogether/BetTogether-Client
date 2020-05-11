@@ -1,4 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
+import { Dai } from "@rimble/icons";
+import { ethers } from "ethers";
+import { Tooltip } from "rimble-ui";
+import BTMarketContract from "contracts/BTMarket.json";
+import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import { DaiABI } from "contracts/DaiABI";
+import addresses, { KOVAN_ID } from "contracts/addresses";
+import Container from "components/Routes/RoutesContainer";
+import { LayoutContext } from "store/Context";
 import {
   Content,
   Top,
@@ -8,24 +17,15 @@ import {
   Button,
   GetDaiButton,
 } from "./Dashboard.style";
-import Container from "components/Routes/RoutesContainer";
-import { LayoutContext } from "store/Context";
 import Card from "./Card";
-import { ethers } from "ethers";
-import BTMarketContract from "contracts/BTMarket.json";
-import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
-import { Dai } from "@rimble/icons";
-import { Tooltip } from "rimble-ui";
-import { DaiABI } from "contracts/DaiABI";
-import addresses, { KOVAN_ID } from "contracts/addresses";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
-  const [daiContractInstance, setDaiContractInstance] = useState("");
+  const [daiContractInstance, setDaiContractInstance] = useState(null);
   const [factoryContractInstance, setFactoryContractInstance] = useState(null);
+  const [marketInstance, setMarketInstance] = useState(null);
   const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
   const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
-  const [marketInstance, setMarketInstance] = useState(null);
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -33,10 +33,6 @@ const Dashboard = () => {
   const openEmailModal = () => {
     dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
   };
-
-  //   let MarketList = Object.keys(contracts)
-  //     .filter((contractName) => contractName !== "MarketFactory")
-  //     .reverse();
 
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
@@ -64,37 +60,25 @@ const Dashboard = () => {
       wallet
     );
     setFactoryContractInstance(FactoryInstance);
+    getMarketInstance(FactoryInstance, wallet);
   }, [DaiAddressKovan, marketFactoryAddressKovan]);
 
-  useEffect(() => {
-    (async () => {
-      if (factoryContractInstance) {
-        console.log("factoryContractInstance:", factoryContractInstance);
-        const provider = new ethers.providers.Web3Provider(
-          (window as any).web3.currentProvider
-        );
-        const wallet = provider.getSigner();
+  const getMarketInstance = async (
+    factoryContractInstance: any,
+    wallet: any
+  ) => {
+    let deployedMarkets = await (factoryContractInstance as any).getMarkets();
+    let mostRecentlyDeployedAddress =
+      deployedMarkets[deployedMarkets.length - 1];
 
-        let deployedMarkets = await (factoryContractInstance as any).getMarkets();
-        let deployedMarketsLength = deployedMarkets.length;
-        let mostRecentlyDeployedAddress =
-          deployedMarkets[deployedMarketsLength - 1];
+    const instance: any = new ethers.Contract(
+      mostRecentlyDeployedAddress,
+      BTMarketContract.abi,
+      wallet
+    );
 
-        console.log(
-          "mostRecentlyDeployedAddress:",
-          mostRecentlyDeployedAddress
-        );
-        const instance: any = new ethers.Contract(
-          mostRecentlyDeployedAddress,
-          BTMarketContract.abi,
-          wallet
-        );
-
-        console.log("instance:", instance);
-        setMarketInstance(instance);
-      }
-    })();
-  }, [factoryContractInstance]);
+    setMarketInstance(instance);
+  };
 
   const createMarket = async (factory: any) => {
     console.log(factoryContractInstance);
@@ -145,7 +129,6 @@ const Dashboard = () => {
             ))} */}
 
           {marketInstance && (
-            // console.log("marketInstance:", marketInstance)
             <Card
               key={1}
               daiContract={daiContractInstance}
