@@ -69,6 +69,7 @@ const Dashboard = () => {
   useEffect(() => {
     (async () => {
       if (factoryContractInstance) {
+        console.log("factoryContractInstance:", factoryContractInstance);
         const provider = new ethers.providers.Web3Provider(
           (window as any).web3.currentProvider
         );
@@ -79,11 +80,17 @@ const Dashboard = () => {
         let mostRecentlyDeployedAddress =
           deployedMarkets[deployedMarketsLength - 1];
 
+        console.log(
+          "mostRecentlyDeployedAddress:",
+          mostRecentlyDeployedAddress
+        );
         const instance: any = new ethers.Contract(
           mostRecentlyDeployedAddress,
           BTMarketContract.abi,
           wallet
         );
+
+        console.log("instance:", instance);
         setMarketInstance(instance);
       }
     })();
@@ -94,7 +101,7 @@ const Dashboard = () => {
     const DUMMY_MARKET_OPENING_TIME = 0;
     const DUMMY_MARKET_RESOLUTION_TIME = 0;
     const DUMMY_ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
-    const DUMMY_EVENT_NAME = "Who will win the 2020 US General Election?";
+    const DUMMY_EVENT_NAME = "Who will win the 2020 US Presidential Election?";
     const DUMMY_NUMBER_OF_OUTCOMES = 2;
     const DUMMY_TIMEOUT = 10;
 
@@ -137,17 +144,18 @@ const Dashboard = () => {
               />
             ))} */}
 
-          {marketInstance ? (
+          {marketInstance && (
+            // console.log("marketInstance:", marketInstance)
             <Card
               key={1}
               daiContract={daiContractInstance}
               marketContract={marketInstance}
             />
-          ) : (
-            <Button onClick={() => createMarket(factoryContractInstance)}>
-              Create New Contract
-            </Button>
           )}
+
+          <Button onClick={() => createMarket(factoryContractInstance)}>
+            Create New Contract
+          </Button>
 
           <GetDaiButton onClick={() => getDai()}>
             <Dai />
