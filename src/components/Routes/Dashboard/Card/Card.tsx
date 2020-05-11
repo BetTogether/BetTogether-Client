@@ -98,7 +98,7 @@ const Card = ({ marketContract, daiContract }: any) => {
     }
   }, []);
 
-  const submitFunds = async (e: any) => {
+  const placeBet = async (e: any) => {
     e.preventDefault();
     console.log(choice);
     console.log(amountToBet);
@@ -182,7 +182,7 @@ const Card = ({ marketContract, daiContract }: any) => {
           <Chart outcomes={outcomes} />
         </ChartWrapper>
 
-        <Form onSubmit={submitFunds}>
+        <Form onSubmit={placeBet}>
           <Select
             value={choice}
             onChange={(e: any) => setChoice(e.target.value)}
