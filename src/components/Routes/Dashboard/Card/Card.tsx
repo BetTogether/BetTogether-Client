@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CountUp from "react-countup";
+import Countdown from "react-countdown";
 import { v4 as uuidv4 } from "uuid";
 import { ethers } from "ethers";
 import { useWeb3Context } from "web3-react";
@@ -27,7 +28,7 @@ import Chart from "./Chart";
 const Card = ({ marketContract, daiContract }: any) => {
   console.log("marketContract:", marketContract);
   const context = useWeb3Context();
-  const { active, error, account, networkId } = context;
+  const { active, account, networkId } = context;
   const [totalBet, setTotalBet] = useState(0);
   const [amountToBet, setAmountToBet] = useState(0);
   const [approve, setApprove] = useState(false);
@@ -41,6 +42,7 @@ const Card = ({ marketContract, daiContract }: any) => {
   const [owner, setOwner] = useState("");
   const [choice, setChoice] = useState("");
   const [outcomes, setOutcomes] = useState<any>([]);
+  const [marketResolutionTime, setMarketResolutionTime] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -53,6 +55,8 @@ const Card = ({ marketContract, daiContract }: any) => {
         setOwner(owner);
         const totalBet = await marketContract.totalBet();
         setTotalBet(totalBet);
+        const marketResolutionTime = await marketContract.marketResolutionTime();
+        setMarketResolutionTime(marketResolutionTime);
 
         // const totalBets = marketContract.totalBet()
         const totalBets = 100;
@@ -145,8 +149,8 @@ const Card = ({ marketContract, daiContract }: any) => {
     <Content>
       <Header>
         <span>{ShortenAddress(marketContract.address)}</span>
-        <span>{state ? state : "Nil"}</span>
-        <span>{"10:23:22"}</span>
+        <span>{state ? state : "-"}</span>
+        <span>{/* <CountDown  /> */}</span>
       </Header>
       <Prompt>{prompt}</Prompt>
 
@@ -169,7 +173,7 @@ const Card = ({ marketContract, daiContract }: any) => {
         </Item>
         <Item>
           <ItemDescription>Total Pot</ItemDescription>
-          <MarketAmount>{`${totalBet ? totalBet : "Nil"}`}</MarketAmount>
+          <MarketAmount>{`${totalBet ? totalBet : "-"}`}</MarketAmount>
         </Item>
         <Item>
           <ItemDescription>Compounding In AAVE</ItemDescription>

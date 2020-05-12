@@ -67,17 +67,21 @@ const Dashboard = () => {
     factoryContractInstance: any,
     wallet: any
   ) => {
-    let deployedMarkets = await (factoryContractInstance as any).getMarkets();
-    let mostRecentlyDeployedAddress =
-      deployedMarkets[deployedMarkets.length - 1];
+    try {
+      let deployedMarkets = await (factoryContractInstance as any).getMarkets();
+      let mostRecentlyDeployedAddress =
+        deployedMarkets[deployedMarkets.length - 1];
 
-    const instance: any = new ethers.Contract(
-      mostRecentlyDeployedAddress,
-      BTMarketContract.abi,
-      wallet
-    );
+      const instance: any = new ethers.Contract(
+        mostRecentlyDeployedAddress,
+        BTMarketContract.abi,
+        wallet
+      );
 
-    setMarketInstance(instance);
+      setMarketInstance(instance);
+    } catch (error) {
+      console.log("error:", error);
+    }
   };
 
   const createMarket = async (factory: any) => {

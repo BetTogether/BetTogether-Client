@@ -24,15 +24,9 @@ import { ethers } from "ethers";
 
 const Uniswap = () => {
   const context = useWeb3Context();
-  const [activeAccount, setActiveAccount] = useState<string | null | undefined>(
-    ""
-  );
+  const { active, account, networkId } = context;
   const [amountToExchange, setAmountToExchange] = useState<number>(0);
   const [potentialDai, setPotentialDai] = useState<number>(0);
-
-  useEffect(() => {
-    if (context.active) setActiveAccount(context.account);
-  }, [context]);
 
   const DAI = new Token(
     ChainId.KOVAN,
@@ -65,11 +59,18 @@ const Uniswap = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    console.log("handleSubmit:");
+
+    console.log("WETH_TO_DAI:", WETH_TO_DAI);
+    console.log("WETH:", WETH);
+    e.preventDefault();
     const TRADE = new Trade(
       WETH_TO_DAI,
       new TokenAmount(WETH, "1000000000000000"),
       TradeType.EXACT_INPUT
     );
+
+    console.log("TRADE:", TRADE);
   };
 
   return (
@@ -81,6 +82,7 @@ const Uniswap = () => {
             <Input
               type="number"
               required
+              placeholder="0"
               value={amountToExchange}
               onChange={handleChange}
               onKeyDown={(e: any) =>
