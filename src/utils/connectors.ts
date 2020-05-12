@@ -9,5 +9,5 @@ export const injected = new InjectedConnector({
 
 export const portis = new PortisConnector({
   dAppId: PORTIS_API_KEY as string,
-  networks: [1, 100],
+  networks: [42],
 });
