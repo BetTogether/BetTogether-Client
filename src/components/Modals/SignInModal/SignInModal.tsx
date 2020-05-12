@@ -24,7 +24,6 @@ import {
 } from "./SignInModal.style";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
 import { LayoutContext } from "store/Context";
-import { useWeb3Context } from "web3-react";
 import portisLogo from "assets/portis.svg";
 import metamaskLogo from "assets/metamask.svg";
 import { Loader } from "rimble-ui";

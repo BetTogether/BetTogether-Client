@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { Wrapper, Modal, IconButton, Top, Title } from "./TradeModal.style";
 import { LayoutContext } from "store/Context";
 import { Clear } from "@rimble/icons";
-import { useWeb3Context } from "web3-react";
 import Uniswap from "./Exchanges/Uniswap";
 import Kyber from "./Exchanges/Kyber";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface ITradeModal {
   isOpen: boolean;
@@ -12,8 +13,8 @@ interface ITradeModal {
 
 const TradeModal = ({ isOpen }: ITradeModal) => {
   const { state, dispatch } = useContext(LayoutContext);
-  const context = useWeb3Context();
-  const { active, account, networkId } = context;
+  const context = useWeb3React<Web3Provider>();
+  const { active, account, chainId } = context;
 
   const toggleModal = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -28,7 +29,7 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
           </IconButton>
         </Top>
         <Uniswap />
-        {networkId === 4 && <Kyber />}
+        {chainId === 4 && <Kyber />}
       </Modal>
     </Wrapper>
   );

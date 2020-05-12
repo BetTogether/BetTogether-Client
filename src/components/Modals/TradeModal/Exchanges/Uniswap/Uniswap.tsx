@@ -21,10 +21,13 @@ import {
 } from "@uniswap/sdk";
 import { useWeb3Context } from "web3-react";
 import { ethers } from "ethers";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 const Uniswap = () => {
-  const context = useWeb3Context();
-  const { active, account, networkId } = context;
+  const context = useWeb3React<Web3Provider>();
+  const { active, account, chainId } = context;
+
   const [amountToExchange, setAmountToExchange] = useState<number>(0);
   const [potentialDai, setPotentialDai] = useState<number>(0);
 

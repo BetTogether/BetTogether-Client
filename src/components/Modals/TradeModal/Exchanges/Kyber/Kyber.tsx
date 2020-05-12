@@ -1,5 +1,6 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import { useWeb3Context } from "web3-react";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { KyberNetworkProxyABI } from "contracts/KyberNetworkProxyABI";
 import KyberLogo from "assets/kyber.svg";
@@ -15,10 +16,8 @@ import {
 } from "./Kyber.style";
 
 const Kyber = () => {
-  const context = useWeb3Context();
-  const [activeAccount, setActiveAccount] = useState<string | null | undefined>(
-    ""
-  );
+  const context = useWeb3React<Web3Provider>();
+  const { active, account } = context;
   const [amountEthToExchange, setAmountEthToExchange] = useState<number>(0);
   const [potentialDai, setPotentialDai] = useState<number>(0);
   const provider = ethers.getDefaultProvider();
@@ -30,12 +29,6 @@ const Kyber = () => {
     KyberNetworkProxyABI,
     provider
   );
-
-  useEffect(() => {
-    if (context.active) {
-      setActiveAccount(context.account);
-    }
-  }, [context.account, context.active]);
 
   const handleChange = async (e: FormEvent<HTMLInputElement>) => {
     try {

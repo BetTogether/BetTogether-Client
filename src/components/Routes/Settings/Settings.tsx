@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Content, Border, Top, Title, Image } from "./Settings.style";
 import Container from "components/Routes/RoutesContainer";
-import { useWeb3Context } from "web3-react";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { Loader } from "rimble-ui";
 import Box from "3box";
 
 const Settings = () => {
-  const context = useWeb3Context();
-  const { active, account } = context;
+  const context = useWeb3React<Web3Provider>();
+  const { active, account, chainId } = context;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

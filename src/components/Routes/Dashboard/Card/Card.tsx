@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import CountUp from "react-countup";
 import Countdown from "react-countdown";
 import { v4 as uuidv4 } from "uuid";
-import { ethers } from "ethers";
-import { useWeb3Context } from "web3-react";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+
 import { ShortenAddress } from "utils/ShortenAddress";
 import {
   Content,
@@ -27,8 +28,8 @@ import Chart from "./Chart";
 
 const Card = ({ marketContract, daiContract }: any) => {
   console.log("marketContract:", marketContract);
-  const context = useWeb3Context();
-  const { active, account, networkId } = context;
+  const context = useWeb3React<Web3Provider>();
+  const { active, account, library } = context;
   const [totalBet, setTotalBet] = useState(0);
   const [amountToBet, setAmountToBet] = useState(0);
   const [approve, setApprove] = useState(false);
@@ -97,7 +98,9 @@ const Card = ({ marketContract, daiContract }: any) => {
     };
     if (account) {
       getAllowance().then((allowance) => {
-        if (allowance !== "0") setApprove(true);
+        if (allowance !== "0") {
+          setApprove(true);
+        }
       });
     }
   }, []);
@@ -110,6 +113,7 @@ const Card = ({ marketContract, daiContract }: any) => {
     let choiceAsNumber: number;
     choice === "Donald Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
 
+    console.log("approve:", approve);
     if (!approve) {
       let balance = await daiContract.balanceOf(account);
       await daiContract.approve(marketContract.address, balance);
@@ -204,13 +208,17 @@ const Card = ({ marketContract, daiContract }: any) => {
             placeholder="0"
             onChange={(e: any) => setAmountToBet(e.target.value)}
           />
-          <Button disabled={amountToBet <= 0 || active === false}>Enter</Button>
+          {!!(library && account) && (
+            <Button disabled={amountToBet <= 0 || active === false}>
+              Enter
+            </Button>
+          )}
         </Form>
       </GraphFormWrapper>
 
       {checkOwner() && (
         <>
-          <h1>TESTING FUNCTIONALITY - Owner: {owner}</h1>
+          <h1>TESTING FUNCTIONALITY - Owner: {ShortenAddress(owner)}</h1>
           <OwnerButtons>
             <OwnerButton onClick={() => incrementState()}>
               Increment State
