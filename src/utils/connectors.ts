@@ -1,19 +1,13 @@
-import { Connectors } from "web3-react";
-import PortisApi from "@portis/web3";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { PortisConnector } from "@web3-react/portis-connector";
 
-const { InjectedConnector, PortisConnector } = Connectors;
 const PORTIS_API_KEY: string = process.env.REACT_APP_PORTIS_API_KEY!;
-const NETWORK: string = process.env.REACT_APP_NETWORK!;
 
-const Injected = new InjectedConnector();
-
-const Portis = new PortisConnector({
-  api: PortisApi,
-  dAppId: PORTIS_API_KEY,
-  network: NETWORK,
+export const injected = new InjectedConnector({
+  supportedChainIds: [42],
 });
 
-export default {
-  Injected,
-  Portis,
-};
+export const portis = new PortisConnector({
+  dAppId: PORTIS_API_KEY as string,
+  networks: [1, 100],
+});

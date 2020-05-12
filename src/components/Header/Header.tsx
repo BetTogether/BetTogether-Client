@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useWeb3Context } from "web3-react";
+import { useWeb3React } from "@web3-react/core";
+import styled from "styled-components";
+import { formatEther } from "@ethersproject/units";
+import { Web3Provider } from "@ethersproject/providers";
+
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
 import {
@@ -21,8 +25,9 @@ import { ReactComponent as Github } from "assets/github.svg";
 import Box from "3box";
 
 const Header = () => {
-  const context = useWeb3Context();
-  const { active, error, account, networkId } = context;
+  const context = useWeb3React<Web3Provider>();
+  const { active, error, account, deactivate, chainId } = context;
+
   const { state, dispatch } = useContext(LayoutContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [imageLink, setImageLink] = useState("");
@@ -49,8 +54,8 @@ const Header = () => {
 
   return (
     <>
-      {active && networkId !== 42 && (
-        <NetworkNotification currentNetwork={networkId} requiredNetwork={42} />
+      {active && chainId !== 42 && (
+        <NetworkNotification currentNetwork={chainId} requiredNetwork={42} />
       )}
       <Head>
         <Link to="/dashboard">
@@ -67,14 +72,14 @@ const Header = () => {
 
           {active && !error ? (
             <>
-              {account !== (undefined && null) && (
+              {account !== null && (
                 <>
                   {imageLink ? (
-                    <ImageButton onClick={() => context.unsetConnector()}>
+                    <ImageButton onClick={() => deactivate()}>
                       <Image src={imageLink} alt="3Box profile picture" />
                     </ImageButton>
                   ) : (
-                    <ConnectionButton onClick={() => context.unsetConnector()}>
+                    <ConnectionButton onClick={() => deactivate()}>
                       <Address>{ShortenAddress(account)}</Address>
                     </ConnectionButton>
                   )}

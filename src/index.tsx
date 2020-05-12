@@ -5,6 +5,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { Web3ReactProvider } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+
 import { theme } from "./utils/theme";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
@@ -54,17 +57,24 @@ export const GlobalStyle = createGlobalStyle`
 // This is the official Aave subgraph. You can replace it with your own, if you need to.
 // See all subgraphs: https://thegraph.com/explorer/
 const client = new ApolloClient({
-  uri:
-    "https://api.thegraph.com/subgraphs/name/aave/protocol-kovan",
+  uri: "https://api.thegraph.com/subgraphs/name/aave/protocol-kovan",
 });
+
+function getLibrary(provider: any): Web3Provider {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Router>
         <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <App />
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <GlobalStyle />
+            <App />
+          </Web3ReactProvider>
         </ThemeProvider>
       </Router>
     </ApolloProvider>
