@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CountUp from "react-countup";
-import Countdown from "react-countdown";
+import CountDown from "react-countdown";
 import { v4 as uuidv4 } from "uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -26,24 +26,31 @@ import {
 } from "./Card.style";
 import Chart from "./Chart";
 
+//!remove
+import { ethers } from "ethers";
+import { parseUnits } from "@ethersproject/units";
+
 const Card = ({ marketContract, daiContract }: any) => {
-  console.log("marketContract:", marketContract);
+  // console.log("marketContract:", marketContract);
   const context = useWeb3React<Web3Provider>();
   const { active, account, library } = context;
-  const [totalBet, setTotalBet] = useState(0);
-  const [amountToBet, setAmountToBet] = useState(0);
-  const [approve, setApprove] = useState(false);
-  const [accrued, setAccrued] = useState(0);
-  const [AAVEToken] = useState(0);
-  const [gross] = useState(3);
-  const [state, setState] = useState("");
+
+  const [totalBet, setTotalBet] = useState<number>(0);
+  const [amountToBet, setAmountToBet] = useState<number>(0);
+  const [accrued, setAccrued] = useState<number>(0);
+  const [AAVEToken] = useState<number>(0);
+  const [gross, setGross] = useState<number>(3);
+  const [accountBalance, setAccountBalance] = useState<number>(0);
+  const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const MarketStates = ["OPEN", "COMMITTING", "REWARDING"];
-  const [accountBalance] = useState(0);
-  const [prompt, setPrompt] = useState("");
-  const [owner, setOwner] = useState("");
-  const [choice, setChoice] = useState("");
+  const [state, setState] = useState<string>("");
+  const [prompt, setPrompt] = useState<string>("");
+  const [owner, setOwner] = useState<string>("");
+  const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
-  const [marketResolutionTime, setMarketResolutionTime] = useState(null);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [daiApproved, setDaiApproved] = useState<boolean>(false);
+  const [daiAllowance, setDaiAllowance] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -56,7 +63,11 @@ const Card = ({ marketContract, daiContract }: any) => {
         setOwner(owner);
         const totalBet = await marketContract.totalBet();
         setTotalBet(totalBet);
-        const marketResolutionTime = await marketContract.marketResolutionTime();
+        const isPaused = await marketContract.paused();
+        setIsPaused(isPaused);
+        // const marketResolutionTime = await marketContract.marketResolutionTime();
+        // TEST VALUE
+        const marketResolutionTime = 300000;
         setMarketResolutionTime(marketResolutionTime);
 
         // const totalBets = marketContract.totalBet()
@@ -85,25 +96,36 @@ const Card = ({ marketContract, daiContract }: any) => {
     /* eslint-disable */
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const isPaused = await marketContract.paused();
-      console.log("isPaused:", isPaused);
-    })();
-  }, [marketContract]);
+  const getAllowance = async () => {
+    return await daiContract.allowance(account, marketContract.address);
+  };
 
   useEffect(() => {
-    const getAllowance = async () => {
-      return await daiContract.allowance(account, marketContract.address);
-    };
     if (account) {
       getAllowance().then((allowance) => {
-        if (allowance !== "0") {
-          setApprove(true);
+        if (allowance.toString() !== "0") {
+          setDaiApproved(true);
+          const stringRep = allowance.toString();
+          const formatted = ethers.utils.formatEther(stringRep);
+          setDaiAllowance(formatted);
         }
       });
     }
-  }, []);
+  }, [account]);
+
+  const enableDai = async (e: any) => {
+    const val = e.target.checked;
+    let balance = await daiContract.balanceOf(account);
+    console.log("balance:", balance);
+
+    if (!val) balance = 0;
+
+    let res = await daiContract.approve(
+      marketContract.address,
+      balance.toString()
+    );
+    console.log("res:", res);
+  };
 
   const placeBet = async (e: any) => {
     e.preventDefault();
@@ -113,21 +135,25 @@ const Card = ({ marketContract, daiContract }: any) => {
     let choiceAsNumber: number;
     choice === "Donald Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
 
-    console.log("approve:", approve);
-    if (!approve) {
-      let balance = await daiContract.balanceOf(account);
-      await daiContract.approve(marketContract.address, balance);
-      setApprove(true);
-    }
-    try {
-      await marketContract.placeBet(choiceAsNumber, amountToBet);
-      // .sendTransaction({
-      //   to: marketContract.address,
-      //   value: ethers.utils.parseEther("1.0"),
-      //   chainId: networkId,
-      // });
-    } catch (error) {
-      throw error;
+    // if (!daiApproved) {
+    //   let balance = await daiContract.balanceOf(account);
+    //   await daiContract.approve(marketContract.address, balance);
+    //   setDaiApproved(true);
+    // }
+    let daiAllowanceCheck = parseFloat(daiAllowance);
+    if (daiAllowanceCheck > 0) {
+      let newAmount = parseUnits(daiAllowance, 18);
+      console.log("newAmount:", newAmount);
+      try {
+        await marketContract.placeBet(choiceAsNumber, newAmount);
+        // .sendTransaction({
+        //   to: marketContract.address,
+        //   value: ethers.utils.parseEther("1.0"),
+        //   chainId: networkId,
+        // });
+      } catch (error) {
+        throw error;
+      }
     }
   };
 
@@ -154,7 +180,13 @@ const Card = ({ marketContract, daiContract }: any) => {
       <Header>
         <span>{ShortenAddress(marketContract.address)}</span>
         <span>{state ? state : "-"}</span>
-        <span>{/* <CountDown  /> */}</span>
+        <span>
+          {marketResolutionTime ? (
+            <CountDown date={Date.now() + marketResolutionTime} />
+          ) : (
+            "-"
+          )}
+        </span>
       </Header>
       <Prompt>{prompt}</Prompt>
 
@@ -191,6 +223,20 @@ const Card = ({ marketContract, daiContract }: any) => {
         </ChartWrapper>
 
         <Form onSubmit={placeBet}>
+          <>
+            <span>DAI {daiApproved ? "Enabled" : "Disabled"}</span>
+            <label>
+              Dai approved?
+              <input
+                name="enable dai"
+                type="checkbox"
+                checked={daiApproved ? true : false}
+                onChange={enableDai}
+              />
+            </label>
+
+            <span>{daiAllowance} DAI</span>
+          </>
           <Select
             value={choice}
             onChange={(e: any) => setChoice(e.target.value)}
@@ -218,7 +264,11 @@ const Card = ({ marketContract, daiContract }: any) => {
 
       {checkOwner() && (
         <>
-          <h1>TESTING FUNCTIONALITY - Owner: {ShortenAddress(owner)}</h1>
+          <h1>TESTING FUNCTIONALITY</h1>
+          <h3>
+            {" "}
+            Owner: {ShortenAddress(owner)}, State: {state}
+          </h3>
           <OwnerButtons>
             <OwnerButton onClick={() => incrementState()}>
               Increment State

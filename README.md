@@ -8,7 +8,7 @@
 <p align="center">
 
   <a href="https://bettogether.netlify.app/dashboard">
-    <img src="https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status" alt="Netlify badge"/>
+    <img src="https://bettogether.netlify.app" alt="Netlify badge"/>
   </a>
 
   <a href="https://BetTogether.github.io/BetTogether-Client/">

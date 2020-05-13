@@ -7,7 +7,7 @@ import {
   StyledLink,
   Span,
 } from "./NavStrip.style";
-import { Dashboard, PieChart, ModeEdit, FolderShared } from "@rimble/icons";
+import { Dashboard, PieChart, FolderShared } from "@rimble/icons";
 
 const NavStrip = () => {
   return (
@@ -26,12 +26,7 @@ const NavStrip = () => {
               <Span>Markets</Span>
             </StyledLink>
           </Section>
-          <Section>
-            <StyledLink to="/reporting">
-              <ModeEdit />
-              <Span>Reporting</Span>
-            </StyledLink>
-          </Section>
+
           <Section settings>
             <StyledLink to="/settings">
               <FolderShared />

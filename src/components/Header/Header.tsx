@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
-import styled from "styled-components";
-import { formatEther } from "@ethersproject/units";
 import { Web3Provider } from "@ethersproject/providers";
 
 import MenuIcon from "./MenuIcon";
@@ -35,11 +33,15 @@ const Header = () => {
   useEffect(() => {
     (async () => {
       if (active) {
-        const profile = await Box.getProfile(account);
-        if (profile.image) {
-          let imageLink = profile.image[0]["contentUrl"]["/"];
-          let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;
-          setImageLink(newLink);
+        try {
+          const profile = await Box.getProfile(account);
+          if (profile.image) {
+            let imageLink = profile.image[0]["contentUrl"]["/"];
+            let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;
+            setImageLink(newLink);
+          }
+        } catch (error) {
+          console.log("error:", error);
         }
       }
     })();

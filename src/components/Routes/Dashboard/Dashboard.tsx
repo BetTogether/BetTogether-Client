@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Dai } from "@rimble/icons";
 import { ethers } from "ethers";
 import { Tooltip } from "rimble-ui";
+
 import BTMarketContract from "contracts/BTMarket.json";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
 import { DaiABI } from "contracts/DaiABI";
@@ -18,34 +19,26 @@ import {
   GetDaiButton,
 } from "./Dashboard.style";
 import Card from "./Card";
+import { ShortenAddress } from "utils/ShortenAddress";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
-  const [daiContractInstance, setDaiContractInstance] = useState(null);
-  const [factoryContractInstance, setFactoryContractInstance] = useState(null);
-  const [marketInstance, setMarketInstance] = useState(null);
-  const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
+
+  const [factoryContract, setFactoryContract] = useState<any>(null);
+  const [marketInstance, setMarketInstance] = useState<any>(null);
+  const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
+  // const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
+  const DaiAddressKovan = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
   const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
-
-  const getDai = () =>
-    dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
-
-  const openEmailModal = () => {
-    dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
-  };
+  const [marketList, setMarketList] = useState<any>([]);
+  const [wallet, setWallet] = useState<any>(null);
 
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
       (window as any).web3.currentProvider
     );
     const wallet = provider.getSigner();
-    // const contractAddress = "0xBECFc6F472798FD59020Eec49Df0F4799b4e0f2A";
-    // const instance: any = new ethers.Contract(
-    //   contractAddress,
-    //   BTMarketContract.abi,
-    //   wallet
-    // );
-    // setInstance(instance);
+    setWallet(wallet);
 
     const DaiInstance: any = new ethers.Contract(
       DaiAddressKovan,
@@ -54,21 +47,21 @@ const Dashboard = () => {
     );
     setDaiContractInstance(DaiInstance);
 
-    const FactoryInstance: any = new ethers.Contract(
+    const FactoryContract: any = new ethers.Contract(
       marketFactoryAddressKovan,
       BTMarketFactoryContract.abi,
       wallet
     );
-    setFactoryContractInstance(FactoryInstance);
-    getMarketInstance(FactoryInstance, wallet);
+
+    setFactoryContract(FactoryContract);
+    getMarketInstance(FactoryContract, wallet);
   }, [DaiAddressKovan, marketFactoryAddressKovan]);
 
-  const getMarketInstance = async (
-    factoryContractInstance: any,
-    wallet: any
-  ) => {
+  const getMarketInstance = async (factoryContract: any, wallet: any) => {
     try {
-      let deployedMarkets = await (factoryContractInstance as any).getMarkets();
+      let deployedMarkets = await (factoryContract as any).getMarkets();
+      setMarketList(deployedMarkets);
+
       let mostRecentlyDeployedAddress =
         deployedMarkets[deployedMarkets.length - 1];
 
@@ -80,12 +73,12 @@ const Dashboard = () => {
 
       setMarketInstance(instance);
     } catch (error) {
-      console.log("error:", error);
+      console.log(error);
     }
   };
 
   const createMarket = async (factory: any) => {
-    console.log(factoryContractInstance);
+    console.log(factoryContract);
     const DUMMY_MARKET_OPENING_TIME = 0;
     const DUMMY_MARKET_RESOLUTION_TIME = 0;
     const DUMMY_ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
@@ -93,7 +86,7 @@ const Dashboard = () => {
     const DUMMY_NUMBER_OF_OUTCOMES = 2;
     const DUMMY_TIMEOUT = 10;
 
-    let contractInstance = await factory.createMarket(
+    await factory.createMarket(
       DUMMY_MARKET_OPENING_TIME,
       DUMMY_MARKET_RESOLUTION_TIME,
       DUMMY_ARBITRATOR,
@@ -102,8 +95,14 @@ const Dashboard = () => {
       DUMMY_TIMEOUT
     );
 
-    setMarketInstance(contractInstance);
+    getMarketInstance(factoryContract, wallet);
   };
+
+  const getDai = () =>
+    dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
+
+  const openEmailModal = () =>
+    dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
 
   return (
     <Container>
@@ -123,15 +122,6 @@ const Dashboard = () => {
         </Top>
 
         <Wrapper>
-          {/* {MarketList.length !== 0 &&
-            MarketList.map((Market) => (
-              <Card
-                key={Market}
-                marketContractName={Market}
-                owner={owner}
-              />
-            ))} */}
-
           {marketInstance && (
             <Card
               key={1}
@@ -139,10 +129,14 @@ const Dashboard = () => {
               marketContract={marketInstance}
             />
           )}
-
-          <Button onClick={() => createMarket(factoryContractInstance)}>
+          <Button onClick={() => createMarket(factoryContract)}>
             Create New Contract
           </Button>
+
+          {marketList.length &&
+            marketList.map((market: any) => (
+              <span key={market}> {ShortenAddress(market)} </span>
+            ))}
 
           <GetDaiButton onClick={() => getDai()}>
             <Dai />
