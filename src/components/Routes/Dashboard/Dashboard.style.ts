@@ -75,3 +75,14 @@ export const GetDaiButton = styled.button`
     outline: none;
   }
 `;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  max-width: 100%;
+`;
+
+export const Input = styled.input``;

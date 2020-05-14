@@ -30,18 +30,18 @@ import Chart from "./Chart";
 import { ethers } from "ethers";
 import { parseUnits } from "@ethersproject/units";
 
-const Card = ({ marketContract, daiContract }: any) => {
+const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
+  console.log("numberOfTokenContracts:", numberOfTokenContracts);
+  console.log(marketContract);
   const context = useWeb3React<Web3Provider>();
   const { active, account, library } = context;
 
-  const [totalBet, setTotalBet] = useState<number>(0);
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accrued, setAccrued] = useState<number>(0);
   const [AAVEToken] = useState<number>(0);
   const [gross, setGross] = useState<number>(3);
-  const [accountBalance, setAccountBalance] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
-  const MarketStates = ["OPEN", "COMMITTING", "REWARDING"];
+  const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
   const [state, setState] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
   const [owner, setOwner] = useState<string>("");
@@ -50,39 +50,47 @@ const Card = ({ marketContract, daiContract }: any) => {
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
   const [daiAllowance, setDaiAllowance] = useState<string>("");
+  const [totalNumberOfBets, setTotalNumberOfBets] = useState<number>(0);
+  const [totalNumberOfParticipants, setTotalNumberOfParticipants] = useState<
+    number
+  >(0);
+
+  //temp
+  const [totalVotesTrump, setTotalVotesTrump] = useState<number>(0);
+  const [totalVotesBiden, setTotalVotesBiden] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       const state = await marketContract.state();
+      console.log("state:", state);
       setState(MarketStates[state]);
       const owner = await marketContract.owner();
       setOwner(owner);
-      const totalBet = await marketContract.totalBet();
-      setTotalBet(totalBet);
       const isPaused = await marketContract.paused();
       setIsPaused(isPaused);
       const marketResolutionTime = await marketContract.marketResolutionTime();
       setMarketResolutionTime(marketResolutionTime);
-
-      const numberOfOutcomes = await marketContract.numberOfOutcomes();
-      console.log("numberOfOutcomes:", numberOfOutcomes.toNumber());
-      const totalBets = await marketContract.totalBet();
-      console.log("totalBets:", totalBets.toNumber());
-
       const eventName = await marketContract.eventName();
       setPrompt(eventName);
-      const DT = await marketContract.outcomeNames(0);
-      const JB = await marketContract.outcomeNames(1);
+      const totalBets = await marketContract.totalBets();
+      setTotalNumberOfBets(totalBets.toNumber());
 
-      // const DTNumberOfBets = await marketContract.totalBetPerOutcome(0);
-      // const JBNumberOfBets = await marketContract.totalBetPerOutcome(1);
-      const DTNumberOfBets = 60;
-      const JBNumberOfBets = 40;
-      setOutcomes([
-        ...outcomes,
-        { name: DT, percentage: DTNumberOfBets / totalBets },
-        { name: JB, percentage: JBNumberOfBets / totalBets },
-      ]);
+      if (numberOfTokenContracts !== 0) {
+        const DT = await marketContract.outcomeNames(0);
+        const JB = await marketContract.outcomeNames(1);
+
+        const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
+        setTotalVotesTrump(DTNumberOfBets.toNumber());
+        const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
+        setTotalVotesBiden(JBNumberOfBets.toNumber());
+
+        setOutcomes([...outcomes, DT, JB]);
+        // setOutcomes([
+        //   ...outcomes,
+        //   { name: DT, percentage: DTNumberOfBets / totalBets },
+        //   { name: JB, percentage: JBNumberOfBets / totalBets },
+        // ]);
+      }
       // let numberOfOutcomes = (
       //   await marketContract.numberOfOutcomes()
       // ).toNumber();
@@ -91,6 +99,7 @@ const Card = ({ marketContract, daiContract }: any) => {
       //   console.log("newOutcomeName:", newOutcomeName);
       //   setOutcomes([...outcomes, { name: newOutcomeName }]);
       // }
+      // await marketContract.placeBet(1, 1);
     })();
   }, []);
 
@@ -110,15 +119,14 @@ const Card = ({ marketContract, daiContract }: any) => {
     }
   }, [account]);
 
-  const enableDai = async (e: any) => {
-    const val = e.target.checked;
-    let balance = await daiContract.balanceOf(account);
-    console.log("balance:", balance);
+  // const enableDai = async (e: any) => {
+  //   const val = e.target.checked;
+  //   let balance = await daiContract.balanceOf(account);
 
-    if (!val) balance = 0;
+  //   if (!val) balance = 0;
 
-    await daiContract.approve(marketContract.address, balance.toString());
-  };
+  //   await daiContract.approve(marketContract.address, balance.toString());
+  // };
 
   const placeBet = async (e: any) => {
     e.preventDefault();
@@ -134,16 +142,7 @@ const Card = ({ marketContract, daiContract }: any) => {
       setDaiApproved(true);
     }
 
-    if (parseFloat(daiAllowance) > 0) {
-      let parsedAmount = parseUnits(amountToBet.toString(), 18).toString();
-      console.log("parsedAmount:", parsedAmount);
-
-      try {
-        await marketContract.placeBet(choiceAsNumber, parsedAmount);
-      } catch (error) {
-        throw error;
-      }
-    }
+    await marketContract.placeBet(1, amountToBet);
   };
 
   const checkOwner = () => {
@@ -193,28 +192,32 @@ const Card = ({ marketContract, daiContract }: any) => {
           </MarketAmount>
         </Item>
         <Item>
-          <ItemDescription>Your Balance</ItemDescription>
-          <MarketAmount>{accountBalance}</MarketAmount>
+          <ItemDescription>Number of Paricipants</ItemDescription>
+          <MarketAmount>{`${
+            totalNumberOfParticipants ? setTotalNumberOfParticipants : "-"
+          }`}</MarketAmount>
         </Item>
         <Item>
           <ItemDescription>Total Pot</ItemDescription>
-          <MarketAmount>{`${totalBet ? totalBet : "-"}`}</MarketAmount>
+          <MarketAmount>{`${
+            totalNumberOfBets ? totalNumberOfBets : "-"
+          }`}</MarketAmount>
         </Item>
         <Item>
-          <ItemDescription>Compounding In AAVE</ItemDescription>
+          <ItemDescription>Compounded in AAVE</ItemDescription>
           <MarketAmount>{AAVEToken}</MarketAmount>
         </Item>
       </MarketDetails>
 
       <GraphFormWrapper>
-        <ChartWrapper>
+        {/* <ChartWrapper>
           <Chart outcomes={outcomes} />
-        </ChartWrapper>
+        </ChartWrapper> */}
 
         <Form onSubmit={placeBet}>
           <>
             <span>DAI {daiApproved ? "Enabled" : "Disabled"}</span>
-            <label>
+            {/* <label>
               Dai approved?
               <input
                 name="enable dai"
@@ -222,7 +225,7 @@ const Card = ({ marketContract, daiContract }: any) => {
                 checked={daiApproved ? true : false}
                 onChange={enableDai}
               />
-            </label>
+            </label> */}
 
             <span>{daiAllowance} DAI</span>
           </>
@@ -232,8 +235,8 @@ const Card = ({ marketContract, daiContract }: any) => {
           >
             <Option key={uuidv4()} value="" />
             {outcomes.map((outcome: any) => (
-              <Option key={uuidv4()} value={outcome.name}>
-                {outcome.name}
+              <Option key={uuidv4()} value={outcome}>
+                {outcome}
               </Option>
             ))}
           </Select>
@@ -251,22 +254,16 @@ const Card = ({ marketContract, daiContract }: any) => {
         </Form>
       </GraphFormWrapper>
 
+      <h1>Votes for Trump: {totalVotesTrump}</h1>
+      <h1>Votes for Biden: {totalVotesBiden}</h1>
+
       {checkOwner() && (
-        <>
-          <h1>TESTING FUNCTIONALITY</h1>
-          <h3>
-            {" "}
-            Owner: {ShortenAddress(owner)}, State: {state}
-          </h3>
-          <OwnerButtons>
-            <OwnerButton onClick={() => incrementState()}>
-              Increment State
-            </OwnerButton>
-            <OwnerButton onClick={() => disable()}>
-              Disable Contract
-            </OwnerButton>
-          </OwnerButtons>
-        </>
+        <OwnerButtons>
+          <OwnerButton onClick={() => incrementState()}>
+            Increment State
+          </OwnerButton>
+          <OwnerButton onClick={() => disable()}>Disable Contract</OwnerButton>
+        </OwnerButtons>
       )}
     </Content>
   );

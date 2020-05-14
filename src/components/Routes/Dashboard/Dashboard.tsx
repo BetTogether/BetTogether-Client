@@ -17,18 +17,32 @@ import {
   Wrapper,
   Button,
   GetDaiButton,
+  Form,
+  Input,
 } from "./Dashboard.style";
 import Card from "./Card";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
 
+  const daiAddress = addresses[KOVAN_ID].tokens.DAI;
+  const factoryAddress = addresses[KOVAN_ID].marketFactory;
   const [factoryContract, setFactoryContract] = useState<any>(null);
   const [marketInstance, setMarketInstance] = useState<any>(null);
   const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
-  const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
-  const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
   const [wallet, setWallet] = useState<any>(null);
+  const [marketEventName, setMarketEventName] = useState<string>(
+    "Who will win the 2020 US Presidential Election?"
+  );
+  const [optionOne, setOptionOne] = useState<string>("Trump");
+  const [optionTwo, setOptionTwo] = useState<string>("Biden");
+  const [numberOfTokenContracts, setNumberOfTokenContracts] = useState(0);
+
+  const getDai = () =>
+    dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
+
+  const openEmailModal = () =>
+    dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
 
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
@@ -37,62 +51,39 @@ const Dashboard = () => {
     const wallet = provider.getSigner();
     setWallet(wallet);
 
-    const DaiInstance: any = new ethers.Contract(
-      DaiAddressKovan,
-      DaiABI,
-      wallet
-    );
+    const DaiInstance: any = new ethers.Contract(daiAddress, DaiABI, wallet);
     setDaiContractInstance(DaiInstance);
 
     const FactoryContract: any = new ethers.Contract(
-      marketFactoryAddressKovan,
+      factoryAddress,
       BTMarketFactoryContract.abi,
       wallet
     );
 
     setFactoryContract(FactoryContract);
-    getMarketInstance(FactoryContract, wallet);
-  }, [DaiAddressKovan, marketFactoryAddressKovan]);
+    getMostRecentMarket(FactoryContract, wallet);
+  }, [daiAddress, factoryAddress]);
 
-  // const marketPromptAndOptions = async (instance: any) => {
-  //   const eventName = await instance.eventName();
-  //   if (eventName === undefined || null)
-  //     await instance.setEventName(
-  //       "Who will win the 2020 US Presidential Election?"
-  //     );
-
-  //   let DT = await instance.outcomeNames(0);
-  //   if (DT === undefined || null)
-  //     await instance.setOutcomeName(0, "Donald Trump");
-
-  //   let JB = await instance.outcomeNames(1);
-  //   if (JB === undefined || null) await instance.setOutcomeName(1, "Joe Biden");
-  // };
-
-  const getMarketInstance = async (factoryContract: any, wallet: any) => {
+  const getMostRecentMarket = async (factoryContract: any, wallet: any) => {
     try {
       let deployedMarkets = await (factoryContract as any).getMarkets();
+
       if (deployedMarkets.length !== 0) {
         let mostRecentlyDeployedAddress =
           deployedMarkets[deployedMarkets.length - 1];
+
+        console.log(
+          "Most Recently Deployed Address:",
+          mostRecentlyDeployedAddress
+        );
 
         const instance: any = new ethers.Contract(
           mostRecentlyDeployedAddress,
           BTMarketContract.abi,
           wallet
         );
-
-        const eventName = await instance.eventName();
-        if (eventName === "" || null)
-          await instance.setEventName(
-            "Who will win the 2020 US Presidential Election?"
-          );
-
-        let DT = await instance.outcomeNames(0);
-        if (DT === "" || null) await instance.setOutcomeName(0, "Donald Trump");
-
-        let JB = await instance.outcomeNames(1);
-        if (JB === "" || null) await instance.setOutcomeName(1, "Joe Biden");
+        let tokenContractsCreated = await instance.tokenContractsCreated();
+        setNumberOfTokenContracts(tokenContractsCreated.toNumber());
 
         setMarketInstance(instance);
       }
@@ -101,29 +92,35 @@ const Dashboard = () => {
     }
   };
 
-  const createMarket = async (factory: any) => {
-    const DUMMY_MARKET_OPENING_TIME = 0;
-    const DUMMY_MARKET_RESOLUTION_TIME = 0;
-    const DUMMY_ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
-    const DUMMY_QUESTION = "Who will win the 2020 US Presidential Election?";
-    const DUMMY_NUMBER_OF_OUTCOMES = 2;
+  const createMarket = async (e: any) => {
+    e.preventDefault();
+    const MARKET_EVENT_NAME = marketEventName;
+    const MARKET_OPENING_TIME = 0;
+    const MARKET_RESOLUTION_TIME = 0;
+    const ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
+    const QUESTION = marketEventName;
+    const NUMBER_OF_OUTCOMES = 2;
 
-    await factory.createMarket(
-      DUMMY_MARKET_OPENING_TIME,
-      DUMMY_MARKET_RESOLUTION_TIME,
-      DUMMY_ARBITRATOR,
-      DUMMY_QUESTION,
-      DUMMY_NUMBER_OF_OUTCOMES
+    await factoryContract.createMarket(
+      MARKET_EVENT_NAME,
+      MARKET_OPENING_TIME,
+      MARKET_RESOLUTION_TIME,
+      ARBITRATOR,
+      QUESTION,
+      NUMBER_OF_OUTCOMES
     );
 
-    getMarketInstance(factoryContract, wallet);
+    getMostRecentMarket(factoryContract, wallet);
   };
 
-  const getDai = () =>
-    dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
+  const createTokens = async (e: any) => {
+    e.preventDefault();
 
-  const openEmailModal = () =>
-    dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
+    if (numberOfTokenContracts === 0) {
+      await marketInstance.createTokenContract("Donald Trump", "Donald Trump");
+      await marketInstance.createTokenContract("Joe Biden", "Joe Biden");
+    }
+  };
 
   return (
     <Container>
@@ -148,11 +145,30 @@ const Dashboard = () => {
               key={1}
               daiContract={daiContractInstance}
               marketContract={marketInstance}
+              numberOfTokenContracts={numberOfTokenContracts}
             />
           )}
-          <Button onClick={() => createMarket(factoryContract)}>
-            Create New Contract
-          </Button>
+          <Form onSubmit={createMarket}>
+            <Input
+              type="text"
+              value={marketEventName}
+              onChange={(e) => setMarketEventName(e.target.value)}
+            />
+            <Button>Create New Market</Button>
+          </Form>
+          <Form onSubmit={createTokens}>
+            <Input
+              type="text"
+              value={optionOne}
+              onChange={(e) => setOptionOne(e.target.value)}
+            />
+            <Input
+              type="text"
+              value={optionTwo}
+              onChange={(e) => setOptionTwo(e.target.value)}
+            />
+            <Button>Create New Tokens</Button>
+          </Form>
 
           <GetDaiButton onClick={() => getDai()}>
             <Dai />
