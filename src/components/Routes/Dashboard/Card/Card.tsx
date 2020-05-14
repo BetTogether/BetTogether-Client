@@ -31,7 +31,7 @@ import { ethers } from "ethers";
 import { parseUnits } from "@ethersproject/units";
 
 const Card = ({ marketContract, daiContract }: any) => {
-  // console.log("marketContract:", marketContract);
+  console.log(marketContract);
   const context = useWeb3React<Web3Provider>();
   const { active, account, library } = context;
 
@@ -54,28 +54,43 @@ const Card = ({ marketContract, daiContract }: any) => {
 
   useEffect(() => {
     (async () => {
-      if (marketContract) {
+      if (marketContract && account) {
         let state = await marketContract.state();
+        console.log("MarketStates", MarketStates[state]);
         setState(MarketStates[state]);
-        let prompt = await marketContract.eventName();
-        setPrompt(prompt);
+
         const owner = await marketContract.owner();
         setOwner(owner);
+
         const totalBet = await marketContract.totalBet();
         setTotalBet(totalBet);
+
         const isPaused = await marketContract.paused();
         setIsPaused(isPaused);
-        // const marketResolutionTime = await marketContract.marketResolutionTime();
-        // TEST VALUE
-        const marketResolutionTime = 300000;
+
+        const marketResolutionTime = await marketContract.marketResolutionTime();
         setMarketResolutionTime(marketResolutionTime);
 
-        // const totalBets = marketContract.totalBet()
-        const totalBets = 100;
-        const DT = await marketContract.eventOutcomes(0);
+        const numberOfOutcomes = await marketContract.numberOfOutcomes();
+        console.log("numberOfOutcomes:", numberOfOutcomes.toNumber());
+
+        const totalBets = await marketContract.totalBet();
+        console.log("totalBets:", totalBets.toNumber());
+
+        let questionId = await marketContract.realitio();
+        console.log("questionId:", questionId);
+
+        let eventName = await marketContract.eventName();
+        setPrompt(eventName);
+
+        let DT = await marketContract.outcomeNames(0);
+        console.log("DT:", DT);
+
+        let JB = await marketContract.outcomeNames(1);
+        console.log("JB:", JB);
+
         // const DTNumberOfBets = await marketContract.totalBetPerOutcome(0);
         const DTNumberOfBets = 60;
-        const JB = await marketContract.eventOutcomes(1);
         // const JBNumberOfBets = await marketContract.totalBetPerOutcome(1);
         const JBNumberOfBets = 40;
         setOutcomes([
@@ -128,31 +143,30 @@ const Card = ({ marketContract, daiContract }: any) => {
   };
 
   const placeBet = async (e: any) => {
-    e.preventDefault();
-    console.log(choice);
-    console.log(amountToBet);
+    if (!!library && !!account) {
+      e.preventDefault();
+      console.log(choice);
+      console.log(amountToBet);
 
-    let choiceAsNumber: number;
-    choice === "Donald Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
+      let choiceAsNumber: number;
+      choice === "Donald Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
 
-    // if (!daiApproved) {
-    //   let balance = await daiContract.balanceOf(account);
-    //   await daiContract.approve(marketContract.address, balance);
-    //   setDaiApproved(true);
-    // }
-    let daiAllowanceCheck = parseFloat(daiAllowance);
-    if (daiAllowanceCheck > 0) {
-      let newAmount = parseUnits(daiAllowance, 18);
-      console.log("newAmount:", newAmount);
-      try {
-        await marketContract.placeBet(choiceAsNumber, newAmount);
-        // .sendTransaction({
-        //   to: marketContract.address,
-        //   value: ethers.utils.parseEther("1.0"),
-        //   chainId: networkId,
-        // });
-      } catch (error) {
-        throw error;
+      // if (!daiApproved) {
+      //   let balance = await daiContract.balanceOf(account);
+      //   await daiContract.approve(marketContract.address, balance);
+      //   setDaiApproved(true);
+      // }
+
+      if (parseFloat(daiAllowance) > 0) {
+        let amountToBetString = amountToBet.toString();
+        let newAmount = parseUnits(amountToBetString, 18).toString();
+        console.log("newAmount:", newAmount);
+
+        try {
+          await marketContract.placeBet(choiceAsNumber, newAmount);
+        } catch (error) {
+          throw error;
+        }
       }
     }
   };

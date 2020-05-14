@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Dai } from "@rimble/icons";
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import { Tooltip } from "rimble-ui";
 
 import BTMarketContract from "contracts/BTMarket.json";
@@ -19,7 +19,6 @@ import {
   GetDaiButton,
 } from "./Dashboard.style";
 import Card from "./Card";
-import { ShortenAddress } from "utils/ShortenAddress";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
@@ -27,10 +26,8 @@ const Dashboard = () => {
   const [factoryContract, setFactoryContract] = useState<any>(null);
   const [marketInstance, setMarketInstance] = useState<any>(null);
   const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
-  // const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
-  const DaiAddressKovan = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
+  const DaiAddressKovan = addresses[KOVAN_ID].tokens.DAI;
   const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
-  const [marketList, setMarketList] = useState<any>([]);
   const [wallet, setWallet] = useState<any>(null);
 
   useEffect(() => {
@@ -57,42 +54,66 @@ const Dashboard = () => {
     getMarketInstance(FactoryContract, wallet);
   }, [DaiAddressKovan, marketFactoryAddressKovan]);
 
+  // const marketPromptAndOptions = async (instance: any) => {
+  //   const eventName = await instance.eventName();
+  //   if (eventName === undefined || null)
+  //     await instance.setEventName(
+  //       "Who will win the 2020 US Presidential Election?"
+  //     );
+
+  //   let DT = await instance.outcomeNames(0);
+  //   if (DT === undefined || null)
+  //     await instance.setOutcomeName(0, "Donald Trump");
+
+  //   let JB = await instance.outcomeNames(1);
+  //   if (JB === undefined || null) await instance.setOutcomeName(1, "Joe Biden");
+  // };
+
   const getMarketInstance = async (factoryContract: any, wallet: any) => {
     try {
       let deployedMarkets = await (factoryContract as any).getMarkets();
-      setMarketList(deployedMarkets);
+      if (deployedMarkets.length !== 0) {
+        let mostRecentlyDeployedAddress =
+          deployedMarkets[deployedMarkets.length - 1];
 
-      let mostRecentlyDeployedAddress =
-        deployedMarkets[deployedMarkets.length - 1];
+        const instance: any = new ethers.Contract(
+          mostRecentlyDeployedAddress,
+          BTMarketContract.abi,
+          wallet
+        );
 
-      const instance: any = new ethers.Contract(
-        mostRecentlyDeployedAddress,
-        BTMarketContract.abi,
-        wallet
-      );
+        const eventName = await instance.eventName();
+        if (eventName === "" || null)
+          await instance.setEventName(
+            "Who will win the 2020 US Presidential Election?"
+          );
 
-      setMarketInstance(instance);
+        let DT = await instance.outcomeNames(0);
+        if (DT === "" || null) await instance.setOutcomeName(0, "Donald Trump");
+
+        let JB = await instance.outcomeNames(1);
+        if (JB === "" || null) await instance.setOutcomeName(1, "Joe Biden");
+
+        setMarketInstance(instance);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const createMarket = async (factory: any) => {
-    console.log(factoryContract);
     const DUMMY_MARKET_OPENING_TIME = 0;
     const DUMMY_MARKET_RESOLUTION_TIME = 0;
     const DUMMY_ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
-    const DUMMY_EVENT_NAME = "Who will win the 2020 US Presidential Election?";
+    const DUMMY_QUESTION = "Who will win the 2020 US Presidential Election?";
     const DUMMY_NUMBER_OF_OUTCOMES = 2;
-    const DUMMY_TIMEOUT = 10;
 
     await factory.createMarket(
       DUMMY_MARKET_OPENING_TIME,
       DUMMY_MARKET_RESOLUTION_TIME,
       DUMMY_ARBITRATOR,
-      DUMMY_EVENT_NAME,
-      DUMMY_NUMBER_OF_OUTCOMES,
-      DUMMY_TIMEOUT
+      DUMMY_QUESTION,
+      DUMMY_NUMBER_OF_OUTCOMES
     );
 
     getMarketInstance(factoryContract, wallet);
@@ -132,11 +153,6 @@ const Dashboard = () => {
           <Button onClick={() => createMarket(factoryContract)}>
             Create New Contract
           </Button>
-
-          {marketList.length &&
-            marketList.map((market: any) => (
-              <span key={market}> {ShortenAddress(market)} </span>
-            ))}
 
           <GetDaiButton onClick={() => getDai()}>
             <Dai />
