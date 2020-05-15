@@ -26,7 +26,7 @@ import { ReactComponent as CrossIcon } from "assets/cross.svg";
 import { LayoutContext } from "store/Context";
 import portisLogo from "assets/portis.svg";
 import metamaskLogo from "assets/metamask.svg";
-import { Loader } from "rimble-ui";
+import Spinner from "utils/spinner";
 
 interface ISignInModalProps {
   isOpen: boolean;
@@ -116,7 +116,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     <Wrapper isOpen={isOpen}>
       <Modal ref={node}>
         {loading ? (
-          <Loader />
+          <Spinner />
         ) : (
           <>
             <IconButton onClick={() => toggleModal()}>

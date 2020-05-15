@@ -3,8 +3,9 @@ import { Content, Border, Top, Title, Image } from "./Settings.style";
 import Container from "components/Routes/RoutesContainer";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Loader } from "rimble-ui";
 import Box from "3box";
+
+import Spinner from "utils/spinner";
 
 const Settings = () => {
   const context = useWeb3React<Web3Provider>();
@@ -63,7 +64,7 @@ const Settings = () => {
                   <button>Change email</button>
                 </form>
               ) : (
-                <Loader />
+                <Spinner />
               )}
             </>
           )}

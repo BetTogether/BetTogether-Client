@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CountUp from "react-countup";
 import CountDown from "react-countdown";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "./node_modules/uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
-import { ShortenAddress } from "utils/ShortenAddress";
+import { ShortenAddress } from "./node_modules/utils/ShortenAddress";
 import {
   Content,
   Header,
@@ -23,15 +23,14 @@ import {
   Input,
   OwnerButton,
   OwnerButtons,
-} from "./Card.style";
-import Chart from "./Chart";
+} from "./MarketCard.style";
+//import Chart from "./Chart";
 
 //!remove
 import { ethers } from "ethers";
 import { parseUnits } from "@ethersproject/units";
 
 const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
-  console.log("numberOfTokenContracts:", numberOfTokenContracts);
   console.log(marketContract);
   const context = useWeb3React<Web3Provider>();
   const { active, account, library } = context;
@@ -62,7 +61,6 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
   useEffect(() => {
     (async () => {
       const state = await marketContract.state();
-      console.log("state:", state);
       setState(MarketStates[state]);
       const owner = await marketContract.owner();
       setOwner(owner);
@@ -72,15 +70,15 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
       setMarketResolutionTime(marketResolutionTime);
       const eventName = await marketContract.eventName();
       setPrompt(eventName);
-      const totalBets = await marketContract.totalBets();
-      setTotalNumberOfBets(totalBets.toNumber());
+      // const totalBets = await marketContract.totalBets();
+      // setTotalNumberOfBets(totalBets.toNumber());
 
       if (numberOfTokenContracts !== 0) {
         const DT = await marketContract.outcomeNames(0);
-        const JB = await marketContract.outcomeNames(1);
-
         const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
         setTotalVotesTrump(DTNumberOfBets.toNumber());
+
+        const JB = await marketContract.outcomeNames(1);
         const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
         setTotalVotesBiden(JBNumberOfBets.toNumber());
 
@@ -99,7 +97,6 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
       //   console.log("newOutcomeName:", newOutcomeName);
       //   setOutcomes([...outcomes, { name: newOutcomeName }]);
       // }
-      // await marketContract.placeBet(1, 1);
     })();
   }, []);
 
@@ -134,7 +131,7 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
     console.log(amountToBet);
 
     let choiceAsNumber: number;
-    choice === "Donald Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
+    choice === "Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
 
     if (!daiApproved) {
       let balance = await daiContract.balanceOf(account);
@@ -142,7 +139,10 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
       setDaiApproved(true);
     }
 
-    await marketContract.placeBet(1, amountToBet);
+    let stringed = amountToBet + "";
+    let factored = ethers.utils.parseUnits(stringed, 18);
+
+    await marketContract.placeBet(choiceAsNumber, factored);
   };
 
   const checkOwner = () => {
@@ -217,15 +217,6 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
         <Form onSubmit={placeBet}>
           <>
             <span>DAI {daiApproved ? "Enabled" : "Disabled"}</span>
-            {/* <label>
-              Dai approved?
-              <input
-                name="enable dai"
-                type="checkbox"
-                checked={daiApproved ? true : false}
-                onChange={enableDai}
-              />
-            </label> */}
 
             <span>{daiAllowance} DAI</span>
           </>
@@ -247,7 +238,7 @@ const Card = ({ marketContract, daiContract, numberOfTokenContracts }: any) => {
             onChange={(e: any) => setAmountToBet(e.target.value)}
           />
           {!!(library && account) && (
-            <Button disabled={amountToBet <= 0 || active === false}>
+            <Button disabled={amountToBet <= 0 || state !== "OPEN"}>
               Enter
             </Button>
           )}

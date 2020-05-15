@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, FormEvent } from "react";
 import { Dai } from "@rimble/icons";
-import { ethers, utils } from "ethers";
-import { Tooltip } from "rimble-ui";
+import { ethers } from "ethers";
 
 import BTMarketContract from "contracts/BTMarket.json";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
@@ -20,23 +19,23 @@ import {
   Form,
   Input,
 } from "./Dashboard.style";
-import Card from "./Card";
+import MarketCard from "./MarketCard";
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
 
   const daiAddress = addresses[KOVAN_ID].tokens.DAI;
   const factoryAddress = addresses[KOVAN_ID].marketFactory;
-  const [factoryContract, setFactoryContract] = useState<any>(null);
-  const [marketInstance, setMarketInstance] = useState<any>(null);
+
   const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
-  const [wallet, setWallet] = useState<any>(null);
+  const [factoryContract, setFactoryContract] = useState<any>(null);
+  const [marketContractInstance, setMarketContractInstance] = useState<any>(
+    null
+  );
   const [marketEventName, setMarketEventName] = useState<string>(
     "Who will win the 2020 US Presidential Election?"
   );
-  const [optionOne, setOptionOne] = useState<string>("Trump");
-  const [optionTwo, setOptionTwo] = useState<string>("Biden");
-  const [numberOfTokenContracts, setNumberOfTokenContracts] = useState(0);
+  const [wallet, setWallet] = useState<any>(null);
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -72,27 +71,25 @@ const Dashboard = () => {
         let mostRecentlyDeployedAddress =
           deployedMarkets[deployedMarkets.length - 1];
 
-        console.log(
-          "Most Recently Deployed Address:",
-          mostRecentlyDeployedAddress
-        );
-
         const instance: any = new ethers.Contract(
           mostRecentlyDeployedAddress,
           BTMarketContract.abi,
           wallet
         );
-        let tokenContractsCreated = await instance.tokenContractsCreated();
-        setNumberOfTokenContracts(tokenContractsCreated.toNumber());
 
-        setMarketInstance(instance);
+        setMarketContractInstance(instance);
+
+        console.log(
+          "Most Recently Deployed Address:",
+          mostRecentlyDeployedAddress
+        );
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const createMarket = async (e: any) => {
+  const createMarket = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const MARKET_EVENT_NAME = marketEventName;
     const MARKET_OPENING_TIME = 0;
@@ -113,61 +110,36 @@ const Dashboard = () => {
     getMostRecentMarket(factoryContract, wallet);
   };
 
-  const createTokens = async (e: any) => {
-    e.preventDefault();
-
-    if (numberOfTokenContracts === 0) {
-      await marketInstance.createTokenContract("Donald Trump", "Donald Trump");
-      await marketInstance.createTokenContract("Joe Biden", "Joe Biden");
-    }
-  };
-
   return (
     <Container>
       <Content>
         <Top>
           <Title>Dashboard</Title>
-          <Tooltip message="Send a reminder email" placement="left">
-            <SVG
-              fill="#000000"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              onClick={() => openEmailModal()}
-            >
-              <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 15 L 18 15 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 5 17 A 1.0001 1.0001 0 1 0 5 19 L 10.269531 19 A 2 2 0 0 0 10 20 A 2 2 0 0 0 12 22 A 2 2 0 0 0 14 20 A 2 2 0 0 0 13.728516 19 L 19 19 A 1.0001 1.0001 0 1 0 19 17 L 5 17 z" />
-            </SVG>
-          </Tooltip>
+          <SVG
+            fill="#000000"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            onClick={() => openEmailModal()}
+          >
+            <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 15 L 18 15 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 5 17 A 1.0001 1.0001 0 1 0 5 19 L 10.269531 19 A 2 2 0 0 0 10 20 A 2 2 0 0 0 12 22 A 2 2 0 0 0 14 20 A 2 2 0 0 0 13.728516 19 L 19 19 A 1.0001 1.0001 0 1 0 19 17 L 5 17 z" />
+          </SVG>
         </Top>
 
         <Wrapper>
-          {marketInstance && (
-            <Card
-              key={1}
+          {marketContractInstance && (
+            <MarketCard
               daiContract={daiContractInstance}
-              marketContract={marketInstance}
-              numberOfTokenContracts={numberOfTokenContracts}
+              marketContract={marketContractInstance}
             />
           )}
+
           <Form onSubmit={createMarket}>
             <Input
               type="text"
               value={marketEventName}
               onChange={(e) => setMarketEventName(e.target.value)}
             />
-            <Button>Create New Market</Button>
-          </Form>
-          <Form onSubmit={createTokens}>
-            <Input
-              type="text"
-              value={optionOne}
-              onChange={(e) => setOptionOne(e.target.value)}
-            />
-            <Input
-              type="text"
-              value={optionTwo}
-              onChange={(e) => setOptionTwo(e.target.value)}
-            />
-            <Button>Create New Tokens</Button>
+            <Button>Create Market</Button>
           </Form>
 
           <GetDaiButton onClick={() => getDai()}>
