@@ -8,7 +8,7 @@ export const ROPSTEN_ID = 3;
 
 export default {
   [KOVAN_ID]: {
-    marketFactory: "0xFf6c64bbdF7D7E406D0b6514c852fe6E6742b0BD",
+    marketFactory: "0x6368ED053B1514B39f92F1a57d57366C61903608",
     lendingPoolAddressesProvider: "0x506B0B2CF20FAA8f38a4E2B524EE43e1f4458Cc5",
     lendingPool: "0x580D4Fdc4BF8f9b5ae2fb9225D584fED4AD5375c",
     lendingPoolCore: "0x95D1189Ed88B380E319dF73fF00E479fcc4CFa45",

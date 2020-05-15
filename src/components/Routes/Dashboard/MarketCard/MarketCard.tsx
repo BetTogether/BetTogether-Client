@@ -24,7 +24,7 @@ import {
   OwnerButton,
   OwnerButtons,
 } from "./MarketCard.style";
-//import Chart from "./Chart";
+import Chart from "./Chart";
 
 //!remove
 import { ethers, utils } from "ethers";
@@ -36,8 +36,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   const { account, library } = context;
 
   const [amountToBet, setAmountToBet] = useState<number>(0);
-  const [AAVEToken] = useState<number>(0);
-  const [gross, setGross] = useState<number>(3);
+  const [accruedInterest, setAccruedInterest] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
   const [state, setState] = useState<string>("");
@@ -45,13 +44,10 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   const [owner, setOwner] = useState<string>("");
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
   const [daiAllowance, setDaiAllowance] = useState<string>("");
-  const [totalNumberOfBets, setTotalNumberOfBets] = useState<number>(0);
-  const [totalNumberOfParticipants, setTotalNumberOfParticipants] = useState<
-    number
-  >(0);
+  const [numberOfParticipants, setNumberOfParticipants] = useState<number>(0);
+  const [pot, setPot] = useState<string>("");
 
   //temp
   const [totalVotesForTrump, setTotalVotesForTrump] = useState<string>("");
@@ -60,29 +56,27 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   useEffect(() => {
     (async () => {
       const state = await marketContract.state();
-      console.log("state:", state);
       setState(MarketStates[state]);
       const owner = await marketContract.owner();
       setOwner(owner);
-      const isPaused = await marketContract.paused();
-      setIsPaused(isPaused);
       const marketResolutionTime = await marketContract.marketResolutionTime();
       setMarketResolutionTime(marketResolutionTime);
       const eventName = await marketContract.eventName();
       setPrompt(eventName);
-      // const totalBets = await marketContract.totalBets();
-      // setTotalNumberOfBets(totalBets.toNumber());
+      const numberOfParticipants = await marketContract.getMarketSize();
+      setNumberOfParticipants(numberOfParticipants.toNumber());
+      const pot = await marketContract.totalBets();
+      const unformatted = pot.toString();
+      setPot(utils.formatUnits(unformatted, 18));
+      const accruedInterest = await marketContract.getTotalInterest();
+      const formatted = utils.formatEther(accruedInterest.toNumber());
+      setAccruedInterest(parseFloat(formatted));
     })();
   }, []);
 
   useEffect(() => {
     (async () => {
       let numberOfTokenContracts = await marketContract.tokenContractsCreated();
-
-      console.log(
-        "Number of Token Contracts:",
-        numberOfTokenContracts.toNumber()
-      );
 
       if (numberOfTokenContracts.toNumber() === 0) {
         await marketContract.createTokenContract("Trump", "Trump");
@@ -92,7 +86,12 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       if (numberOfTokenContracts.toNumber() !== 0) {
         const DT = await marketContract.outcomeNames(0);
         const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
-        setTotalVotesForTrump(DTNumberOfBets.toString());
+        console.log("DTNumberOfBets:", DTNumberOfBets);
+
+        const fortmattedTrump = utils.formatUnits(DTNumberOfBets, 18);
+        let cielstring = parseFloat(fortmattedTrump);
+        let ceil = Math.ceil(cielstring);
+        setTotalVotesForTrump(ceil + "");
 
         const JB = await marketContract.outcomeNames(1);
         const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
@@ -122,6 +121,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     };
     if (account) {
       getAllowance().then((allowance) => {
+        console.log("allowance:", allowance);
         if (allowance.toString() !== "0") {
           setDaiApproved(true);
           const stringRep = allowance.toString();
@@ -163,7 +163,16 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     let stringed = amountToBet + "";
     let factored = ethers.utils.parseUnits(stringed, 18);
 
-    await marketContract.placeBet(choiceAsNumber, factored);
+    console.log(choiceAsNumber, factored);
+    console.log("Formatted", choiceAsNumber.toString(), factored.toString());
+
+    try {
+      let tx = await marketContract.placeBet(choiceAsNumber, factored);
+      console.log(tx.hash);
+      await tx.wait();
+    } catch (error) {
+      throw error;
+    }
   };
 
   const checkOwner = () => {
@@ -184,11 +193,32 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     await marketContract.disableContract();
   };
 
+  const enableDai = async (e: any) => {
+    const val = e.target.checked;
+    let balance = await daiContract.balanceOf(account);
+
+    if (!val) balance = 0;
+
+    await daiContract.approve(marketContract.address, balance.toString());
+  };
+
   return (
     <Content>
       <Header>
         <span>{ShortenAddress(marketContract.address)}</span>
-        <span>{state ? state : "-"}</span>
+        <span>
+          <ItemDescription>
+            Current, Potential Winnings (in Dai)
+          </ItemDescription>
+          <CountUp
+            start={0}
+            end={accruedInterest}
+            decimals={18}
+            preserveValue={true}
+            duration={5}
+          />
+        </span>
+
         <span>
           {marketResolutionTime ? (
             <CountDown date={Date.now() + marketResolutionTime} />
@@ -199,7 +229,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       </Header>
       <Prompt>{prompt}</Prompt>
 
-      <MarketDetails>
+      {/* <MarketDetails>
         <Item>
           <ItemDescription>Potential Winnings (in Dai)</ItemDescription>
           <MarketAmount>
@@ -212,32 +242,25 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
             />
           </MarketAmount>
         </Item>
-        <Item>
-          <ItemDescription>Number of Paricipants</ItemDescription>
-          <MarketAmount>{`${
-            totalNumberOfParticipants ? setTotalNumberOfParticipants : "-"
-          }`}</MarketAmount>
-        </Item>
-        <Item>
-          <ItemDescription>Total Pot</ItemDescription>
-          <MarketAmount>{`${
-            totalNumberOfBets ? totalNumberOfBets : "-"
-          }`}</MarketAmount>
-        </Item>
-        <Item>
-          <ItemDescription>Compounded in AAVE</ItemDescription>
-          <MarketAmount>{AAVEToken}</MarketAmount>
-        </Item>
-      </MarketDetails>
+      </MarketDetails> */}
 
       <GraphFormWrapper>
-        {/* <ChartWrapper>
+        <ChartWrapper>
           <Chart outcomes={outcomes} />
-        </ChartWrapper> */}
+        </ChartWrapper>
 
         <Form onSubmit={placeBet}>
           <>
             <span>DAI {daiApproved ? "Enabled" : "Disabled"}</span>
+            <label>
+              Dai approved?
+              <input
+                name="enable dai"
+                type="checkbox"
+                checked={daiApproved ? true : false}
+                onChange={enableDai}
+              />
+            </label>
             <span>{daiAllowance} DAI</span>
           </>
           <Select
@@ -265,6 +288,10 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
       <h1>Votes for Trump: {totalVotesForTrump}</h1>
       <h1>Votes for Biden: {totalVotesForBiden}</h1>
+      <h1>Number of Paritcipants: {numberOfParticipants}</h1>
+      <h1>Total Pot Size: {pot}</h1>
+      <h1>Owner: {ShortenAddress(owner)}</h1>
+      <h1>State: {state}</h1>
 
       {checkOwner() && (
         <OwnerButtons>
