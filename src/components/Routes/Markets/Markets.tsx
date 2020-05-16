@@ -25,12 +25,7 @@ const Markets = () => {
   const fetchMarkets = async (factory: any) => {
     try {
       const markets = await factory.getMarkets();
-      console.log({ markets });
-
-      const firstTestMarket = "0x7519b699d54fabc183fca06f3c10a5709365203f";
-      const allMarkets = [firstTestMarket, ...markets] as any;
-
-      setMarkets(allMarkets);
+      setMarkets(markets);
     } catch (error) {
       console.log({ error });
     }
@@ -71,9 +66,9 @@ const Markets = () => {
               <TableRow>
                 <TableHead>Address</TableHead>
                 <TableHead>Question</TableHead>
-                <TableHead>Winner</TableHead>
+                <TableHead>Winning Outcome</TableHead>
                 <TableHead>Winnings</TableHead>
-                <TableHead>Timestamp</TableHead>
+                <TableHead>Finish Date</TableHead>
               </TableRow>
               {markets.length &&
                 markets.map((market: string) => (

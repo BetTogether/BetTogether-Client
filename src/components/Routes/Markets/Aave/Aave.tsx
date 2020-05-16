@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { ShortenAddress } from "utils/ShortenAddress";
+import { ethers } from "ethers";
+
+import BTMarketContract from "contracts/BTMarket.json";
 
 // import {
 //   TableRow,
@@ -9,32 +12,84 @@ import { ShortenAddress } from "utils/ShortenAddress";
 
 const GET_LAST_DEPOSITS_FROM_MARKET = gql`
   query deposits($market: ID!) {
-    deposits(where: { user: $market }) {
-      user {
-        id
-      }
-      amount
-      timestamp
-      pool {
-        lendingPool
+    users(where: { id: $market }) {
+      reserves {
+        aTokenBalanceHistory(orderBy: timestamp) {
+          balance
+          timestamp
+        }
+        depositHistory(orderBy: timestamp) {
+          amount
+          timestamp
+        }
       }
     }
   }
 `;
 
+const getFormattedNumber = (floatBalance: number, decimals: number) => {
+  if (floatBalance === 0) {
+    return 0
+  } else if (floatBalance < 1) {
+    const decimalDigits = floatBalance.toFixed(decimals).slice(2)
+    const leadingZeros = decimalDigits.search(/[1-9]/)
+    const firstTwoDigits = decimalDigits.slice(leadingZeros, leadingZeros + 2)
+
+    return `0.${'0'.repeat(leadingZeros)}${firstTwoDigits}`
+  } else if (floatBalance < 10) return Math.round(floatBalance * 10) / 10
+
+  return Math.round(floatBalance)
+}
+
 function Aave({ market }: { market: string }) {
+  const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
+  const [winningOutcome, setWinningOutcome] = useState<number>(0);
+
+  useEffect(() => {
+    (async () => {
+      const provider = new ethers.providers.Web3Provider(
+        (window as any).web3.currentProvider
+      );
+      const wallet = provider.getSigner();
+      const marketContract: any = new ethers.Contract(
+        market,
+        BTMarketContract.abi,
+        wallet
+      );
+      const _marketResolutionTime = await marketContract.marketResolutionTime();
+      const _winningOutcome = await marketContract.winningOutcome();
+      setMarketResolutionTime(_marketResolutionTime);
+      setWinningOutcome(_winningOutcome);
+    })();
+  }, []);
+
   const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_MARKET, {
-    variables: { market },
+    variables: { market: market.toLowerCase() },
   });
 
-  const totalDepositAmount =
-    data &&
-    data.deposits.reduce(
-      (acc: number, v: any) => acc + parseInt(v.amount, 10),
-      0
-    );
+  let totalInterestsFormated: string | number = 0;
 
-  console.log({ market, data, totalDepositAmount });
+  if (data) { 
+    const { aTokenBalanceHistory, depositHistory } = data.users[0].reserves[0];
+
+    // TODO use real _marketResolutionTime
+    const fakeMarketResolutionTime = aTokenBalanceHistory.length > 2 ? aTokenBalanceHistory[2].timestamp - 2 : 0;
+
+    const accruedInterestChanges = aTokenBalanceHistory.filter((aTokenBalanceChange: any) => {
+      return aTokenBalanceChange.timestamp < fakeMarketResolutionTime
+    })
+
+    // filtering deposits probably not required for real contracts?
+    const filteredDeposits = depositHistory.filter((deposit: any) => {
+      return deposit.timestamp < fakeMarketResolutionTime
+    })
+
+    const currentAtokenBalance = parseInt(accruedInterestChanges[accruedInterestChanges.length - 1].balance, 10);
+    const totalDeposits = filteredDeposits.reduce((depositSum: number, currentValue: any) => depositSum + parseInt(currentValue.amount, 10), 0);
+    const totalInterests = currentAtokenBalance - totalDeposits;
+
+    totalInterestsFormated = getFormattedNumber(totalInterests / 1e18, 17);
+  }
 
   return (
     <>
@@ -42,9 +97,9 @@ function Aave({ market }: { market: string }) {
         <>
           <th>{ShortenAddress(market)}</th>
           <th>{"TODO Question"}</th>
-          <th>{`TODO Winner`}</th>
-          <th>{`${totalDepositAmount / 1e18}$`}</th>
-          <th>{"TODO Timestamp"}</th>
+          <th>{winningOutcome.toString()}</th>
+          <th>{totalInterestsFormated ? `${totalInterestsFormated} DAI` : 'Loading'}</th>
+          <th>{new Date(marketResolutionTime).toUTCString()}</th>
         </>
       )}
     </>
