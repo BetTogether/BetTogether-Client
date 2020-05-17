@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 
 import BTMarketContract from "contracts/BTMarket.json";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import { injected, portis } from "utils/connectors";
 
 import { DaiABI } from "contracts/DaiABI";
 import addresses, { KOVAN_ID } from "contracts/addresses";
@@ -21,9 +22,25 @@ import {
   Input,
 } from "./Dashboard.style";
 import MarketCard from "./MarketCard";
+import { useWeb3React } from "@web3-react/core";
+
+const connectorsByName: { [name: string]: any } = {
+  Injected: injected,
+  Portis: portis,
+};
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(LayoutContext);
+  const context = useWeb3React();
+  const {
+    account,
+    active,
+    activate,
+    connector,
+    deactivate,
+    library,
+    error,
+  } = context;
 
   const daiAddress = addresses[KOVAN_ID].tokens.DAI;
   const factoryAddress = addresses[KOVAN_ID].marketFactory;
@@ -71,6 +88,13 @@ const Dashboard = () => {
       if (deployedMarkets.length !== 0) {
         let mostRecentlyDeployedAddress =
           deployedMarkets[deployedMarkets.length - 1];
+
+        // const usingPortis = portis.portis.provider
+
+        // const Provider = new ethers.providers.Web3Provider(
+        //   portis.portis.provider
+        // );
+        // const wallet = Provider.getSigner();
 
         const instance: any = new ethers.Contract(
           mostRecentlyDeployedAddress,

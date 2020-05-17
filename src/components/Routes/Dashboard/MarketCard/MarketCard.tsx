@@ -45,7 +45,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
-  const [daiAllowance, setDaiAllowance] = useState<string>("");
   const [numberOfParticipants, setNumberOfParticipants] = useState<number>(0);
   const [pot, setPot] = useState<string>("");
 
@@ -122,24 +121,10 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     if (account) {
       getAllowance().then((allowance) => {
         console.log("allowance:", allowance);
-        if (allowance.toString() !== "0") {
-          setDaiApproved(true);
-          const stringRep = allowance.toString();
-          const formatted = ethers.utils.formatEther(stringRep);
-          setDaiAllowance(formatted);
-        }
+        if (allowance.toString() !== "0") setDaiApproved(true);
       });
     }
   }, [account]);
-
-  // const enableDai = async (e: any) => {
-  //   const val = e.target.checked;
-  //   let balance = await daiContract.balanceOf(account);
-
-  //   if (!val) balance = 0;
-
-  //   await daiContract.approve(marketContract.address, balance.toString());
-  // };
 
   const placeBet = async (e: any) => {
     e.preventDefault();
@@ -193,15 +178,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     await marketContract.disableContract();
   };
 
-  const enableDai = async (e: any) => {
-    const val = e.target.checked;
-    let balance = await daiContract.balanceOf(account);
-
-    if (!val) balance = 0;
-
-    await daiContract.approve(marketContract.address, balance.toString());
-  };
-
   return (
     <Content>
       <Header>
@@ -250,19 +226,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
         </ChartWrapper>
 
         <Form onSubmit={placeBet}>
-          <>
-            <span>DAI {daiApproved ? "Enabled" : "Disabled"}</span>
-            <label>
-              Dai approved?
-              <input
-                name="enable dai"
-                type="checkbox"
-                checked={daiApproved ? true : false}
-                onChange={enableDai}
-              />
-            </label>
-            <span>{daiAllowance} DAI</span>
-          </>
           <Select
             value={choice}
             onChange={(e: any) => setChoice(e.target.value)}
