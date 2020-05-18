@@ -12,7 +12,7 @@ import {
   Image,
 } from "./PBTC.style";
 import { pBTC } from "ptokens-pbtc";
-import { sendBitcoin } from "./helpers/utils";
+import { sendBitcoin } from "./utils";
 
 const configs = {
   ethPrivateKey:

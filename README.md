@@ -20,6 +20,7 @@
 
 With [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed, run `npm install` inside the root directory.
 After compiling the contracts, add the ABI's into the client by storing them inside the src folder.
+If you deployed the factory contract, grab the address it was deployed to and paste it into utils/address under the corresponding network and variable name.
 
 ## Usage
 

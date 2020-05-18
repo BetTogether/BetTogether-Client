@@ -13,7 +13,7 @@ import {
   TableRow,
   PastMarkets,
 } from "./Markets.style";
-import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 
 import addresses, { KOVAN_ID } from "utils/addresses";
 

@@ -84,7 +84,7 @@ export default {
     },
   },
   [KOVAN_ID]: {
-    marketFactory: "0x0DBD1038834dB8A0eD44c0b00CF5F74989E0ef9f",
+    marketFactory: "0x6b8Ae0aD2f52FF258983812BFEd79265CeE002d0",
     lendingPoolAddressesProvider: "0x506B0B2CF20FAA8f38a4E2B524EE43e1f4458Cc5",
     lendingPool: "0x580D4Fdc4BF8f9b5ae2fb9225D584fED4AD5375c",
     lendingPoolCore: "0x95D1189Ed88B380E319dF73fF00E479fcc4CFa45",

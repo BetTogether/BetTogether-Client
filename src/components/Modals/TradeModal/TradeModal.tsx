@@ -33,9 +33,6 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
         {chainId === 4 && <Kyber />}
         <Top>
           <Title>BTC &#x2192; PBCT</Title>
-          <IconButton onClick={() => toggleModal()}>
-            <Clear />
-          </IconButton>
         </Top>
         <PBTC />
       </Modal>
