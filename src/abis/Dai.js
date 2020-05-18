@@ -1,4 +1,4 @@
-export const DaiABI = [
+export const Dai = [
   {
     inputs: [{ internalType: "uint256", name: "chainId_", type: "uint256" }],
     payable: false,

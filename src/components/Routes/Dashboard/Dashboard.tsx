@@ -2,11 +2,12 @@ import React, { useState, useContext, useEffect, FormEvent } from "react";
 import { Dai as DaiIcon } from "@rimble/icons";
 import { ethers } from "ethers";
 
-import BTMarketContract from "contracts/BTMarket.json";
-import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import BTMarketContract from "abis/BTMarket.json";
+import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import { injected, portis } from "utils/connectors";
 
-import { DaiABI } from "contracts/Dai";
+// import Dai from "abis/Dai.json";
+import { Dai } from "abis/Dai.js";
 import addresses, { KOVAN_ID } from "utils/addresses";
 import Container from "components/Routes/RoutesContainer";
 import { LayoutContext } from "store/Context";
@@ -43,7 +44,6 @@ const Dashboard = () => {
   } = context;
 
   const daiAddress = addresses[KOVAN_ID].tokens.DAI;
-  console.log("daiAddress:", daiAddress);
   const factoryAddress = addresses[KOVAN_ID].marketFactory;
 
   const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
@@ -69,8 +69,7 @@ const Dashboard = () => {
     const wallet = provider.getSigner();
     setWallet(wallet);
 
-    const DaiInstance: any = new ethers.Contract(daiAddress, DaiABI, wallet);
-    console.log("DaiInstance:", DaiInstance);
+    const DaiInstance: any = new ethers.Contract(daiAddress, Dai, wallet);
     setDaiContractInstance(DaiInstance);
 
     const FactoryContract: any = new ethers.Contract(
@@ -89,11 +88,11 @@ const Dashboard = () => {
       if (deployedMarkets.length !== 0) {
         let mostRecentlyDeployedAddress =
           deployedMarkets[deployedMarkets.length - 1];
-
         console.log(
-          "mostRecentlyDeployedAddress:",
+          "Most Recently Deployed Address:",
           mostRecentlyDeployedAddress
         );
+
         // const usingPortis = portis.portis.provider
         // const Provider = new ethers.providers.Web3Provider(
         //   portis.portis.provider
@@ -105,10 +104,6 @@ const Dashboard = () => {
           wallet
         );
         setMarketContractInstance(instance);
-        console.log(
-          "Most Recently Deployed Address:",
-          mostRecentlyDeployedAddress
-        );
       }
     } catch (error) {
       console.log(error);

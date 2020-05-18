@@ -76,8 +76,14 @@ export const Wrapper = styled.div`
 
 export const Container = styled.div`
   display: flex;
+  justify-content: space-around;
+`;
+
+export const Column = styled.div`
+  display: flex;
   flex-direction: column;
-  text-align: left;
+  justify-content: space-evenly;
+  align-items: center;
 `;
 
 export const Item = styled.div`

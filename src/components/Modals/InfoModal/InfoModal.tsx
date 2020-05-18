@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { LayoutContext } from "store/Context";
 import { Clear } from "@rimble/icons";
 import { ethers, utils } from "ethers";
@@ -10,13 +16,14 @@ import {
   Top,
   Title,
   Container,
+  Column,
   Detail,
   Item,
   ItemDescription,
 } from "./InfoModal.style";
 import { shortenAddress } from "utils/shortenAddress";
-import BTMarketContract from "contracts/BTMarket.json";
-import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import BTMarketContract from "abis/BTMarket.json";
+import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import addresses, { KOVAN_ID } from "utils/addresses";
 
 interface IInfoModalProps {
@@ -87,13 +94,13 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
           const addressVotesForTrump = await marketContract.getParticipantsBet(
             0
           );
-          console.log("addressVotesForTrump:", addressVotesForTrump);
+          console.log("addressVotesForTrump:", addressVotesForTrump.toString());
           setAddressVotesForTrump(addressVotesForTrump.toString());
 
           const addressVotesForBiden = await marketContract.getParticipantsBet(
             1
           );
-          console.log("addressVotesForBiden:", addressVotesForBiden);
+          console.log("addressVotesForBiden:", addressVotesForBiden.toString());
           setAddressVotesForBiden(addressVotesForBiden.toString());
         }
       }
@@ -103,48 +110,73 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
   const toggleModal = () =>
     dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });
 
+  //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE ... EVENTUALLY MOVE
+  const escFunction = useCallback(
+    (event: any) => {
+      if (event.keyCode === 27)
+        dispatch({
+          type: "TOGGLE_INFO_MODAL",
+          payload: !state.infoModalIsOpen,
+        });
+    },
+    [dispatch, state.infoModalIsOpen]
+  );
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("keydown", escFunction, false);
+      return () => {
+        document.removeEventListener("keydown", escFunction, false);
+      };
+    }
+  }, [dispatch, escFunction, isOpen, state.infoModalIsOpen]);
+  //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE
+
   return (
     <MainWrapper isOpen={isOpen}>
       <Modal>
         <Top>
-          <Title>Some important info to know...</Title>
+          <Title>Some important info...</Title>
           <IconButton onClick={() => toggleModal()}>
             <Clear />
           </IconButton>
         </Top>
         <Container>
-          <Item>
-            <Detail>{totalVotesForTrump}</Detail>
-            <ItemDescription>Total votes for Trump</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{totalVotesForBiden}</Detail>
-            <ItemDescription>Total votes for Biden</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{addressVotesForTrump}</Detail>
-            <ItemDescription>This address's Votes for Trump</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{addressVotesForBiden}</Detail>
-            <ItemDescription>This address's Votes for Biden</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{numberOfParticipants}</Detail>
-            <ItemDescription>Number of Participants</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{pot}</Detail>
-            <ItemDescription>Total Pot Size (in Dai)</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{shortenAddress(owner)}</Detail>
-            <ItemDescription>Contract Owner</ItemDescription>
-          </Item>
-          <Item>
-            <Detail>{marketState}</Detail>
-            <ItemDescription>Market State</ItemDescription>
-          </Item>
+          <Column>
+            <Item>
+              <Detail>{shortenAddress(owner)}</Detail>
+              <ItemDescription>Contract Owner</ItemDescription>
+            </Item>
+            <Item>
+              <Detail>{marketState}</Detail>
+              <ItemDescription>Market State</ItemDescription>
+            </Item>
+            <Item>
+              <Detail>{totalVotesForTrump}</Detail>
+              <ItemDescription>Votes for Trump</ItemDescription>
+            </Item>
+            <Item>
+              <Detail>{totalVotesForBiden}</Detail>
+              <ItemDescription>Votes for Biden</ItemDescription>
+            </Item>
+          </Column>
+          <Column>
+            <Item>
+              <Detail>{addressVotesForTrump}</Detail>
+              <ItemDescription>Your votes for Trump</ItemDescription>
+            </Item>
+            <Item>
+              <Detail>{addressVotesForBiden}</Detail>
+              <ItemDescription>Your votes for Biden</ItemDescription>
+            </Item>
+            <Item>
+              <Detail>{numberOfParticipants}</Detail>
+              <ItemDescription>Number of Participants</ItemDescription>
+            </Item>
+            <Item>
+              <Detail>{pot}</Detail>
+              <ItemDescription>Total Pot Size (in Dai)</ItemDescription>
+            </Item>
+          </Column>
         </Container>
       </Modal>
     </MainWrapper>
