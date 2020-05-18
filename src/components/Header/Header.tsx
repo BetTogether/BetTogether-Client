@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import Box from "3box";
 
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
@@ -20,7 +21,6 @@ import {
 import { LayoutContext } from "store/Context";
 import { shortenAddress } from "utils/shortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
-import Box from "3box";
 
 const Header = () => {
   const context = useWeb3React<Web3Provider>();

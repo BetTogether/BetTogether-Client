@@ -162,7 +162,7 @@ const Dashboard = () => {
             <Input
               type="text"
               value={marketEventName}
-              onChange={(e) => setMarketEventName(e.target.value)}
+              onChange={(e: any) => setMarketEventName(e.target.value)}
             />
             <Button>Create Market</Button>
           </Form>

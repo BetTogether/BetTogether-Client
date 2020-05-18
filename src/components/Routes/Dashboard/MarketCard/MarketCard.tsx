@@ -46,8 +46,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
 
-  //temp
-
   useEffect(() => {
     (async () => {
       const marketState = await marketContract.state();
