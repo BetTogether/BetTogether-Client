@@ -5,17 +5,9 @@
 
 <br/>
 
-<p align="center">
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status)](https://app.netlify.com/sites/bettogether/deploys)
 
-  <a href="https://bettogether.netlify.app/dashboard">
-    <img src="https://bettogether.netlify.app" alt="Netlify badge"/>
-  </a>
-
-  <a href="https://BetTogether.github.io/BetTogether-Client/">
-    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="Storybook badge"/>
-  </a>
-
-</p>
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://BetTogether.github.io/BetTogether-Client)
 
 # [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
 

@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 react-scripts build",
     "test": "react-scripts test",
     "brave": "BROWSER='brave browser' react-scripts start",
     "firefox": "BROWSER='firefox' react-scripts start",

@@ -51,6 +51,8 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   //temp
   const [totalVotesForTrump, setTotalVotesForTrump] = useState<string>("");
   const [totalVotesForBiden, setTotalVotesForBiden] = useState<string>("");
+  const [addressVotesForTrump, setAddressVotesForTrump] = useState<string>("");
+  const [addressVotesForBiden, setAddressVotesForBiden] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -85,7 +87,8 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       if (numberOfTokenContracts.toNumber() !== 0) {
         const DT = await marketContract.outcomeNames(0);
         const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
-        console.log("DTNumberOfBets:", DTNumberOfBets);
+        const addressVotesForTrump = await marketContract.getParticipantsBet(0);
+        setAddressVotesForTrump(addressVotesForTrump.toString());
 
         const fortmattedTrump = utils.formatUnits(DTNumberOfBets, 18);
         let cielstring = parseFloat(fortmattedTrump);
@@ -94,6 +97,8 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
         const JB = await marketContract.outcomeNames(1);
         const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
+        const addressVotesForBiden = await marketContract.getParticipantsBet(1);
+        setAddressVotesForBiden(addressVotesForBiden.toString());
         setTotalVotesForBiden(JBNumberOfBets.toString());
 
         setOutcomes([...outcomes, DT, JB]);
@@ -160,6 +165,16 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     }
   };
 
+  const withdraw = async () => {
+    try {
+      let tx = await marketContract.withdraw();
+      console.log(tx.hash);
+      await tx.wait();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const checkOwner = () => {
     if (owner !== null && account !== null) {
       if (account === null) return false;
@@ -175,6 +190,10 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   };
 
   const disable = async () => {
+    await marketContract.disableContract();
+  };
+
+  const determineWinner = async () => {
     await marketContract.disableContract();
   };
 
@@ -244,13 +263,20 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
             onChange={(e: any) => setAmountToBet(e.target.value)}
           />
           {!!(library && account) && (
-            <Button disabled={amountToBet <= 0}>Enter</Button>
+            <>
+              <Button disabled={amountToBet <= 0}>Enter</Button>
+              <Button type="button" onClick={() => withdraw()}>
+                Withdraw
+              </Button>
+            </>
           )}
         </Form>
       </GraphFormWrapper>
 
       <h1>Votes for Trump: {totalVotesForTrump}</h1>
       <h1>Votes for Biden: {totalVotesForBiden}</h1>
+      <h1>This address's Votes for Trump: {addressVotesForTrump}</h1>
+      <h1>This address's Votes for Biden: {addressVotesForBiden}</h1>
       <h1>Number of Paritcipants: {numberOfParticipants}</h1>
       <h1>Total Pot Size: {pot}</h1>
       <h1>Owner: {shortenAddress(owner)}</h1>
@@ -260,6 +286,9 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
         <OwnerButtons>
           <OwnerButton onClick={() => incrementState()}>
             Increment State
+          </OwnerButton>
+          <OwnerButton onClick={() => determineWinner()}>
+            Determine Winner
           </OwnerButton>
           <OwnerButton onClick={() => disable()}>Disable Contract</OwnerButton>
         </OwnerButtons>
