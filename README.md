@@ -18,7 +18,8 @@
 
 ## Installation
 
-With [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed, run `npm install` inside the root directory
+With [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed, run `npm install` inside the root directory.
+After compiling the contracts, add them into the client by renaming the folder to `contracts` and storing them inside the src folder.
 
 ## Usage
 

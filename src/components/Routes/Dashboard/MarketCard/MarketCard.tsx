@@ -74,22 +74,16 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       if (numberOfTokenContracts.toNumber() !== 0) {
         const DT = await marketContract.outcomeNames(0);
         const JB = await marketContract.outcomeNames(1);
-
         setOutcomes([...outcomes, DT, JB]);
-        // setOutcomes([
-        //   ...outcomes,
-        //   { name: DT, percentage: DTNumberOfBets / totalBets },
-        //   { name: JB, percentage: JBNumberOfBets / totalBets },
-        // ]);
+        // let numberOfOutcomes = (
+        //   await marketContract.numberOfOutcomes()
+        // ).toNumber();
+        // for (let i = 0; i < numberOfOutcomes; i++) {
+        //   let newOutcomeName = await marketContract.eventOutcomes(i);
+        //   console.log("newOutcomeName:", newOutcomeName);
+        //   setOutcomes([...outcomes, { name: newOutcomeName }]);
+        // }
       }
-      // let numberOfOutcomes = (
-      //   await marketContract.numberOfOutcomes()
-      // ).toNumber();
-      // for (let i = 0; i < numberOfOutcomes; i++) {
-      //   let newOutcomeName = await marketContract.eventOutcomes(i);
-      //   console.log("newOutcomeName:", newOutcomeName);
-      //   setOutcomes([...outcomes, { name: newOutcomeName }]);
-      // }
     })();
   }, []);
 
@@ -99,7 +93,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     };
     if (account) {
       getAllowance().then((allowance) => {
-        console.log("allowance:", allowance);
         if (allowance.toString() !== "0") setDaiApproved(true);
       });
     }

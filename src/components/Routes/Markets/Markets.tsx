@@ -15,7 +15,7 @@ import {
 } from "./Markets.style";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
 
-import addresses, { KOVAN_ID } from "contracts/addresses";
+import addresses, { KOVAN_ID } from "utils/addresses";
 
 const Markets = () => {
   const [markets, setMarkets] = useState([]);

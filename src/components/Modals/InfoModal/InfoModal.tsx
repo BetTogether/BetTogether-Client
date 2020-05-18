@@ -17,7 +17,7 @@ import {
 import { shortenAddress } from "utils/shortenAddress";
 import BTMarketContract from "contracts/BTMarket.json";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
-import addresses, { KOVAN_ID } from "contracts/addresses";
+import addresses, { KOVAN_ID } from "utils/addresses";
 
 interface IInfoModalProps {
   isOpen: boolean;
@@ -54,34 +54,49 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
       let mostRecentlyDeployedAddress =
         deployedMarkets[deployedMarkets.length - 1];
 
-      const marketContract = new ethers.Contract(
-        mostRecentlyDeployedAddress,
-        BTMarketContract.abi,
-        provider
-      );
-      const marketState = await marketContract.state();
-      setMarketState(MarketStates[marketState]);
-      const owner = await marketContract.owner();
-      setOwner(owner);
-      const numberOfParticipants = await marketContract.getMarketSize();
-      setNumberOfParticipants(numberOfParticipants.toNumber());
-      const pot = await marketContract.totalBets();
-      const unformatted = pot.toString();
-      setPot(utils.formatUnits(unformatted, 18));
+      if (deployedMarkets.length !== 0) {
+        const marketContract = new ethers.Contract(
+          mostRecentlyDeployedAddress,
+          BTMarketContract.abi,
+          provider
+        );
+        const marketState = await marketContract.state();
+        setMarketState(MarketStates[marketState]);
+        const owner = await marketContract.owner();
+        setOwner(owner);
+        const numberOfParticipants = await marketContract.getMarketSize();
+        setNumberOfParticipants(numberOfParticipants.toNumber());
+        const pot = await marketContract.totalBets();
+        setPot(utils.formatUnits(pot.toString(), 18));
 
-      const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
-      const addressVotesForTrump = await marketContract.getParticipantsBet(0);
-      setAddressVotesForTrump(addressVotesForTrump.toString());
+        let numberOfTokenContracts = await marketContract.tokenContractsCreated();
+        if (numberOfTokenContracts !== 0) {
+          const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
+          //GOTTA BE A CLEANER WAY TO DO THIS...
+          const fortmattedTrump = utils.formatUnits(DTNumberOfBets, 18);
+          const floatTrump = parseFloat(fortmattedTrump);
+          const roundedTrump = Math.ceil(floatTrump);
+          setTotalVotesForTrump(roundedTrump.toString());
 
-      const fortmattedTrump = utils.formatUnits(DTNumberOfBets, 18);
-      let ceilstring = parseFloat(fortmattedTrump);
-      let ceil = Math.ceil(ceilstring);
-      setTotalVotesForTrump(ceil + "");
+          const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
+          const fortmattedBiden = utils.formatUnits(JBNumberOfBets, 18);
+          const floatBiden = parseFloat(fortmattedBiden);
+          const roundedBiden = Math.ceil(floatBiden);
+          setTotalVotesForBiden(roundedBiden.toString());
 
-      const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
-      const addressVotesForBiden = await marketContract.getParticipantsBet(1);
-      setAddressVotesForBiden(addressVotesForBiden.toString());
-      setTotalVotesForBiden(JBNumberOfBets.toString());
+          const addressVotesForTrump = await marketContract.getParticipantsBet(
+            0
+          );
+          console.log("addressVotesForTrump:", addressVotesForTrump);
+          setAddressVotesForTrump(addressVotesForTrump.toString());
+
+          const addressVotesForBiden = await marketContract.getParticipantsBet(
+            1
+          );
+          console.log("addressVotesForBiden:", addressVotesForBiden);
+          setAddressVotesForBiden(addressVotesForBiden.toString());
+        }
+      }
     })();
   }, []);
 
