@@ -18,7 +18,7 @@ import {
   ImageButton,
 } from "./Header.style";
 import { LayoutContext } from "store/Context";
-import { shortenAddress } from "utils/shortenAddress";
+import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
 import Box from "3box";
 

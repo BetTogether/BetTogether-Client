@@ -6,7 +6,7 @@ import BTMarketContract from "contracts/BTMarket.json";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
 import { injected, portis } from "utils/connectors";
 
-import { DaiABI } from "contracts/DaiABI";
+import { DaiABI } from "contracts/daiABI";
 import addresses, { KOVAN_ID } from "contracts/addresses";
 import Container from "components/Routes/RoutesContainer";
 import { LayoutContext } from "store/Context";
