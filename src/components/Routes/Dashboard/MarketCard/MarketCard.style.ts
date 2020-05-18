@@ -81,9 +81,6 @@ export const Select = styled.select`
   font-size: 1rem;
   border: 1px solid ${(props) => props.theme.palette3.red};
   outline: none;
-  /* @media (max-width: 800px) {
-    width: 100%;
-  } */
 `;
 
 export const Option = styled.option`
@@ -106,26 +103,19 @@ export const Input = styled.input`
   width: 50%;
 `;
 
-export const Buttons = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
 export const Button = styled.button<{ buy?: boolean }>`
   background-color: ${(props) =>
     props.buy ? props.theme.palette3.red : props.theme.palette3.white};
   border: 2px solid ${(props) => props.theme.palette3.red};
   color: ${(props) =>
     props.buy ? props.theme.palette3.white : props.theme.palette3.red};
-  border-bottom-right-radius: ${(props) => (props.buy ? 0 : "0.5rem")};
-  border-top-right-radius: ${(props) => (props.buy ? "0.5rem" : 0)};
-  border-bottom-left-radius: ${(props) => (props.buy ? 0 : "0.5rem")};
-  border-top-left-radius: ${(props) => (props.buy ? "0.5rem" : 0)};
+  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
   cursor: pointer;
   font-size: 1.33rem;
-  padding: 0.67rem 2rem;
-  transition: all 0.2s;
+  padding: 0.67rem 1rem;
   margin: 0 auto;
   width: 8rem;
 `;

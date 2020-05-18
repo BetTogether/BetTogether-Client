@@ -23,7 +23,6 @@ import {
   Input,
   OwnerButton,
   OwnerButtons,
-  Buttons,
 } from "./MarketCard.style";
 import Chart from "./Chart";
 import { LayoutContext } from "store/Context";
@@ -45,8 +44,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
-
-  //temp
 
   useEffect(() => {
     (async () => {
@@ -76,22 +73,16 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       if (numberOfTokenContracts.toNumber() !== 0) {
         const DT = await marketContract.outcomeNames(0);
         const JB = await marketContract.outcomeNames(1);
-
         setOutcomes([...outcomes, DT, JB]);
-        // setOutcomes([
-        //   ...outcomes,
-        //   { name: DT, percentage: DTNumberOfBets / totalBets },
-        //   { name: JB, percentage: JBNumberOfBets / totalBets },
-        // ]);
+        // let numberOfOutcomes = (
+        //   await marketContract.numberOfOutcomes()
+        // ).toNumber();
+        // for (let i = 0; i < numberOfOutcomes; i++) {
+        //   let newOutcomeName = await marketContract.eventOutcomes(i);
+        //   console.log("newOutcomeName:", newOutcomeName);
+        //   setOutcomes([...outcomes, newOutcomeName]);
+        // }
       }
-      // let numberOfOutcomes = (
-      //   await marketContract.numberOfOutcomes()
-      // ).toNumber();
-      // for (let i = 0; i < numberOfOutcomes; i++) {
-      //   let newOutcomeName = await marketContract.eventOutcomes(i);
-      //   console.log("newOutcomeName:", newOutcomeName);
-      //   setOutcomes([...outcomes, { name: newOutcomeName }]);
-      // }
     })();
   }, [marketContract, outcomes]);
 
@@ -101,7 +92,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     };
     if (account) {
       getAllowance().then((allowance) => {
-        console.log("allowance:", allowance);
         if (allowance.toString() !== "0") setDaiApproved(true);
       });
     }
@@ -112,8 +102,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
   const placeBet = async (e: any) => {
     e.preventDefault();
-    console.log(choice);
-    console.log(amountToBet);
     //TESTING
     if (marketState !== "OPEN") {
       console.log("marketState !== OPEN");
@@ -129,14 +117,10 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       setDaiApproved(true);
     }
 
-    let stringed = amountToBet + "";
-    let factored = ethers.utils.parseUnits(stringed, 18);
-
-    console.log(choiceAsNumber, factored);
-    console.log("Formatted", choiceAsNumber.toString(), factored.toString());
+    let formatted = ethers.utils.parseUnits(amountToBet.toString(), 18);
 
     try {
-      let tx = await marketContract.placeBet(choiceAsNumber, factored);
+      let tx = await marketContract.placeBet(choiceAsNumber, formatted);
       console.log(tx.hash);
       await tx.wait();
     } catch (error) {
@@ -231,14 +215,16 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
             onChange={(e: any) => setAmountToBet(e.target.value)}
           />
           {!!(library && account) && (
-            <Buttons>
+            <>
               <Button buy disabled={amountToBet <= 0}>
                 Enter
               </Button>
-              <Button type="button" onClick={() => withdraw()}>
-                Exit
-              </Button>
-            </Buttons>
+              {marketState === "WITHDRAW" && (
+                <Button type="button" onClick={() => withdraw()}>
+                  Withdraw
+                </Button>
+              )}
+            </>
           )}
         </Form>
       </GraphFormWrapper>

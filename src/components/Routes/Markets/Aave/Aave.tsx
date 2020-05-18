@@ -61,7 +61,7 @@ function Aave({ market }: { market: string }) {
       setMarketResolutionTime(_marketResolutionTime);
       setWinningOutcome(_winningOutcome);
     })();
-  }, []);
+  }, [market]);
 
   const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_MARKET, {
     variables: { market: market.toLowerCase() },

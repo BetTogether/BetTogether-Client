@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect, FormEvent } from "react";
-import { Dai } from "@rimble/icons";
+import { Dai as DaiIcon } from "@rimble/icons";
 import { ethers } from "ethers";
 
-import BTMarketContract from "contracts/BTMarket.json";
-import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import BTMarketContract from "abis/BTMarket.json";
+import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import { injected, portis } from "utils/connectors";
 
-import { DaiABI } from "contracts/daiABI";
-import addresses, { KOVAN_ID } from "contracts/addresses";
+// import Dai from "abis/Dai.json";
+import { Dai } from "abis/Dai.js";
+import addresses, { KOVAN_ID } from "utils/addresses";
 import Container from "components/Routes/RoutesContainer";
 import { LayoutContext } from "store/Context";
 import {
@@ -68,7 +69,7 @@ const Dashboard = () => {
     const wallet = provider.getSigner();
     setWallet(wallet);
 
-    const DaiInstance: any = new ethers.Contract(daiAddress, DaiABI, wallet);
+    const DaiInstance: any = new ethers.Contract(daiAddress, Dai, wallet);
     setDaiContractInstance(DaiInstance);
 
     const FactoryContract: any = new ethers.Contract(
@@ -84,30 +85,25 @@ const Dashboard = () => {
   const getMostRecentMarket = async (factoryContract: any, wallet: any) => {
     try {
       let deployedMarkets = await (factoryContract as any).getMarkets();
-
       if (deployedMarkets.length !== 0) {
         let mostRecentlyDeployedAddress =
           deployedMarkets[deployedMarkets.length - 1];
+        console.log(
+          "Most Recently Deployed Address:",
+          mostRecentlyDeployedAddress
+        );
 
         // const usingPortis = portis.portis.provider
-
         // const Provider = new ethers.providers.Web3Provider(
         //   portis.portis.provider
         // );
         // const wallet = Provider.getSigner();
-
         const instance: any = new ethers.Contract(
           mostRecentlyDeployedAddress,
           BTMarketContract.abi,
           wallet
         );
-
         setMarketContractInstance(instance);
-
-        console.log(
-          "Most Recently Deployed Address:",
-          mostRecentlyDeployedAddress
-        );
       }
     } catch (error) {
       console.log(error);
@@ -162,13 +158,13 @@ const Dashboard = () => {
             <Input
               type="text"
               value={marketEventName}
-              onChange={(e) => setMarketEventName(e.target.value)}
+              onChange={(e: any) => setMarketEventName(e.target.value)}
             />
             <Button>Create Market</Button>
           </Form>
 
           <GetDaiButton onClick={() => getDai()}>
-            <Dai />
+            <DaiIcon />
           </GetDaiButton>
         </Wrapper>
       </Content>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, FormEvent } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
-import { KyberNetworkProxyABI } from "contracts/KyberNetworkProxyABI";
+import { KyberNetworkProxyABI } from "./KyberNetworkProxyABI";
 import KyberLogo from "assets/kyber.svg";
 import {
   Wrapper,
