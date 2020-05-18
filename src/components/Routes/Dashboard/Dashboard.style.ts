@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Content = styled.div`
   background-color: ${(props) => props.theme.palette3.white};
@@ -25,6 +25,18 @@ export const Title = styled.h3`
   color: ${(props) => props.theme.palette3.black};
 `;
 
+const shake = keyframes` 
+  0% {
+    transform: translate(0.25rem, 0);
+  }
+  50% {
+    transform: translate(-0.25rem, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+`;
+
 export const SVG = styled.svg`
   height: 1.5rem;
   width: 1.5rem;
@@ -32,6 +44,7 @@ export const SVG = styled.svg`
   color: #edf2f7;
   &:hover {
     fill: ${(props) => props.theme.palette3.black};
+    animation: ${shake} 150ms 2 linear;
   }
 `;
 

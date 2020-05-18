@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CountUp from "react-countup";
 import CountDown from "react-countdown";
 import { v4 as uuidv4 } from "uuid";
@@ -6,15 +6,15 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
 import { shortenAddress } from "utils/shortenAddress";
+import { ReactComponent as Info } from "assets/info.svg";
 import {
   Content,
   Header,
+  Wrapper,
+  SVG,
   Prompt,
   GraphFormWrapper,
   ChartWrapper,
-  MarketDetails,
-  Item,
-  MarketAmount,
   Form,
   ItemDescription,
   Option,
@@ -23,14 +23,14 @@ import {
   Input,
   OwnerButton,
   OwnerButtons,
+  Buttons,
 } from "./MarketCard.style";
 import Chart from "./Chart";
-
-//!remove
+import { LayoutContext } from "store/Context";
 import { ethers, utils } from "ethers";
-import { parseUnits } from "@ethersproject/units";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {
+  const { state, dispatch } = useContext(LayoutContext);
   console.log(marketContract);
   const context = useWeb3React<Web3Provider>();
   const { account, library } = context;
@@ -39,36 +39,25 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
-  const [state, setState] = useState<string>("");
+  const [marketState, setMarketState] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
   const [owner, setOwner] = useState<string>("");
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
-  const [numberOfParticipants, setNumberOfParticipants] = useState<number>(0);
-  const [pot, setPot] = useState<string>("");
 
   //temp
-  const [totalVotesForTrump, setTotalVotesForTrump] = useState<string>("");
-  const [totalVotesForBiden, setTotalVotesForBiden] = useState<string>("");
-  const [addressVotesForTrump, setAddressVotesForTrump] = useState<string>("");
-  const [addressVotesForBiden, setAddressVotesForBiden] = useState<string>("");
 
   useEffect(() => {
     (async () => {
-      const state = await marketContract.state();
-      setState(MarketStates[state]);
+      const marketState = await marketContract.state();
+      setMarketState(MarketStates[marketState]);
       const owner = await marketContract.owner();
       setOwner(owner);
       const marketResolutionTime = await marketContract.marketResolutionTime();
       setMarketResolutionTime(marketResolutionTime);
       const eventName = await marketContract.eventName();
       setPrompt(eventName);
-      const numberOfParticipants = await marketContract.getMarketSize();
-      setNumberOfParticipants(numberOfParticipants.toNumber());
-      const pot = await marketContract.totalBets();
-      const unformatted = pot.toString();
-      setPot(utils.formatUnits(unformatted, 18));
       const accruedInterest = await marketContract.getTotalInterest();
       const formatted = utils.formatEther(accruedInterest.toNumber());
       setAccruedInterest(parseFloat(formatted));
@@ -86,20 +75,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
       if (numberOfTokenContracts.toNumber() !== 0) {
         const DT = await marketContract.outcomeNames(0);
-        const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
-        const addressVotesForTrump = await marketContract.getParticipantsBet(0);
-        setAddressVotesForTrump(addressVotesForTrump.toString());
-
-        const fortmattedTrump = utils.formatUnits(DTNumberOfBets, 18);
-        let cielstring = parseFloat(fortmattedTrump);
-        let ceil = Math.ceil(cielstring);
-        setTotalVotesForTrump(ceil + "");
-
         const JB = await marketContract.outcomeNames(1);
-        const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
-        const addressVotesForBiden = await marketContract.getParticipantsBet(1);
-        setAddressVotesForBiden(addressVotesForBiden.toString());
-        setTotalVotesForBiden(JBNumberOfBets.toString());
 
         setOutcomes([...outcomes, DT, JB]);
         // setOutcomes([
@@ -131,13 +107,16 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     }
   }, [account]);
 
+  const openInfoModal = () =>
+    dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });
+
   const placeBet = async (e: any) => {
     e.preventDefault();
     console.log(choice);
     console.log(amountToBet);
     //TESTING
-    if (state !== "OPEN") {
-      console.log("state !== OPEN");
+    if (marketState !== "OPEN") {
+      console.log("marketState !== OPEN");
       return;
     }
 
@@ -185,7 +164,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   };
 
   //   /** OWNER FUNCTIONS */
-  const incrementState = async () => {
+  const incrementMarketState = async () => {
     await marketContract.incrementState();
   };
 
@@ -213,31 +192,20 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
             duration={5}
           />
         </span>
-
-        <span>
-          {marketResolutionTime ? (
-            <CountDown date={Date.now() + marketResolutionTime} />
-          ) : (
-            "-"
-          )}
-        </span>
+        <Wrapper>
+          <span>
+            {marketResolutionTime ? (
+              <CountDown date={Date.now() + marketResolutionTime} />
+            ) : (
+              "-"
+            )}
+          </span>
+          <SVG>
+            <Info onClick={() => openInfoModal()} />
+          </SVG>
+        </Wrapper>
       </Header>
       <Prompt>{prompt}</Prompt>
-
-      {/* <MarketDetails>
-        <Item>
-          <ItemDescription>Potential Winnings (in Dai)</ItemDescription>
-          <MarketAmount>
-            <CountUp
-              start={0}
-              end={gross}
-              decimals={2}
-              preserveValue={true}
-              duration={5}
-            />
-          </MarketAmount>
-        </Item>
-      </MarketDetails> */}
 
       <GraphFormWrapper>
         <ChartWrapper>
@@ -263,29 +231,22 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
             onChange={(e: any) => setAmountToBet(e.target.value)}
           />
           {!!(library && account) && (
-            <>
-              <Button disabled={amountToBet <= 0}>Enter</Button>
-              <Button type="button" onClick={() => withdraw()}>
-                Withdraw
+            <Buttons>
+              <Button buy disabled={amountToBet <= 0}>
+                Enter
               </Button>
-            </>
+              <Button type="button" onClick={() => withdraw()}>
+                Exit
+              </Button>
+            </Buttons>
           )}
         </Form>
       </GraphFormWrapper>
 
-      <h1>Votes for Trump: {totalVotesForTrump}</h1>
-      <h1>Votes for Biden: {totalVotesForBiden}</h1>
-      <h1>This address's Votes for Trump: {addressVotesForTrump}</h1>
-      <h1>This address's Votes for Biden: {addressVotesForBiden}</h1>
-      <h1>Number of Paritcipants: {numberOfParticipants}</h1>
-      <h1>Total Pot Size: {pot}</h1>
-      <h1>Owner: {shortenAddress(owner)}</h1>
-      <h1>State: {state}</h1>
-
       {checkOwner() && (
         <OwnerButtons>
-          <OwnerButton onClick={() => incrementState()}>
-            Increment State
+          <OwnerButton onClick={() => incrementMarketState()}>
+            Increment Market State
           </OwnerButton>
           <OwnerButton onClick={() => determineWinner()}>
             Determine Winner

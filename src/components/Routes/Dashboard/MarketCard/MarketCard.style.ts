@@ -15,6 +15,19 @@ export const Header = styled.div`
   padding: 0.5rem 1rem;
 `;
 
+export const SVG = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  svg {
+    fill: ${(props) => props.theme.palette3.red};
+    &:hover {
+      fill: ${(props) => props.theme.palette3.black};
+    }
+  }
+`;
+
 export const Prompt = styled.h1`
   display: flex;
   align-items: center;
@@ -23,24 +36,10 @@ export const Prompt = styled.h1`
   font-size: 3rem;
 `;
 
-export const MarketDetails = styled.div`
+export const Wrapper = styled.div`
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
-`;
-
-export const Item = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-export const MarketAmount = styled.h3`
-  font-size: 1.8rem;
-  font-weight: 400;
-  line-height: 2rem;
-  margin: 0;
-  padding: 0;
+  justify-content: center;
 `;
 
 export const GraphFormWrapper = styled.div`
@@ -107,19 +106,28 @@ export const Input = styled.input`
   width: 50%;
 `;
 
-export const Button = styled.button`
-  background-color: ${(props) => props.theme.palette3.red};
+export const Buttons = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const Button = styled.button<{ buy?: boolean }>`
+  background-color: ${(props) =>
+    props.buy ? props.theme.palette3.red : props.theme.palette3.white};
   border: 2px solid ${(props) => props.theme.palette3.red};
-  color: ${(props) => props.theme.palette3.white};
-  border-bottom-right-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
-  border-top-left-radius: 0.5rem;
+  color: ${(props) =>
+    props.buy ? props.theme.palette3.white : props.theme.palette3.red};
+  border-bottom-right-radius: ${(props) => (props.buy ? 0 : "0.5rem")};
+  border-top-right-radius: ${(props) => (props.buy ? "0.5rem" : 0)};
+  border-bottom-left-radius: ${(props) => (props.buy ? 0 : "0.5rem")};
+  border-top-left-radius: ${(props) => (props.buy ? "0.5rem" : 0)};
   cursor: pointer;
   font-size: 1.33rem;
   padding: 0.67rem 2rem;
   transition: all 0.2s;
   margin: 0 auto;
+  width: 8rem;
 `;
 
 export const BuyTicket = styled.button`

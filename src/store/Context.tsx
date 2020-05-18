@@ -6,6 +6,7 @@ export const initialState: InitialStateType = {
   signInModalIsOpen: false,
   tradeModalIsOpen: false,
   emailModalIsOpen: false,
+  infoModalIsOpen: false,
 };
 
 export const LayoutContext = createContext<{
