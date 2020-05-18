@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
-import { ShortenAddress } from "utils/ShortenAddress";
+import { shortenAddress } from "utils/shortenAddress";
 import {
   Content,
   Header,
@@ -181,7 +181,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   return (
     <Content>
       <Header>
-        <span>{ShortenAddress(marketContract.address)}</span>
+        <span>{shortenAddress(marketContract.address)}</span>
         <span>
           <ItemDescription>
             Current, Potential Winnings (in Dai)
@@ -253,7 +253,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       <h1>Votes for Biden: {totalVotesForBiden}</h1>
       <h1>Number of Paritcipants: {numberOfParticipants}</h1>
       <h1>Total Pot Size: {pot}</h1>
-      <h1>Owner: {ShortenAddress(owner)}</h1>
+      <h1>Owner: {shortenAddress(owner)}</h1>
       <h1>State: {state}</h1>
 
       {checkOwner() && (

@@ -24,8 +24,8 @@ const MobileDropdown = ({
           </StyledLink>
         </Item>
         <Item>
-          <StyledLink to="/settings" onClick={() => setIsExpanded(false)}>
-            Settings
+          <StyledLink to="/account" onClick={() => setIsExpanded(false)}>
+            Account
           </StyledLink>
         </Item>
       </List>

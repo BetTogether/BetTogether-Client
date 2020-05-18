@@ -18,7 +18,7 @@ import {
   ImageButton,
 } from "./Header.style";
 import { LayoutContext } from "store/Context";
-import { ShortenAddress } from "utils/ShortenAddress";
+import { shortenAddress } from "utils/shortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
 import Box from "3box";
 
@@ -82,7 +82,7 @@ const Header = () => {
                     </ImageButton>
                   ) : (
                     <ConnectionButton onClick={() => deactivate()}>
-                      <Address>{ShortenAddress(account)}</Address>
+                      <Address>{shortenAddress(account)}</Address>
                     </ConnectionButton>
                   )}
                 </>

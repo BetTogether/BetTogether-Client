@@ -20,9 +20,9 @@ export const Content = styled.nav`
   justify-content: center;
 `;
 
-export const Section = styled.div<{ settings?: boolean }>`
+export const Section = styled.div<{ account?: boolean }>`
   display: flex;
-  margin-right: ${(props) => (props.settings ? "0" : "2rem")};
+  margin-right: ${(props) => (props.account ? "0" : "2rem")};
 `;
 
 export const StyledLink = styled(NavLink)`

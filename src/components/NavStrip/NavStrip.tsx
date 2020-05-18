@@ -27,10 +27,10 @@ const NavStrip = () => {
             </StyledLink>
           </Section>
 
-          <Section settings>
-            <StyledLink to="/settings">
+          <Section account>
+            <StyledLink to="/account">
               <FolderShared />
-              <Span>Settings</Span>
+              <Span>Account</Span>
             </StyledLink>
           </Section>
         </Content>
