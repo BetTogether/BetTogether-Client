@@ -14,7 +14,7 @@ import {
   Item,
   ItemDescription,
 } from "./InfoModal.style";
-import { shortenAddress } from "utils/shortenAddress";
+import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "contracts/BTMarket.json";
 import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
 import addresses, { KOVAN_ID } from "contracts/addresses";
@@ -83,7 +83,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
       setAddressVotesForBiden(addressVotesForBiden.toString());
       setTotalVotesForBiden(JBNumberOfBets.toString());
     })();
-  }, []);
+  }, [MarketStates, factoryAddress]);
 
   const toggleModal = () =>
     dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });
