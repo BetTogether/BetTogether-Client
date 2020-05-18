@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
-import { shortenAddress } from "utils/shortenAddress";
+import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Info } from "assets/info.svg";
 import {
   Content,
@@ -59,7 +59,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       const formatted = utils.formatEther(accruedInterest.toNumber());
       setAccruedInterest(parseFloat(formatted));
     })();
-  }, []);
+  }, [MarketStates, marketContract]);
 
   useEffect(() => {
     (async () => {
@@ -84,7 +84,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
         // }
       }
     })();
-  }, []);
+  }, [marketContract, outcomes]);
 
   useEffect(() => {
     const getAllowance = async () => {
@@ -95,7 +95,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
         if (allowance.toString() !== "0") setDaiApproved(true);
       });
     }
-  }, [account]);
+  }, [account, daiContract, marketContract.address]);
 
   const openInfoModal = () =>
     dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });

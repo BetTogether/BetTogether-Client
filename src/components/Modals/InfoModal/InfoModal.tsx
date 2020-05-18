@@ -21,10 +21,10 @@ import {
   Item,
   ItemDescription,
 } from "./InfoModal.style";
-import { shortenAddress } from "utils/shortenAddress";
-import BTMarketContract from "abis/BTMarket.json";
-import BTMarketFactoryContract from "abis/BTMarketFactory.json";
-import addresses, { KOVAN_ID } from "utils/addresses";
+import { shortenAddress } from "utils/ShortenAddress";
+import BTMarketContract from "contracts/BTMarket.json";
+import BTMarketFactoryContract from "contracts/BTMarketFactory.json";
+import addresses, { KOVAN_ID } from "contracts/addresses";
 
 interface IInfoModalProps {
   isOpen: boolean;
@@ -105,7 +105,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         }
       }
     })();
-  }, []);
+  }, [MarketStates, factoryAddress]);
 
   const toggleModal = () =>
     dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });
