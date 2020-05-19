@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { LayoutContext } from "store/Context";
 import { Clear } from "@rimble/icons";
 import { ethers, utils } from "ethers";
@@ -24,7 +18,7 @@ import {
 import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "abis/BTMarket.json";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
-import addresses, { KOVAN_ID } from "abis/addresses";
+import addresses, { KOVAN_ID } from "utils/addresses";
 
 interface IInfoModalProps {
   isOpen: boolean;

@@ -6,7 +6,8 @@ import BTMarketContract from "abis/BTMarket.json";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import { injected, portis } from "utils/connectors";
 
-import { Dai } from "utils/Dai";
+// import { Dai } from "utils/Dai";
+import IERC20 from "abis/IERC20.json";
 import addresses, { KOVAN_ID } from "utils/addresses";
 import Container from "components/Routes/RoutesContainer";
 import { LayoutContext } from "store/Context";
@@ -45,15 +46,20 @@ const Dashboard = () => {
   const daiAddress = addresses[KOVAN_ID].tokens.DAI;
   const factoryAddress = addresses[KOVAN_ID].marketFactory;
 
+  const [wallet, setWallet] = useState<any>(null);
   const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
   const [factoryContract, setFactoryContract] = useState<any>(null);
   const [marketContractInstance, setMarketContractInstance] = useState<any>(
     null
   );
   const [marketEventName, setMarketEventName] = useState<string>(
-    "Who will win the 2020 US Presidential Election?"
+    "Who will win the 2020 US General Election"
   );
-  const [wallet, setWallet] = useState<any>(null);
+  const [question, setQuestion] = useState<string>(
+    'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
+  );
+
+  const [numberOfOutcomes, setNumberOfOutcomes] = useState<number>(2);
 
   const getDai = () =>
     dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
@@ -68,7 +74,11 @@ const Dashboard = () => {
     const wallet = provider.getSigner();
     setWallet(wallet);
 
-    const DaiInstance: any = new ethers.Contract(daiAddress, Dai, wallet);
+    const DaiInstance: any = new ethers.Contract(
+      daiAddress,
+      IERC20.abi,
+      wallet
+    );
     setDaiContractInstance(DaiInstance);
 
     const FactoryContract: any = new ethers.Contract(
@@ -114,9 +124,11 @@ const Dashboard = () => {
     const MARKET_EVENT_NAME = marketEventName;
     const MARKET_OPENING_TIME = 0;
     const MARKET_RESOLUTION_TIME = 0;
-    const ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
-    const QUESTION = marketEventName;
-    const NUMBER_OF_OUTCOMES = 2;
+    const ARBITRATOR = "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D";
+    //const QUESTION = marketEventName;
+    const QUESTION = question;
+    //const NUMBER_OF_OUTCOMES = 2;
+    const NUMBER_OF_OUTCOMES = numberOfOutcomes;
 
     await factoryContract.createMarket(
       MARKET_EVENT_NAME,
@@ -158,6 +170,16 @@ const Dashboard = () => {
               type="text"
               value={marketEventName}
               onChange={(e: any) => setMarketEventName(e.target.value)}
+            />
+            <Input
+              type="text"
+              value={question}
+              onChange={(e: any) => setQuestion(e.target.value)}
+            />
+            <Input
+              type="text"
+              value={numberOfOutcomes}
+              onChange={(e: any) => setNumberOfOutcomes(e.target.value)}
             />
             <Button>Create Market</Button>
           </Form>
