@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
-import { shortenAddress } from "utils/shortenAddress";
+import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Info } from "assets/info.svg";
 import {
   Content,

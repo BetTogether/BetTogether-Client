@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
-import { shortenAddress } from "utils/shortenAddress";
+import { shortenAddress } from "utils/ShortenAddress";
 import { ethers } from "ethers";
 
 import BTMarketContract from "abis/BTMarket.json";

@@ -21,7 +21,7 @@ import {
   Item,
   ItemDescription,
 } from "./InfoModal.style";
-import { shortenAddress } from "utils/shortenAddress";
+import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "abis/BTMarket.json";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import addresses, { KOVAN_ID } from "abis/addresses";
