@@ -29,9 +29,9 @@ import { LayoutContext } from "store/Context";
 import { ethers, utils } from "ethers";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {
-  console.log("daiContract:", daiContract);
+  console.log("Market Contract: ", marketContract);
+  console.log("Dai Contract:", daiContract);
   const { state, dispatch } = useContext(LayoutContext);
-  console.log(marketContract);
   const context = useWeb3React<Web3Provider>();
   const { account, library } = context;
 
