@@ -17,6 +17,8 @@ import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 
 import addresses, { KOVAN_ID } from "utils/addresses";
 
+declare let window: any;
+
 const Markets = () => {
   const [markets, setMarkets] = useState([]);
 
@@ -33,7 +35,7 @@ const Markets = () => {
 
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
-      (window as any).web3.currentProvider
+      window.web3.currentProvider
     );
     const wallet = provider.getSigner();
     const FactoryInstance: any = new ethers.Contract(

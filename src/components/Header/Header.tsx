@@ -7,7 +7,6 @@ import Box from "3box";
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
 import {
-  NetworkNotification,
   Head,
   Logo,
   GitHubLink,
@@ -18,7 +17,7 @@ import {
   Image,
   ImageButton,
 } from "./Header.style";
-import { ModalContext } from "store/Context";
+import { ModalContext } from "store/context/ModalContext";
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
 
@@ -56,9 +55,6 @@ const Header = () => {
 
   return (
     <>
-      {active && chainId !== 42 && (
-        <NetworkNotification currentNetwork={chainId} requiredNetwork={42} />
-      )}
       <Head>
         <Link to="/dashboard">
           <Logo>MagicBet</Logo>

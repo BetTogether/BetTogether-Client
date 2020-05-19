@@ -23,7 +23,7 @@ import {
   ProviderDescription,
 } from "./SignInModal.style";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
-import { ModalContext } from "store/Context";
+import { ModalContext } from "store/context/ModalContext";
 import portisLogo from "assets/portis.svg";
 import metamaskLogo from "assets/metamask.svg";
 import Spinner from "utils/spinner";

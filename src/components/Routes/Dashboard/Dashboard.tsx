@@ -3,15 +3,10 @@ import { Dai as DaiIcon } from "@rimble/icons";
 import { ethers } from "ethers";
 
 import BTMarketContract from "abis/BTMarket.json";
-import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import { injected, portis } from "utils/connectors";
-
-// import { Dai } from "utils/Dai";
-import IERC20 from "abis/IERC20.json";
-import addresses, { KOVAN_ID } from "utils/addresses";
 import Container from "components/Routes/RoutesContainer";
-import { ModalContext } from "store/Context";
-import { ContractContext } from "store/ContractContext";
+import { ModalContext } from "store/context/ModalContext";
+import { ContractContext } from "store/context/ContractContext";
 import {
   Content,
   Top,
@@ -26,6 +21,8 @@ import {
 import MarketCard from "./MarketCard";
 import { useWeb3React } from "@web3-react/core";
 
+declare let window: any;
+
 const connectorsByName: { [name: string]: any } = {
   Injected: injected,
   Portis: portis,
@@ -33,7 +30,10 @@ const connectorsByName: { [name: string]: any } = {
 
 const Dashboard = () => {
   const { modalState, modalDispatch } = useContext(ModalContext);
-  // const { contractState, contractDispatch } = useContext(ContractContext);
+  const { contractState, contractDispatch } = useContext(ContractContext);
+
+  const factoryContract = contractState[0];
+  const daiContract = contractState[1];
 
   const context = useWeb3React();
   const {
@@ -46,12 +46,7 @@ const Dashboard = () => {
     error,
   } = context;
 
-  const daiAddress = addresses[KOVAN_ID].tokens.DAI;
-  const factoryAddress = addresses[KOVAN_ID].marketFactory;
-
   const [wallet, setWallet] = useState<any>(null);
-  const [daiContractInstance, setDaiContractInstance] = useState<any>(null);
-  const [factoryContract, setFactoryContract] = useState<any>(null);
   const [marketContractInstance, setMarketContractInstance] = useState<any>(
     null
   );
@@ -78,27 +73,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
-      (window as any).web3.currentProvider
+      window.web3.currentProvider
     );
     const wallet = provider.getSigner();
     setWallet(wallet);
 
-    const DaiInstance: any = new ethers.Contract(
-      daiAddress,
-      IERC20.abi,
-      wallet
-    );
-    setDaiContractInstance(DaiInstance);
-
-    const FactoryContract: any = new ethers.Contract(
-      factoryAddress,
-      BTMarketFactoryContract.abi,
-      wallet
-    );
-
-    setFactoryContract(FactoryContract);
-    getMostRecentMarket(FactoryContract, wallet);
-  }, [daiAddress, factoryAddress]);
+    getMostRecentMarket(factoryContract, wallet);
+  }, [factoryContract]);
 
   const getMostRecentMarket = async (factoryContract: any, wallet: any) => {
     try {
@@ -134,9 +115,7 @@ const Dashboard = () => {
     const MARKET_OPENING_TIME = 0;
     const MARKET_RESOLUTION_TIME = 0;
     const ARBITRATOR = "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D";
-    //const QUESTION = marketEventName;
     const QUESTION = question;
-    //const NUMBER_OF_OUTCOMES = 2;
     const NUMBER_OF_OUTCOMES = numberOfOutcomes;
 
     await factoryContract.createMarket(
@@ -169,7 +148,7 @@ const Dashboard = () => {
         <Wrapper>
           {marketContractInstance && (
             <MarketCard
-              daiContract={daiContractInstance}
+              daiContract={daiContract}
               marketContract={marketContractInstance}
             />
           )}

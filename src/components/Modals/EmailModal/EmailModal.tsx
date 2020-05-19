@@ -12,8 +12,8 @@ import {
   Input,
   Button,
 } from "./EmailModal.style";
-import { ModalContext } from "store/Context";
-import { Clear } from "@rimble/icons";
+import { ModalContext } from "store/context/ModalContext";
+import { ReactComponent as CrossIcon } from "assets/cross.svg";
 
 interface IEmailModalProps {
   isOpen: boolean;
@@ -42,7 +42,7 @@ const EmailModal = ({ isOpen }: IEmailModalProps) => {
         <Top>
           <Title>Send email once resolved...</Title>
           <IconButton onClick={() => toggleModal()}>
-            <Clear />
+            <CrossIcon />
           </IconButton>
         </Top>
         <Wrapper>

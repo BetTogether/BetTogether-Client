@@ -25,7 +25,7 @@ import {
   OwnerButtons,
 } from "./MarketCard.style";
 import Chart from "./Chart";
-import { ModalContext } from "store/Context";
+import { ModalContext } from "store/context/ModalContext";
 import { utils } from "ethers";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {

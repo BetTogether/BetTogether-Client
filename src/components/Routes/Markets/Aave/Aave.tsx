@@ -10,6 +10,8 @@ import BTMarketContract from "abis/BTMarket.json";
 //   TableRow,
 // } from "../Markets.style";
 
+declare let window: any;
+
 const GET_LAST_DEPOSITS_FROM_MARKET = gql`
   query deposits($market: ID!) {
     users(where: { id: $market }) {
@@ -48,7 +50,7 @@ function Aave({ market }: { market: string }) {
   useEffect(() => {
     (async () => {
       const provider = new ethers.providers.Web3Provider(
-        (window as any).web3.currentProvider
+        window.web3.currentProvider
       );
       const wallet = provider.getSigner();
       const marketContract: any = new ethers.Contract(

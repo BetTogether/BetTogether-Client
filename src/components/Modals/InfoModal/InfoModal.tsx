@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { ModalContext } from "store/Context";
+import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
 import { ethers, utils } from "ethers";
 
@@ -24,6 +24,8 @@ interface IInfoModalProps {
   isOpen: boolean;
 }
 
+declare let window: any;
+
 const InfoModal = ({ isOpen }: IInfoModalProps) => {
   const { modalState, modalDispatch } = useContext(ModalContext);
 
@@ -41,7 +43,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
   useEffect(() => {
     (async () => {
       const provider = new ethers.providers.Web3Provider(
-        (window as any).web3.currentProvider
+        window.web3.currentProvider
       );
 
       const factoryContract = new ethers.Contract(

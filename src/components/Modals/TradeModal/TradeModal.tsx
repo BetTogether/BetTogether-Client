@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Wrapper, Modal, IconButton, Top, Title } from "./TradeModal.style";
-import { ModalContext } from "store/Context";
-import { Clear } from "@rimble/icons";
+import { ModalContext } from "store/context/ModalContext";
+import { ReactComponent as CrossIcon } from "assets/cross.svg";
 import Uniswap from "./Exchanges/Uniswap";
 import PBTC from "./Exchanges/PBTC";
 
@@ -24,7 +24,7 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
         <Top>
           <Title>ETH &#x2192; DAI</Title>
           <IconButton onClick={() => toggleModal()}>
-            <Clear />
+            <CrossIcon />
           </IconButton>
         </Top>
         <Uniswap />

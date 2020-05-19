@@ -8,6 +8,9 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
+import { ModalProvider } from "./store/context/ModalContext";
+import { ContractProvider } from "./store/context/ContractContext";
+
 import { theme } from "./utils/theme";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
@@ -54,8 +57,6 @@ export const GlobalStyle = createGlobalStyle`
     }
 `;
 
-// This is the official Aave subgraph. You can replace it with your own, if you need to.
-// See all subgraphs: https://thegraph.com/explorer/
 const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/aave/protocol-kovan",
 });
@@ -68,16 +69,20 @@ function getLibrary(provider: any): Web3Provider {
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <Router>
-        <ThemeProvider theme={theme}>
-          <Web3ReactProvider getLibrary={getLibrary}>
-            <GlobalStyle />
-            <App />
-          </Web3ReactProvider>
-        </ThemeProvider>
-      </Router>
-    </ApolloProvider>
+    <ContractProvider>
+      <ModalProvider>
+        <ApolloProvider client={client}>
+          <Router>
+            <ThemeProvider theme={theme}>
+              <Web3ReactProvider getLibrary={getLibrary}>
+                <GlobalStyle />
+                <App />
+              </Web3ReactProvider>
+            </ThemeProvider>
+          </Router>
+        </ApolloProvider>
+      </ModalProvider>
+    </ContractProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

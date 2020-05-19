@@ -3,6 +3,8 @@ import { useWeb3React } from "@web3-react/core";
 
 import { injected } from "./connectors";
 
+declare let window: any;
+
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
 
@@ -28,7 +30,7 @@ export function useInactiveListener(suppress: boolean = false) {
   const { active, error, activate } = useWeb3React();
 
   useEffect((): any => {
-    const { ethereum } = window as any;
+    const { ethereum } = window;
 
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {

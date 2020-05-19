@@ -1,15 +1,4 @@
 import styled from "styled-components";
-import ConnectionBanner from "@rimble/connection-banner";
-
-export const NetworkNotification = styled(ConnectionBanner)`
-  background-color: #fbe9e7;
-  border: 1px solid #dc2c10;
-  border-radius: 4px;
-  color: #841a09;
-  padding: 1rem;
-  position: relative;
-  width: 100%;
-`;
 
 export const Head = styled.header`
   display: flex;

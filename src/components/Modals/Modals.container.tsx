@@ -3,17 +3,22 @@ import SignInModal from "./SignInModal";
 import TradeModal from "./TradeModal";
 import EmailModal from "./EmailModal";
 import InfoModal from "./InfoModal";
-import { ModalContext } from "store/Context";
+import { ModalContext } from "store/context/ModalContext";
 
-const ModalsContainer = () => {
+const ModalsContainer = ({ active }: any) => {
   const { modalState } = useContext(ModalContext);
 
   return (
     <>
-      <SignInModal isOpen={modalState.signInModalIsOpen} />
-      <TradeModal isOpen={modalState.tradeModalIsOpen} />
-      <InfoModal isOpen={modalState.infoModalIsOpen} />
-      <EmailModal isOpen={modalState.emailModalIsOpen} />
+      {active ? (
+        <>
+          <TradeModal isOpen={modalState.tradeModalIsOpen} />
+          <InfoModal isOpen={modalState.infoModalIsOpen} />
+          <EmailModal isOpen={modalState.emailModalIsOpen} />
+        </>
+      ) : (
+        <SignInModal isOpen={modalState.signInModalIsOpen} />
+      )}
     </>
   );
 };
