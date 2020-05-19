@@ -114,9 +114,11 @@ const Dashboard = () => {
     const MARKET_EVENT_NAME = marketEventName;
     const MARKET_OPENING_TIME = 0;
     const MARKET_RESOLUTION_TIME = 0;
-    const ARBITRATOR = "0x34A971cA2fd6DA2Ce2969D716dF922F17aAA1dB0";
+    const ARBITRATOR = "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D";
     const QUESTION = marketEventName;
+    // const QUESTION = question;
     const NUMBER_OF_OUTCOMES = 2;
+    // const NUMBER_OF_OUTCOMES = numberOfOutcomes;
 
     await factoryContract.createMarket(
       MARKET_EVENT_NAME,
@@ -159,6 +161,16 @@ const Dashboard = () => {
               value={marketEventName}
               onChange={(e: any) => setMarketEventName(e.target.value)}
             />
+            {/* <Input
+              type="text"
+              value={question}
+              onChange={(e: any) => setQuestion(e.target.value)}
+            />
+            <Input
+              type="text"
+              value={numberOfOutcomes}
+              onChange={(e: any) => setNumberOfOutcomes(e.target.value)}
+            /> */}
             <Button>Create Market</Button>
           </Form>
 

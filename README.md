@@ -1,20 +1,20 @@
 <h1 align="center">
-  BetTogether - Client
+  MagicBet - Client
 </h1>
 <h2 align="center">Loseless Ethereum Betting</h2>
 
 <br/>
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status)](https://app.netlify.com/sites/bettogether/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4b263bcd-c02f-42e3-adae-c4a3fa706a43/deploy-status)](https://app.netlify.com/sites/MagicBet/deploys)
 
-[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://BetTogether.github.io/BetTogether-Client)
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://MagicBet.github.io/MagicBet-Client)
 
-# [Corresponding Contracts](https://github.com/BetTogether/BetTogether-Contracts)
+# [Corresponding Contracts](https://github.com/MagicBet/MagicBet-Contracts)
 
 ## Description
 
 - [insert historical facts, reasons for the need of such a product]
-- BetTogether is a no-loss betting platform, allowing users to save money in a fun manner.
+- MagicBet is a no-loss betting platform, allowing users to save money in a fun manner.
 
 ## Installation
 

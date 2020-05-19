@@ -61,11 +61,11 @@ const Header = () => {
       )}
       <Head>
         <Link to="/dashboard">
-          <Logo>BetTogether</Logo>
+          <Logo>MagicBet</Logo>
         </Link>
         <RightContent>
           <GitHubLink
-            href="https://github.com/BetTogether"
+            href="https://github.com/MagicBet"
             target="_blank"
             rel="noreferrer noopener"
           >
