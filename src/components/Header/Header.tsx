@@ -18,7 +18,7 @@ import {
   Image,
   ImageButton,
 } from "./Header.style";
-import { LayoutContext } from "store/Context";
+import { ModalContext } from "store/Context";
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
 
@@ -26,7 +26,7 @@ const Header = () => {
   const context = useWeb3React<Web3Provider>();
   const { active, error, account, deactivate, chainId } = context;
 
-  const { state, dispatch } = useContext(LayoutContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [imageLink, setImageLink] = useState("");
 
@@ -48,9 +48,9 @@ const Header = () => {
   }, [active, account]);
 
   const SignIn = () => {
-    dispatch({
+    modalDispatch({
       type: "TOGGLE_SIGN_IN_MODAL",
-      payload: !state.signInModalIsOpen,
+      payload: !modalState.signInModalIsOpen,
     });
   };
 

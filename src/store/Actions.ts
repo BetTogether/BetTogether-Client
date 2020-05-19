@@ -3,6 +3,7 @@ import {
   TOGGLE_TRADE_MODAL,
   TOGGLE_EMAIL_MODAL,
   TOGGLE_INFO_MODAL,
+  CREATE_MARKET_CONTRACT,
 } from "./Constants";
 
 export const toggleSignInModal = (value: boolean) => {
@@ -29,6 +30,13 @@ export const toggleEmailModal = (value: any) => {
 export const toggleInfoModal = (value: any) => {
   return {
     type: TOGGLE_INFO_MODAL,
+    value,
+  };
+};
+
+export const createMarketContract = (value: any) => {
+  return {
+    type: CREATE_MARKET_CONTRACT,
     value,
   };
 };

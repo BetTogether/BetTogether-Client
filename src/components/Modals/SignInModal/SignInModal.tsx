@@ -23,7 +23,7 @@ import {
   ProviderDescription,
 } from "./SignInModal.style";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
-import { LayoutContext } from "store/Context";
+import { ModalContext } from "store/Context";
 import portisLogo from "assets/portis.svg";
 import metamaskLogo from "assets/metamask.svg";
 import Spinner from "utils/spinner";
@@ -36,7 +36,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
   const context = useWeb3React<Web3Provider>();
   const { connector, activate, error } = context;
 
-  const { state, dispatch } = useContext(LayoutContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
   const [loading, setLoading] = useState(false);
 
   const connectorsByName: { [name: string]: AbstractConnector } = {
@@ -62,22 +62,22 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
       if (event.composedPath().includes(node.current)) {
         return;
       }
-      dispatch({
+      modalDispatch({
         type: "TOGGLE_SIGN_IN_MODAL",
-        payload: !state.signInModalIsOpen,
+        payload: !modalState.signInModalIsOpen,
       });
     },
-    [dispatch, state.signInModalIsOpen]
+    [modalDispatch, modalState.signInModalIsOpen]
   );
   const escFunction = useCallback(
     (event: any) => {
       if (event.keyCode === 27)
-        dispatch({
+        modalDispatch({
           type: "TOGGLE_SIGN_IN_MODAL",
-          payload: !state.signInModalIsOpen,
+          payload: !modalState.signInModalIsOpen,
         });
     },
-    [dispatch, state.signInModalIsOpen]
+    [modalDispatch, modalState.signInModalIsOpen]
   );
   useEffect(() => {
     if (isOpen) {
@@ -88,19 +88,13 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
-  }, [
-    dispatch,
-    escFunction,
-    handleClickOutside,
-    isOpen,
-    state.signInModalIsOpen,
-  ]);
+  }, [escFunction, handleClickOutside, isOpen]);
   //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE
 
   const toggleModal = () => {
-    dispatch({
+    modalDispatch({
       type: "TOGGLE_SIGN_IN_MODAL",
-      payload: !state.signInModalIsOpen,
+      payload: !modalState.signInModalIsOpen,
     });
   };
 

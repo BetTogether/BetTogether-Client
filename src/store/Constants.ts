@@ -1,7 +1,12 @@
 //
-// LAYOUT
+// Modals
 //
 export const TOGGLE_SIGN_IN_MODAL = "TOGGLE_SIGN_IN_MODAL";
 export const TOGGLE_TRADE_MODAL = "TOGGLE_TRADE_MODAL";
 export const TOGGLE_EMAIL_MODAL = "TOGGLE_EMAIL_MODAL";
 export const TOGGLE_INFO_MODAL = "TOGGLE_INFO_MODAL";
+
+//
+// Contracts
+//
+export const CREATE_MARKET_CONTRACT = "CREATE_MARKET_CONTRACT";
