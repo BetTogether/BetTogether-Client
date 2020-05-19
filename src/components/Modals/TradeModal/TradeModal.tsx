@@ -3,7 +3,6 @@ import { Wrapper, Modal, IconButton, Top, Title } from "./TradeModal.style";
 import { LayoutContext } from "store/Context";
 import { Clear } from "@rimble/icons";
 import Uniswap from "./Exchanges/Uniswap";
-import Kyber from "./Exchanges/Kyber";
 import PBTC from "./Exchanges/PBTC";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -30,7 +29,6 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
           </IconButton>
         </Top>
         <Uniswap />
-        {chainId === 4 && <Kyber />}
         <Top>
           <Title>BTC &#x2192; PBCT</Title>
         </Top>
