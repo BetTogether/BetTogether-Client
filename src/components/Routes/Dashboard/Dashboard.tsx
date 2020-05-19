@@ -6,8 +6,7 @@ import BTMarketContract from "abis/BTMarket.json";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import { injected, portis } from "utils/connectors";
 
-// import Dai from "abis/Dai.json";
-import { Dai } from "abis/Dai.js";
+import { Dai } from "utils/Dai";
 import addresses, { KOVAN_ID } from "utils/addresses";
 import Container from "components/Routes/RoutesContainer";
 import { LayoutContext } from "store/Context";
