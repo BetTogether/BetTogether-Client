@@ -12,7 +12,7 @@ import {
   Input,
   Button,
 } from "./EmailModal.style";
-import { LayoutContext } from "store/Context";
+import { ModalContext } from "store/Context";
 import { Clear } from "@rimble/icons";
 
 interface IEmailModalProps {
@@ -20,13 +20,16 @@ interface IEmailModalProps {
 }
 
 const EmailModal = ({ isOpen }: IEmailModalProps) => {
-  const { state, dispatch } = useContext(LayoutContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
   const [box, setBox] = useState("");
   const [email, setEmail] = useState("");
   const [newEmail, setNewEmail] = useState("");
 
   const toggleModal = () =>
-    dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
+    modalDispatch({
+      type: "TOGGLE_EMAIL_MODAL",
+      payload: !modalState.emailModalIsOpen,
+    });
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();

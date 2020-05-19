@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { LayoutContext } from "store/Context";
+import { ModalContext } from "store/Context";
 import { Clear } from "@rimble/icons";
 import { ethers, utils } from "ethers";
 
@@ -25,7 +25,7 @@ interface IInfoModalProps {
 }
 
 const InfoModal = ({ isOpen }: IInfoModalProps) => {
-  const { state, dispatch } = useContext(LayoutContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
 
   const factoryAddress = addresses[KOVAN_ID].marketFactory;
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
@@ -103,18 +103,21 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
   }, [MarketStates, factoryAddress]);
 
   const toggleModal = () =>
-    dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });
+    modalDispatch({
+      type: "TOGGLE_INFO_MODAL",
+      payload: !modalState.infoModalIsOpen,
+    });
 
   //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE ... EVENTUALLY MOVE
   const escFunction = useCallback(
     (event: any) => {
       if (event.keyCode === 27)
-        dispatch({
+        modalDispatch({
           type: "TOGGLE_INFO_MODAL",
-          payload: !state.infoModalIsOpen,
+          payload: !modalState.infoModalIsOpen,
         });
     },
-    [dispatch, state.infoModalIsOpen]
+    [modalDispatch, modalState.infoModalIsOpen]
   );
   useEffect(() => {
     if (isOpen) {
@@ -123,7 +126,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         document.removeEventListener("keydown", escFunction, false);
       };
     }
-  }, [dispatch, escFunction, isOpen, state.infoModalIsOpen]);
+  }, [escFunction, isOpen]);
   //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE
 
   return (

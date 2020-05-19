@@ -25,13 +25,13 @@ import {
   OwnerButtons,
 } from "./MarketCard.style";
 import Chart from "./Chart";
-import { LayoutContext } from "store/Context";
-import { ethers, utils } from "ethers";
+import { ModalContext } from "store/Context";
+import { utils } from "ethers";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {
   console.log("Market Contract: ", marketContract);
   console.log("Dai Contract:", daiContract);
-  const { state, dispatch } = useContext(LayoutContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
   const context = useWeb3React<Web3Provider>();
   const { account, library } = context;
 
@@ -102,7 +102,10 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   }, [account, marketContract.address]);
 
   const openInfoModal = () =>
-    dispatch({ type: "TOGGLE_INFO_MODAL", payload: !state.infoModalIsOpen });
+    modalDispatch({
+      type: "TOGGLE_INFO_MODAL",
+      payload: !modalState.infoModalIsOpen,
+    });
 
   const placeBet = async (e: any) => {
     e.preventDefault();
@@ -121,7 +124,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       setDaiApproved(true);
     }
 
-    let formatted = ethers.utils.parseUnits(amountToBet.toString(), 18);
+    let formatted = utils.parseUnits(amountToBet.toString(), 18);
 
     try {
       let tx = await marketContract.placeBet(choiceAsNumber, formatted);

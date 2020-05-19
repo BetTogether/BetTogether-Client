@@ -7,12 +7,13 @@ import Dashboard from "./components/Routes/Dashboard";
 import Markets from "./components/Routes/Markets";
 import Account from "./components/Routes/Account";
 import NotFound from "./components/Routes/NotFound";
-import { LayoutProvider } from "./store/Context";
+import { ModalProvider } from "./store/Context";
 import ModalContainer from "./components/Modals/Modals.container";
 
 function App() {
   return (
-    <LayoutProvider>
+    // <ContractProvider>
+    <ModalProvider>
       <Header />
       <NavStrip />
       <Switch>
@@ -29,7 +30,8 @@ function App() {
         <Route component={NotFound} />
       </Switch>
       <ModalContainer />
-    </LayoutProvider>
+    </ModalProvider>
+    // </ContractProvider>
   );
 }
 

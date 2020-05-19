@@ -3,22 +3,17 @@ import SignInModal from "./SignInModal";
 import TradeModal from "./TradeModal";
 import EmailModal from "./EmailModal";
 import InfoModal from "./InfoModal";
-import { LayoutContext } from "store/Context";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { ModalContext } from "store/Context";
 
 const ModalsContainer = () => {
-  const { state } = useContext(LayoutContext);
-  const context = useWeb3React<Web3Provider>();
-  const { chainId } = context;
-  const kovanNetworkId = 42;
+  const { modalState } = useContext(ModalContext);
 
   return (
     <>
-      <SignInModal isOpen={state.signInModalIsOpen} />
-      <TradeModal isOpen={state.tradeModalIsOpen} />
-      <InfoModal isOpen={state.infoModalIsOpen} />
-      <EmailModal isOpen={state.emailModalIsOpen} />
+      <SignInModal isOpen={modalState.signInModalIsOpen} />
+      <TradeModal isOpen={modalState.tradeModalIsOpen} />
+      <InfoModal isOpen={modalState.infoModalIsOpen} />
+      <EmailModal isOpen={modalState.emailModalIsOpen} />
     </>
   );
 };

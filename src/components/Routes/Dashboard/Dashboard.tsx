@@ -10,7 +10,8 @@ import { injected, portis } from "utils/connectors";
 import IERC20 from "abis/IERC20.json";
 import addresses, { KOVAN_ID } from "utils/addresses";
 import Container from "components/Routes/RoutesContainer";
-import { LayoutContext } from "store/Context";
+import { ModalContext } from "store/Context";
+import { ContractContext } from "store/ContractContext";
 import {
   Content,
   Top,
@@ -31,7 +32,9 @@ const connectorsByName: { [name: string]: any } = {
 };
 
 const Dashboard = () => {
-  const { state, dispatch } = useContext(LayoutContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
+  // const { contractState, contractDispatch } = useContext(ContractContext);
+
   const context = useWeb3React();
   const {
     account,
@@ -62,10 +65,16 @@ const Dashboard = () => {
   const [numberOfOutcomes, setNumberOfOutcomes] = useState<number>(2);
 
   const getDai = () =>
-    dispatch({ type: "TOGGLE_TRADE_MODAL", payload: !state.tradeModalIsOpen });
+    modalDispatch({
+      type: "TOGGLE_TRADE_MODAL",
+      payload: !modalState.tradeModalIsOpen,
+    });
 
   const openEmailModal = () =>
-    dispatch({ type: "TOGGLE_EMAIL_MODAL", payload: !state.emailModalIsOpen });
+    modalDispatch({
+      type: "TOGGLE_EMAIL_MODAL",
+      payload: !modalState.emailModalIsOpen,
+    });
 
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(
