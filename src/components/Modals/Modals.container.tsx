@@ -16,7 +16,7 @@ const ModalsContainer = () => {
   return (
     <>
       <SignInModal isOpen={state.signInModalIsOpen} />
-      {/* <TradeModal isOpen={state.tradeModalIsOpen} /> */}
+      <TradeModal isOpen={state.tradeModalIsOpen} />
       {/* <InfoModal isOpen={state.infoModalIsOpen} /> */}
       <EmailModal isOpen={state.emailModalIsOpen} />
     </>
