@@ -153,6 +153,19 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     }
   };
 
+  //   /** OWNER FUNCTIONS */
+  const incrementMarketState = async () => {
+    await marketContract.incrementState();
+  };
+
+  const disable = async () => {
+    await marketContract.disableContract();
+  };
+
+  const determineWinner = async () => {
+    await marketContract.determineWinner();
+  };
+
   return (
     <Content>
       <Header>
