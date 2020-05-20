@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, FormEvent } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Dai as DaiIcon } from "@rimble/icons";
 import { providers, Contract } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -17,8 +17,6 @@ import {
   Wrapper,
   Button,
   GetDaiButton,
-  Form,
-  Input,
 } from "./Dashboard.style";
 import MarketCard from "./MarketCard";
 

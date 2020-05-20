@@ -31,7 +31,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [marketEventName, setMarketEventName] = useState<string>(
-    "Who will win the 2020 US General Election"
+    "Who will win the 2020 US General Election?"
   );
   const [realitioQuestion, setRealitioQuestion] = useState<string>(
     'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
