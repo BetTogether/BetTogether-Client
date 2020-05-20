@@ -4,6 +4,8 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import Box from "3box";
 
+import { getNetwork } from "utils/connectors";
+import { useEagerConnect } from "utils/hooks";
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
 import {
@@ -23,11 +25,23 @@ import { ReactComponent as Github } from "assets/github.svg";
 
 const Header = () => {
   const context = useWeb3React<Web3Provider>();
-  const { active, error, account, deactivate, chainId } = context;
+  const { active, error, account, activate, deactivate } = context;
 
   const { modalState, modalDispatch } = useContext(ModalContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [imageLink, setImageLink] = useState("");
+
+  // const tried = useEagerConnect();
+
+  // useEffect(() => {
+  //   if (tried && !active) activate(getNetwork(42));
+  // }, [activate, active, tried]);
+
+  // // manage connecting state for injected connector
+  // const [connecting, setConnecting] = useState(false);
+  // useEffect(() => {
+  //   if (active) setConnecting(false);
+  // }, [active]);
 
   useEffect(() => {
     (async () => {

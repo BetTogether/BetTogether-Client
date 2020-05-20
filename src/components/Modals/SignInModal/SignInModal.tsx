@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import { useKeyPress } from "utils/hooks";
+import { useKeyPress, useOnClickOutside } from "utils/hooks";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { injected, portis } from "utils/connectors";
 import { useEagerConnect, useInactiveListener } from "utils/hooks";
@@ -48,6 +48,13 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
   const [activatingConnector, setActivatingConnector] = useState<
     AbstractConnector
   >();
+
+  const toggleModal = () => {
+    modalDispatch({
+      type: "TOGGLE_SIGN_IN_MODAL",
+      payload: !modalState.signInModalIsOpen,
+    });
+  };
 
   useEffect(() => {
     if (activatingConnector && activatingConnector === connector)
@@ -93,13 +100,6 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     }
   }, [escFunction, handleClickOutside, isOpen]);
   //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE
-
-  const toggleModal = () => {
-    modalDispatch({
-      type: "TOGGLE_SIGN_IN_MODAL",
-      payload: !modalState.signInModalIsOpen,
-    });
-  };
 
   const setConnector = async (currentConnector: any, name: any) => {
     setLoading(true);

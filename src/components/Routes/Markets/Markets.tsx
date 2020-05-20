@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 import Aave from "./Aave";
 import {
   ActiveMarketsWrapper,
@@ -38,7 +38,7 @@ const Markets = () => {
       window.web3.currentProvider
     );
     const wallet = provider.getSigner();
-    const FactoryInstance: any = new ethers.Contract(
+    const FactoryInstance: any = new Contract(
       marketFactoryAddressKovan,
       BTMarketFactoryContract.abi,
       wallet

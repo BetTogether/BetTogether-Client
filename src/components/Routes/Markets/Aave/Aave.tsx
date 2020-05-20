@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { shortenAddress } from "utils/ShortenAddress";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 
 import BTMarketContract from "abis/BTMarket.json";
 
@@ -53,7 +53,7 @@ function Aave({ market }: { market: string }) {
         window.web3.currentProvider
       );
       const wallet = provider.getSigner();
-      const marketContract: any = new ethers.Contract(
+      const marketContract: any = new Contract(
         market,
         BTMarketContract.abi,
         wallet
@@ -102,13 +102,13 @@ function Aave({ market }: { market: string }) {
         0
       );
       const totalInterests = currentAtokenBalance - totalDeposits;
-  
+
       totalInterestsFormated = getFormattedNumber(totalInterests / 1e18, 17);
     }
   }
 
   if (data && !totalInterestsFormated) {
-    totalInterestsFormated = '?';
+    totalInterestsFormated = "?";
   }
 
   return (

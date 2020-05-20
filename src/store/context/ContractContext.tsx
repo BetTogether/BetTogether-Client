@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, Dispatch } from "react";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 
 import { ContractReducer } from "../Reducers";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
@@ -15,7 +15,7 @@ const initialContractState: any = [];
 
 const provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
 const wallet = provider.getSigner();
-const FactoryContract = new ethers.Contract(
+const FactoryContract = new Contract(
   factoryAddress,
   BTMarketFactoryContract.abi,
   wallet
@@ -23,7 +23,7 @@ const FactoryContract = new ethers.Contract(
 
 initialContractState.push(FactoryContract);
 
-const DaiInstance: any = new ethers.Contract(daiAddress, IERC20.abi, wallet);
+const DaiInstance: any = new Contract(daiAddress, IERC20.abi, wallet);
 
 initialContractState.push(DaiInstance);
 

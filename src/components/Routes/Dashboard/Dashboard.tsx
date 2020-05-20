@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, FormEvent } from "react";
 import { Dai as DaiIcon } from "@rimble/icons";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 
 import BTMarketContract from "abis/BTMarket.json";
 import { injected, portis } from "utils/connectors";
@@ -19,14 +19,13 @@ import {
   Input,
 } from "./Dashboard.style";
 import MarketCard from "./MarketCard";
-import { useWeb3React } from "@web3-react/core";
 
 declare let window: any;
 
-const connectorsByName: { [name: string]: any } = {
-  Injected: injected,
-  Portis: portis,
-};
+// const connectorsByName: { [name: string]: any } = {
+//   Injected: injected,
+//   Portis: portis,
+// };
 
 const Dashboard = () => {
   const { modalState, modalDispatch } = useContext(ModalContext);
@@ -34,17 +33,6 @@ const Dashboard = () => {
 
   const factoryContract = contractState[0];
   const daiContract = contractState[1];
-
-  const context = useWeb3React();
-  const {
-    account,
-    active,
-    activate,
-    connector,
-    deactivate,
-    library,
-    error,
-  } = context;
 
   const [wallet, setWallet] = useState<any>(null);
   const [marketContractInstance, setMarketContractInstance] = useState<any>(
@@ -78,10 +66,10 @@ const Dashboard = () => {
     const wallet = provider.getSigner();
     setWallet(wallet);
 
-    getMostRecentMarket(factoryContract, wallet);
+    GetMostRecentMarket(factoryContract, wallet);
   }, [factoryContract]);
 
-  const getMostRecentMarket = async (factoryContract: any, wallet: any) => {
+  const GetMostRecentMarket = async (factoryContract: any, wallet: any) => {
     try {
       let deployedMarkets = await (factoryContract as any).getMarkets();
       if (deployedMarkets.length !== 0) {
@@ -97,7 +85,8 @@ const Dashboard = () => {
         //   portis.portis.provider
         // );
         // const wallet = Provider.getSigner();
-        const instance: any = new ethers.Contract(
+
+        const instance: any = new Contract(
           mostRecentlyDeployedAddress,
           BTMarketContract.abi,
           wallet
@@ -105,7 +94,7 @@ const Dashboard = () => {
         setMarketContractInstance(instance);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -127,7 +116,7 @@ const Dashboard = () => {
       NUMBER_OF_OUTCOMES
     );
 
-    getMostRecentMarket(factoryContract, wallet);
+    GetMostRecentMarket(factoryContract, wallet);
   };
 
   return (

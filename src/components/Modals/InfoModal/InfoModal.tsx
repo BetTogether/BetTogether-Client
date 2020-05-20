@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
-import { ethers, utils } from "ethers";
+import { ethers, utils, Contract } from "ethers";
 
 import {
   MainWrapper,
@@ -52,7 +52,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         window.web3.currentProvider
       );
 
-      const factoryContract = new ethers.Contract(
+      const factoryContract = new Contract(
         factoryAddress,
         BTMarketFactoryContract.abi,
         provider
@@ -64,7 +64,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         deployedMarkets[deployedMarkets.length - 1];
 
       if (deployedMarkets.length !== 0) {
-        const marketContract = new ethers.Contract(
+        const marketContract = new Contract(
           mostRecentlyDeployedAddress,
           BTMarketContract.abi,
           provider

@@ -132,6 +132,12 @@ export function useOnClickOutside({ ref, handler }: any) {
   );
 }
 
+export async function useNetworkId() {
+  let provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
+  let networkId = await provider.getNetwork();
+  return networkId;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useContract(
   address?: string,
@@ -150,10 +156,4 @@ export function useContract(
         : undefined,
     [address, ABI, withSigner, library, account]
   );
-}
-
-export async function useNetworkId() {
-  let provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
-  let networkId = await provider.getNetwork();
-  return networkId;
 }

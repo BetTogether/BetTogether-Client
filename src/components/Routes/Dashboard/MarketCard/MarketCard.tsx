@@ -30,7 +30,6 @@ import { utils } from "ethers";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {
   console.log("Market Contract: ", marketContract);
-  console.log("Dai Contract:", daiContract);
   const { modalState, modalDispatch } = useContext(ModalContext);
   const context = useWeb3React<Web3Provider>();
   const { account, library } = context;
@@ -154,19 +153,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     }
   };
 
-  //   /** OWNER FUNCTIONS */
-  const incrementMarketState = async () => {
-    await marketContract.incrementState();
-  };
-
-  const disable = async () => {
-    await marketContract.disableContract();
-  };
-
-  const determineWinner = async () => {
-    await marketContract.disableContract();
-  };
-
   return (
     <Content>
       <Header>
@@ -238,13 +224,21 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
       {checkOwner() && (
         <OwnerButtons>
-          <OwnerButton onClick={() => incrementMarketState()}>
+          <OwnerButton
+            onClick={async () => await marketContract.incrementState()}
+          >
             Increment Market State
           </OwnerButton>
-          <OwnerButton onClick={() => determineWinner()}>
+          <OwnerButton
+            onClick={async () => await marketContract.determineWinner()}
+          >
             Determine Winner
           </OwnerButton>
-          <OwnerButton onClick={() => disable()}>Disable Contract</OwnerButton>
+          <OwnerButton
+            onClick={async () => await marketContract.disableContract()}
+          >
+            Disable Contract
+          </OwnerButton>
         </OwnerButtons>
       )}
     </Content>
