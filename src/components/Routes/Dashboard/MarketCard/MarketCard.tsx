@@ -237,7 +237,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
           <OwnerButton
             onClick={async () => await marketContract.disableContract()}
           >
-            Disable Contract
+            Pause (Disable) Contract
           </OwnerButton>
         </OwnerButtons>
       )}

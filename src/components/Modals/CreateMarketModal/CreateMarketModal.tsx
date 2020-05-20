@@ -59,7 +59,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
     const REALITIO_QUESTION = realitioQuestion;
     const NUMBER_OF_OUTCOMES = numberOfOutcomes;
 
-    await factoryContract.createMarket(
+    let tx = await factoryContract.createMarket(
       MARKET_EVENT_NAME,
       MARKET_OPENING_TIME,
       MARKET_LOCKING_TIME,
@@ -69,8 +69,11 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
       REALITIO_QUESTION,
       NUMBER_OF_OUTCOMES
     );
-    setLoading(false);
-    toggleModal();
+    let result = await tx.wait();
+    if (result) {
+      setLoading(false);
+      toggleModal();
+    }
   };
 
   const toggleModal = () => {
