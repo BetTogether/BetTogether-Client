@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useWeb3React } from "@web3-react/core";
+import { Contract } from "@ethersproject/contracts";
+import { ethers } from "ethers";
 
 import { injected } from "./connectors";
 
@@ -68,4 +70,90 @@ export function useInactiveListener(suppress: boolean = false) {
       };
     }
   }, [active, error, suppress, activate]);
+}
+
+export function useKeyPress({ targetKey }: any) {
+  // State for keeping track of whether key is pressed
+  const [keyPressed, setKeyPressed] = useState(false);
+
+  useEffect(() => {
+    // If pressed key is our target key then set to true
+    function downHandler({ key }: any) {
+      if (key === targetKey) {
+        setKeyPressed(true);
+      }
+    }
+
+    // If released key is our target key then set to false
+    const upHandler = ({ key }: any) => {
+      if (key === targetKey) {
+        setKeyPressed(false);
+      }
+    };
+
+    window.addEventListener("keydown", downHandler);
+    window.addEventListener("keyup", upHandler);
+    return () => {
+      window.removeEventListener("keydown", downHandler);
+      window.removeEventListener("keyup", upHandler);
+    };
+  }, [targetKey]); // Empty array ensures that effect is only run on mount and unmount
+
+  return keyPressed;
+}
+
+export function useOnClickOutside({ ref, handler }: any) {
+  useEffect(
+    () => {
+      const listener = ({ event }: any) => {
+        // Do nothing if clicking ref's element or descendent elements
+        if (!ref.current || ref.current.contains(event.target)) {
+          return;
+        }
+
+        handler(event);
+      };
+
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+
+      return () => {
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
+      };
+    },
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useContract(
+  address?: string,
+  ABI?: any,
+  withSigner = false
+): Contract | undefined {
+  const { library, account } = useWeb3React();
+  return useMemo(
+    () =>
+      !!address && !!ABI && !!library
+        ? new Contract(
+            address,
+            ABI,
+            withSigner ? library.getSigner(account).connectUnchecked() : library
+          )
+        : undefined,
+    [address, ABI, withSigner, library, account]
+  );
+}
+
+export async function useNetworkId() {
+  let provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
+  let networkId = await provider.getNetwork();
+  return networkId;
 }

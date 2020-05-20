@@ -11,16 +11,27 @@ import Markets from "./components/Routes/Markets";
 import Account from "./components/Routes/Account";
 import NotFound from "./components/Routes/NotFound";
 import ModalContainer from "./components/Modals/Modals.container";
+import { useNetworkId } from "utils/hooks";
 
 function App() {
-  const context = useWeb3React<Web3Provider>();
-  const { connector, active, chainId } = context;
+  const { active } = useWeb3React<Web3Provider>();
+  const [painted, setPainted] = useState(false);
+  const [networkId, setNetwork] = useState<number>();
 
-  return (
+  useNetworkId().then((networkId) => {
+    let chainId = networkId.chainId;
+    setNetwork(chainId);
+  });
+
+  useEffect(() => {
+    setPainted(true);
+  }, []);
+
+  return !painted ? null : !networkId ? null : (
     <>
       <Header />
-      {chainId !== 42 ? (
-        <ConnectionBanner currentNetwork={chainId} requiredNetwork={42} />
+      {networkId !== 42 ? (
+        <ConnectionBanner currentNetwork={networkId} requiredNetwork={42} />
       ) : (
         <>
           <NavStrip />

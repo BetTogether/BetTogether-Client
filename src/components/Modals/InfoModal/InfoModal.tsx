@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useRef,
+} from "react";
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
 import { ethers, utils } from "ethers";

@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
+import { useKeyPress } from "utils/hooks";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { injected, portis } from "utils/connectors";
 import { useEagerConnect, useInactiveListener } from "utils/hooks";
@@ -69,6 +70,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     },
     [modalDispatch, modalState.signInModalIsOpen]
   );
+
   const escFunction = useCallback(
     (event: any) => {
       if (event.keyCode === 27)
@@ -79,12 +81,13 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     },
     [modalDispatch, modalState.signInModalIsOpen]
   );
+
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener("keydown", escFunction, false);
+      // document.addEventListener("keydown", escFunction, false);
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
-        document.removeEventListener("keydown", escFunction, false);
+        // document.removeEventListener("keydown", escFunction, false);
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
@@ -116,6 +119,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
             <IconButton onClick={() => toggleModal()}>
               <CrossIcon />
             </IconButton>
+
             <Buttons>
               {Object.keys(connectorsByName).map((name) => {
                 const currentConnector = connectorsByName[name];
