@@ -29,7 +29,7 @@ const Markets = () => {
       const markets = await factory.getMarkets();
       setMarkets(markets);
     } catch (error) {
-      console.log({ error });
+      console.error(error);
     }
   };
 

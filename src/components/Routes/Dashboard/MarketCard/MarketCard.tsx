@@ -130,7 +130,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       console.log(tx.hash);
       await tx.wait();
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   };
 
@@ -140,7 +140,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       console.log(tx.hash);
       await tx.wait();
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   };
 
@@ -153,7 +153,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     }
   };
 
-  return (
+  return !prompt ? null : (
     <Content>
       <Header>
         <span>{shortenAddress(marketContract.address)}</span>
