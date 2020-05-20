@@ -1,13 +1,7 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
-import { ethers, utils, Contract } from "ethers";
+import { providers, utils, Contract } from "ethers";
 
 import {
   MainWrapper,
@@ -23,8 +17,7 @@ import {
 } from "./InfoModal.style";
 import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "abis/BTMarket.json";
-import BTMarketFactoryContract from "abis/BTMarketFactory.json";
-import addresses, { KOVAN_ID } from "utils/addresses";
+import { ContractContext } from "store/context/ContractContext";
 
 interface IInfoModalProps {
   isOpen: boolean;
@@ -34,8 +27,9 @@ declare let window: any;
 
 const InfoModal = ({ isOpen }: IInfoModalProps) => {
   const { modalState, modalDispatch } = useContext(ModalContext);
+  const { contractState } = useContext(ContractContext);
+  const factoryContract = contractState[0];
 
-  const factoryAddress = addresses[KOVAN_ID].marketFactory;
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
   const [marketState, setMarketState] = useState<string>("");
   const [totalVotesForTrump, setTotalVotesForTrump] = useState<string>("");
@@ -48,15 +42,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
 
   useEffect(() => {
     (async () => {
-      const provider = new ethers.providers.Web3Provider(
-        window.web3.currentProvider
-      );
-
-      const factoryContract = new Contract(
-        factoryAddress,
-        BTMarketFactoryContract.abi,
-        provider
-      );
+      const provider = new providers.Web3Provider(window.web3.currentProvider);
 
       let deployedMarkets = await factoryContract.getMarkets();
 
@@ -79,6 +65,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         setPot(utils.formatUnits(pot.toString(), 18));
 
         let numberOfTokenContracts = await marketContract.tokenContractsCreated();
+        console.log("numberOfTokenContracts:", numberOfTokenContracts);
         if (numberOfTokenContracts !== 0) {
           const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
           //GOTTA BE A CLEANER WAY TO DO THIS...
@@ -107,16 +94,9 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         }
       }
     })();
-    //@eslint-disable-next-line
-  }, [MarketStates, factoryAddress]);
+  }, [MarketStates, factoryContract]);
 
-  const toggleModal = () =>
-    modalDispatch({
-      type: "TOGGLE_INFO_MODAL",
-      payload: !modalState.infoModalIsOpen,
-    });
-
-  //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE ... EVENTUALLY MOVE
+  //#region
   const escFunction = useCallback(
     (event: any) => {
       if (event.keyCode === 27)
@@ -135,14 +115,21 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
       };
     }
   }, [escFunction, isOpen]);
-  //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE
+  //#endregion
 
   return (
     <MainWrapper isOpen={isOpen}>
       <Modal>
         <Top>
           <Title>Some important info...</Title>
-          <IconButton onClick={() => toggleModal()}>
+          <IconButton
+            onClick={() =>
+              modalDispatch({
+                type: "TOGGLE_INFO_MODAL",
+                payload: !modalState.infoModalIsOpen,
+              })
+            }
+          >
             <Clear />
           </IconButton>
         </Top>

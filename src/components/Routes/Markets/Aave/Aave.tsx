@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { shortenAddress } from "utils/ShortenAddress";
-import { ethers, Contract } from "ethers";
+import { providers, Contract } from "ethers";
 
 import BTMarketContract from "abis/BTMarket.json";
 
@@ -49,9 +49,7 @@ function Aave({ market }: { market: string }) {
 
   useEffect(() => {
     (async () => {
-      const provider = new ethers.providers.Web3Provider(
-        window.web3.currentProvider
-      );
+      const provider = new providers.Web3Provider(window.web3.currentProvider);
       const wallet = provider.getSigner();
       const marketContract: any = new Contract(
         market,

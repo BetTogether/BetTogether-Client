@@ -26,7 +26,6 @@ import { ReactComponent as Github } from "assets/github.svg";
 const Header = () => {
   const context = useWeb3React<Web3Provider>();
   const { active, error, account, activate, deactivate } = context;
-  console.log("active:", active);
 
   const { modalState, modalDispatch } = useContext(ModalContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -61,13 +60,6 @@ const Header = () => {
     })();
   }, [active, account]);
 
-  const SignIn = () => {
-    modalDispatch({
-      type: "TOGGLE_SIGN_IN_MODAL",
-      payload: !modalState.signInModalIsOpen,
-    });
-  };
-
   return (
     <>
       <Head>
@@ -100,7 +92,14 @@ const Header = () => {
               )}
             </>
           ) : (
-            <ConnectionButton onClick={() => SignIn()}>
+            <ConnectionButton
+              onClick={() =>
+                modalDispatch({
+                  type: "TOGGLE_SIGN_IN_MODAL",
+                  payload: !modalState.signInModalIsOpen,
+                })
+              }
+            >
               Connect
             </ConnectionButton>
           )}

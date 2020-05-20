@@ -1,4 +1,5 @@
 import {
+  TOGGLE_CREATE_MARKET_MODAL,
   TOGGLE_SIGN_IN_MODAL,
   TOGGLE_TRADE_MODAL,
   TOGGLE_EMAIL_MODAL,
@@ -8,6 +9,12 @@ import {
 
 export function ModalReducer(state: any, action: any) {
   switch (action.type) {
+    case TOGGLE_CREATE_MARKET_MODAL: {
+      return {
+        ...state,
+        createMarketModalIsOpen: action.payload,
+      };
+    }
     case TOGGLE_SIGN_IN_MODAL: {
       return {
         ...state,

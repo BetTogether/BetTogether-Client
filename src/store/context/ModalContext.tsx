@@ -3,6 +3,7 @@ import React, { createContext, useReducer, Dispatch } from "react";
 import { ModalReducer } from "../Reducers";
 
 const initialModalState: any = {
+  createMarketModalIsOpen: false,
   signInModalIsOpen: false,
   tradeModalIsOpen: false,
   emailModalIsOpen: false,

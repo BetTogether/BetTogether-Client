@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect, FormEvent } from "react";
 import { Dai as DaiIcon } from "@rimble/icons";
-import { ethers, Contract } from "ethers";
+import { providers, Contract } from "ethers";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 import BTMarketContract from "abis/BTMarket.json";
 import { injected, portis } from "utils/connectors";
@@ -29,23 +31,29 @@ declare let window: any;
 
 const Dashboard = () => {
   const { modalState, modalDispatch } = useContext(ModalContext);
-  const { contractState, contractDispatch } = useContext(ContractContext);
-
+  const { contractState } = useContext(ContractContext);
   const factoryContract = contractState[0];
   const daiContract = contractState[1];
+  const { active } = useWeb3React<Web3Provider>();
 
   const [wallet, setWallet] = useState<any>(null);
   const [marketContractInstance, setMarketContractInstance] = useState<any>(
     null
   );
-  const [marketEventName, setMarketEventName] = useState<string>(
-    "Who will win the 2020 US General Election"
-  );
-  const [question, setQuestion] = useState<string>(
-    'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
-  );
-
-  const [numberOfOutcomes, setNumberOfOutcomes] = useState<number>(2);
+  // const [marketEventName, setMarketEventName] = useState<string>(
+  //   "Who will win the 2020 US General Election"
+  // );
+  // const [realitioQuestion, setRealitioQuestion] = useState<string>(
+  //   'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
+  // );
+  // const [marketOpeningTime, setMarketOpeningTime] = useState<number>(0);
+  // const [marketLockingTime, setMarketLockingTime] = useState<number>(0);
+  // const [marketResolutionTime, setMarketResolutionTime] = useState<any>(0);
+  // const [timeout, setTimeout] = useState<number>(40);
+  // const [arbitrator, setArbitrator] = useState<string>(
+  //   "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D"
+  // );
+  // const [numberOfOutcomes, setNumberOfOutcomes] = useState<number>(2);
 
   const getDai = () =>
     modalDispatch({
@@ -60,9 +68,7 @@ const Dashboard = () => {
     });
 
   useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(
-      window.web3.currentProvider
-    );
+    const provider = new providers.Web3Provider(window.web3.currentProvider);
     const wallet = provider.getSigner();
     setWallet(wallet);
 
@@ -81,7 +87,7 @@ const Dashboard = () => {
         );
 
         // const usingPortis = portis.portis.provider
-        // const Provider = new ethers.providers.Web3Provider(
+        // const Provider = new providers.Web3Provider(
         //   portis.portis.provider
         // );
         // const wallet = Provider.getSigner();
@@ -96,27 +102,6 @@ const Dashboard = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const createMarket = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const MARKET_EVENT_NAME = marketEventName;
-    const MARKET_OPENING_TIME = 0;
-    const MARKET_RESOLUTION_TIME = 0;
-    const ARBITRATOR = "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D";
-    const QUESTION = question;
-    const NUMBER_OF_OUTCOMES = numberOfOutcomes;
-
-    await factoryContract.createMarket(
-      MARKET_EVENT_NAME,
-      MARKET_OPENING_TIME,
-      MARKET_RESOLUTION_TIME,
-      ARBITRATOR,
-      QUESTION,
-      NUMBER_OF_OUTCOMES
-    );
-
-    GetMostRecentMarket(factoryContract, wallet);
   };
 
   return (
@@ -135,31 +120,24 @@ const Dashboard = () => {
         </Top>
 
         <Wrapper>
-          {marketContractInstance && (
+          {marketContractInstance ? (
             <MarketCard
               daiContract={daiContract}
               marketContract={marketContractInstance}
             />
+          ) : (
+            <Button
+              disabled={!active}
+              onClick={() =>
+                modalDispatch({
+                  type: "TOGGLE_CREATE_MARKET_MODAL",
+                  payload: !modalState.createMarketModalIsOpen,
+                })
+              }
+            >
+              Create Market
+            </Button>
           )}
-
-          <Form onSubmit={createMarket}>
-            <Input
-              type="text"
-              value={marketEventName}
-              onChange={(e: any) => setMarketEventName(e.target.value)}
-            />
-            <Input
-              type="text"
-              value={question}
-              onChange={(e: any) => setQuestion(e.target.value)}
-            />
-            <Input
-              type="text"
-              value={numberOfOutcomes}
-              onChange={(e: any) => setNumberOfOutcomes(e.target.value)}
-            />
-            <Button>Create Market</Button>
-          </Form>
 
           <GetDaiButton onClick={() => getDai()}>
             <DaiIcon />

@@ -5,10 +5,10 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import { useKeyPress, useOnClickOutside } from "utils/hooks";
+//import { useKeyPress, useOnClickOutside } from "utils/hooks";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { injected, portis } from "utils/connectors";
-import { useEagerConnect } from "utils/hooks";
+//import { useEagerConnect } from "utils/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import {

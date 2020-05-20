@@ -27,7 +27,7 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
             <CrossIcon />
           </IconButton>
         </Top>
-        <Uniswap />
+        {/* <Uniswap /> */}
         {/* <Top>
           <Title>BTC &#x2192; PBCT</Title>
         </Top>

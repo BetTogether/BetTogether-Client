@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Contract } from "@ethersproject/contracts";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 
 import { injected } from "./connectors";
 
@@ -133,7 +133,7 @@ export function useOnClickOutside({ ref, handler }: any) {
 }
 
 export async function useNetworkId() {
-  let provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
+  let provider = new providers.Web3Provider(window.web3.currentProvider);
   let networkId = await provider.getNetwork();
   return networkId;
 }
