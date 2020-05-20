@@ -8,7 +8,7 @@ import React, {
 import { useKeyPress, useOnClickOutside } from "utils/hooks";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { injected, portis } from "utils/connectors";
-import { useEagerConnect, useInactiveListener } from "utils/hooks";
+import { useEagerConnect } from "utils/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import {
@@ -56,12 +56,9 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     });
   };
 
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector)
-      setActivatingConnector(undefined);
-  }, [activatingConnector, connector]);
   const triedEager = useEagerConnect();
-  useInactiveListener(!triedEager || !!activatingConnector);
+  //console.log("triedEager:", triedEager);
+  //useInactiveListener(!triedEager);
 
   //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE ... EVENTUALLY MOVE
   const node = useRef<any>(null);

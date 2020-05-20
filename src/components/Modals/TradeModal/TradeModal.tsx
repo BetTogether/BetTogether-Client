@@ -28,10 +28,10 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
           </IconButton>
         </Top>
         <Uniswap />
-        <Top>
+        {/* <Top>
           <Title>BTC &#x2192; PBCT</Title>
         </Top>
-        <PBTC />
+        <PBTC /> */}
       </Modal>
     </Wrapper>
   );

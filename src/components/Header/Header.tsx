@@ -48,13 +48,14 @@ const Header = () => {
       if (active) {
         try {
           const profile = await Box.getProfile(account);
+          console.log("profile:", profile);
           if (profile.image) {
             let imageLink = profile.image[0]["contentUrl"]["/"];
             let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;
             setImageLink(newLink);
           }
         } catch (error) {
-          console.log("error:", error);
+          console.error(error);
         }
       }
     })();
@@ -103,12 +104,16 @@ const Header = () => {
               Connect
             </ConnectionButton>
           )}
-          <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
-            <MenuIcon isExpanded={isExpanded} />
-          </ExpandButton>
+          {active && (
+            <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
+              <MenuIcon isExpanded={isExpanded} />
+            </ExpandButton>
+          )}
         </RightContent>
       </Head>
-      <MobileDropdown isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
+      {active && (
+        <MobileDropdown isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
+      )}
     </>
   );
 };
