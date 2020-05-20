@@ -71,7 +71,7 @@ function Aave({ market }: { market: string }) {
 
   let totalInterestsFormated: string | number = 0;
 
-  if (data) {
+  if (data && data.users.length > 0 && data.users[0].reserves.length > 0) {
     const { aTokenBalanceHistory, depositHistory } = data.users[0].reserves[0];
 
     // TODO use real _marketResolutionTime
@@ -91,18 +91,24 @@ function Aave({ market }: { market: string }) {
       return deposit.timestamp < fakeMarketResolutionTime;
     });
 
-    const currentAtokenBalance = parseInt(
-      accruedInterestChanges[accruedInterestChanges.length - 1].balance,
-      10
-    );
-    const totalDeposits = filteredDeposits.reduce(
-      (depositSum: number, currentValue: any) =>
-        depositSum + parseInt(currentValue.amount, 10),
-      0
-    );
-    const totalInterests = currentAtokenBalance - totalDeposits;
+    if (filteredDeposits.length > 0 && accruedInterestChanges.length > 0) {
+      const currentAtokenBalance = parseInt(
+        accruedInterestChanges[accruedInterestChanges.length - 1].balance,
+        10
+      );
+      const totalDeposits = filteredDeposits.reduce(
+        (depositSum: number, currentValue: any) =>
+          depositSum + parseInt(currentValue.amount, 10),
+        0
+      );
+      const totalInterests = currentAtokenBalance - totalDeposits;
+  
+      totalInterestsFormated = getFormattedNumber(totalInterests / 1e18, 17);
+    }
+  }
 
-    totalInterestsFormated = getFormattedNumber(totalInterests / 1e18, 17);
+  if (data && !totalInterestsFormated) {
+    totalInterestsFormated = '?';
   }
 
   return (
