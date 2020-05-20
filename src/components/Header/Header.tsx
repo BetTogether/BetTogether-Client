@@ -26,6 +26,7 @@ import { ReactComponent as Github } from "assets/github.svg";
 const Header = () => {
   const context = useWeb3React<Web3Provider>();
   const { active, error, account, activate, deactivate } = context;
+  console.log("active:", active);
 
   const { modalState, modalDispatch } = useContext(ModalContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -48,7 +49,6 @@ const Header = () => {
       if (active) {
         try {
           const profile = await Box.getProfile(account);
-          console.log("profile:", profile);
           if (profile.image) {
             let imageLink = profile.image[0]["contentUrl"]["/"];
             let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;

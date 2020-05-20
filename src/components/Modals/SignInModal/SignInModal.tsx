@@ -34,8 +34,7 @@ interface ISignInModalProps {
 }
 
 const SignInModal = ({ isOpen }: ISignInModalProps) => {
-  const context = useWeb3React<Web3Provider>();
-  const { connector, activate, error } = context;
+  const { connector, activate, error } = useWeb3React<Web3Provider>();
 
   const { modalState, modalDispatch } = useContext(ModalContext);
   const [loading, setLoading] = useState(false);
@@ -45,10 +44,6 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     Portis: portis,
   };
 
-  const [activatingConnector, setActivatingConnector] = useState<
-    AbstractConnector
-  >();
-
   const toggleModal = () => {
     modalDispatch({
       type: "TOGGLE_SIGN_IN_MODAL",
@@ -56,11 +51,11 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     });
   };
 
-  const triedEager = useEagerConnect();
-  //console.log("triedEager:", triedEager);
+  // const triedEager = useEagerConnect();
+  // console.log("triedEager:", triedEager);
   //useInactiveListener(!triedEager);
 
-  //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE ... EVENTUALLY MOVE
+  //#region
   const node = useRef<any>(null);
   const handleClickOutside = useCallback(
     (event: any) => {
@@ -96,11 +91,12 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
       };
     }
   }, [escFunction, handleClickOutside, isOpen]);
-  //! CLOSE MODAL BY ESCAPE KEY OR CLICKING OUTSIDE
+  //#endregion
 
   const setConnector = async (currentConnector: any, name: any) => {
+    console.log("name:", name);
     setLoading(true);
-    setActivatingConnector(currentConnector);
+    // setActivatingConnector(currentConnector);
     await activate(connectorsByName[name]);
     setLoading(false);
     toggleModal();
@@ -121,8 +117,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
               {Object.keys(connectorsByName).map((name) => {
                 const currentConnector = connectorsByName[name];
                 const connected = currentConnector === connector;
-                const disabled =
-                  !triedEager || !!activatingConnector || connected || !!error;
+                const disabled = connected || !!error;
 
                 const LogoSrc = name === "Injected" ? metamaskLogo : portisLogo;
 
