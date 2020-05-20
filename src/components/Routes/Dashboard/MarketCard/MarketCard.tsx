@@ -164,7 +164,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
   };
 
   const determineWinner = async () => {
-    await marketContract.disableContract();
+    await marketContract.determineWinner();
   };
 
   return (
