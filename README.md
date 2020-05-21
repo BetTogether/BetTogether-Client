@@ -5,7 +5,7 @@
 
 <br/>
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/c995206c-1474-44fd-859d-c43c483fbb40/deploy-status)](https://magicbet.netlify.app/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c995206c-1474-44fd-859d-c43c483fbb40/deploy-status)](https://app.netlify.com/sites/magicbet/deploys)
 
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://MagicBet.github.io/MagicBet-Client)
 
