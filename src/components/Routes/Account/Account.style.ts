@@ -98,3 +98,32 @@ export const Button = styled.button`
     box-shadow: none;
   }
 `;
+
+export const ThreeBoxLink = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  background-color: ${(props) => props.theme.palette3.gray};
+  width: 20rem;
+  &:hover {
+    background-color: ${(props) => props.theme.palette3.white};
+  }
+`;
+
+export const LogoImage = styled.img`
+  height: 6rem;
+  width: 6rem;
+`;
+
+export const ThreeBoxWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
