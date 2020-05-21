@@ -17,6 +17,7 @@ import {
   Wrapper,
   Button,
   GetDaiButton,
+  CreateMarketButton,
 } from "./Dashboard.style";
 import MarketCard from "./MarketCard";
 
@@ -106,7 +107,7 @@ const Dashboard = () => {
               marketContract={marketContractInstance}
             />
           ) : (
-            <Button
+            <CreateMarketButton
               disabled={!active}
               onClick={() =>
                 modalDispatch({
@@ -116,7 +117,7 @@ const Dashboard = () => {
               }
             >
               Create Market
-            </Button>
+            </CreateMarketButton>
           )}
 
           <GetDaiButton

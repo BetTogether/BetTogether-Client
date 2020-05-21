@@ -27,12 +27,13 @@ import {
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
 import { utils } from "ethers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {
   console.log("Market Contract: ", marketContract);
   const { modalState, modalDispatch } = useContext(ModalContext);
-  const context = useWeb3React<Web3Provider>();
-  const { account, library } = context;
+  const { account, library } = useWeb3React<Web3Provider>();
 
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
@@ -122,10 +123,12 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
     try {
       let tx = await marketContract.placeBet(choiceAsNumber, formatted);
-      console.log(tx.hash);
-      await tx.wait();
+      notifyConfirmation(tx.hash);
+      let result = await tx.wait();
+      notifySuccess(result.transactionHash);
     } catch (error) {
       console.error(error);
+      notifyFailure();
     }
   };
 
@@ -148,95 +151,165 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     }
   };
 
+  const notifyConfirmation = (txHash: any) => {
+    toast(
+      <a
+        href={`https://kovan.etherscan.io/tx/${txHash}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {`Transaction Confirmed`}
+      </a>,
+      {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        progressStyle: { background: "#0000ff" },
+      }
+    );
+  };
+
+  const notifySuccess = (txHash: any) => {
+    toast(
+      <a
+        href={`https://kovan.etherscan.io/tx/${txHash}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {`Transaction Success`}
+      </a>,
+      {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        progressStyle: { background: "#00ff00" },
+      }
+    );
+  };
+
+  const notifyFailure = () => {
+    toast(<span>{`Transaction Failed. Try increasing the gas`}</span>, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      progressStyle: { background: "#ff0000" },
+    });
+  };
+
   return !prompt ? null : (
-    <Content>
-      <Header>
-        <span>{shortenAddress(marketContract.address)}</span>
-        <span>
-          <ItemDescription>
-            Current, Potential Winnings (in Dai)
-          </ItemDescription>
-          <CountUp
-            start={0}
-            end={accruedInterest}
-            decimals={18}
-            preserveValue={true}
-            duration={5}
-          />
-        </span>
-        <Wrapper>
+    <>
+      <Content>
+        <Header>
+          <span>{shortenAddress(marketContract.address)}</span>
           <span>
-            {marketResolutionTime ? (
-              <CountDown date={Date.now() + marketResolutionTime} />
-            ) : (
-              "-"
-            )}
+            <ItemDescription>
+              Current, Potential Winnings (in Dai)
+            </ItemDescription>
+            <CountUp
+              start={0}
+              end={accruedInterest}
+              decimals={18}
+              preserveValue={true}
+              duration={5}
+            />
           </span>
-          <SVG>
-            <Info onClick={() => openInfoModal()} />
-          </SVG>
-        </Wrapper>
-      </Header>
-      <Prompt>{prompt}</Prompt>
-
-      <GraphFormWrapper>
-        <ChartWrapper>
-          <Chart outcomes={outcomes} />
-        </ChartWrapper>
-
-        <Form onSubmit={placeBet}>
-          <Select
-            value={choice}
-            onChange={(e: any) => setChoice(e.target.value)}
-          >
-            <Option key={uuidv4()} value="" />
-            {outcomes.map((outcome: any) => (
-              <Option key={uuidv4()} value={outcome}>
-                {outcome}
-              </Option>
-            ))}
-          </Select>
-
-          <Input
-            type="number"
-            placeholder="0"
-            onChange={(e: any) => setAmountToBet(e.target.value)}
-          />
-          {!!(library && account) && (
-            <>
-              <Button buy disabled={amountToBet <= 0}>
-                Enter
-              </Button>
-              {marketState === "WITHDRAW" && (
-                <Button type="button" onClick={() => withdraw()}>
-                  Withdraw
-                </Button>
+          <Wrapper>
+            <span>
+              {marketResolutionTime ? (
+                <CountDown date={Date.now() + marketResolutionTime} />
+              ) : (
+                "-"
               )}
-            </>
-          )}
-        </Form>
-      </GraphFormWrapper>
+            </span>
+            <SVG>
+              <Info onClick={() => openInfoModal()} />
+            </SVG>
+          </Wrapper>
+        </Header>
+        <Prompt>{prompt}</Prompt>
 
-      {checkOwner() && (
-        <OwnerButtons>
-          <OwnerButton
-            onClick={async () => await marketContract.incrementState()}
-          >
-            Increment Market State
-          </OwnerButton>
-          <OwnerButton
-            onClick={async () => await marketContract.determineWinner()}
-          >
-            Determine Winner
-          </OwnerButton>
-          <OwnerButton
-            onClick={async () => await marketContract.disableContract()}
-          >
-            Pause (Disable) Contract
-          </OwnerButton>
-        </OwnerButtons>
-      )}
-    </Content>
+        <GraphFormWrapper>
+          <ChartWrapper>
+            <Chart outcomes={outcomes} marketContract={marketContract} />
+          </ChartWrapper>
+
+          <Form onSubmit={placeBet}>
+            <Select
+              value={choice}
+              onChange={(e: any) => setChoice(e.target.value)}
+            >
+              <Option key={uuidv4()} value="" />
+              {outcomes.map((outcome: any) => (
+                <Option key={uuidv4()} value={outcome}>
+                  {outcome}
+                </Option>
+              ))}
+            </Select>
+
+            <Input
+              type="number"
+              placeholder="0"
+              onChange={(e: any) => setAmountToBet(e.target.value)}
+            />
+            {!!(library && account) && (
+              <>
+                <Button buy disabled={amountToBet <= 0}>
+                  Enter
+                </Button>
+                {marketState === "WITHDRAW" && (
+                  <Button type="button" onClick={() => withdraw()}>
+                    Withdraw
+                  </Button>
+                )}
+              </>
+            )}
+          </Form>
+        </GraphFormWrapper>
+
+        {checkOwner() && (
+          <OwnerButtons>
+            <OwnerButton
+              onClick={async () => await marketContract.incrementState()}
+            >
+              Increment Market State
+            </OwnerButton>
+            <OwnerButton
+              onClick={async () => await marketContract.determineWinner()}
+            >
+              Determine Winner
+            </OwnerButton>
+            <OwnerButton
+              onClick={async () => await marketContract.disableContract()}
+            >
+              Pause (Disable) Contract
+            </OwnerButton>
+          </OwnerButtons>
+        )}
+      </Content>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 };
 

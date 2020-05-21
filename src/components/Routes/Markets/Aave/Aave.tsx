@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
-import { shortenAddress } from "utils/ShortenAddress";
 import { providers, Contract } from "ethers";
+import styled from "styled-components";
 
+import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "abis/BTMarket.json";
 
 // import {
@@ -11,6 +12,13 @@ import BTMarketContract from "abis/BTMarket.json";
 // } from "../Markets.style";
 
 declare let window: any;
+
+const Address = styled.a`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 const GET_LAST_DEPOSITS_FROM_MARKET = gql`
   query deposits($market: ID!) {
@@ -73,20 +81,21 @@ function Aave({ market }: { market: string }) {
     variables: { market: market.toLowerCase() },
   }); */
 
-
   return (
     <>
-      {(
+      {
         <>
-          <th><a href={`https://kovan.etherscan.io/address/${market}`}>{shortenAddress(market)}</a></th>
+          <th>
+            <Address href={`https://kovan.etherscan.io/address/${market}`}>
+              {shortenAddress(market)}
+            </Address>
+          </th>
           <th>{question}</th>
           <th>{winningOutcome.toString()}</th>
-          <th>
-            { `${getFormattedNumber(maxInterests / 1e18, 18)} DAI` }
-          </th>
+          <th>{`${getFormattedNumber(maxInterests / 1e18, 18)} DAI`}</th>
           <th>{new Date(marketResolutionTime * 1000).toUTCString()}</th>
         </>
-      )}
+      }
     </>
   );
 }

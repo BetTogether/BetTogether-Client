@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactApexChart from "react-apexcharts";
 
@@ -13,9 +13,10 @@ interface outcome {
 
 interface IApex {
   outcomes: outcome[];
+  marketContract: any;
 }
 
-const Apex = ({ outcomes }: IApex) => {
+const Apex = ({ outcomes, marketContract }: IApex) => {
   const [series] = useState([
     {
       name: "Donald Trump",
@@ -75,6 +76,8 @@ const Apex = ({ outcomes }: IApex) => {
       offsetY: -5,
     },
   });
+
+  useEffect(() => {}, []);
 
   return (
     <Wrapper>

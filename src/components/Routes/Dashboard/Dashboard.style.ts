@@ -99,3 +99,19 @@ export const Form = styled.form`
 `;
 
 export const Input = styled.input``;
+
+export const CreateMarketButton = styled.button`
+  background-color: ${(props) => props.theme.palette3.black};
+  border: none;
+  border-radius: 0.33rem;
+  color: ${(props) => props.theme.palette3.white};
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.8rem;
+  width: auto;
+  cursor: pointer;
+  &:hover {
+    background-color: ${(props) => props.theme.palette3.red};
+  }
+`;
