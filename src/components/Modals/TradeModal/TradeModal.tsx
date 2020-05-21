@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+
 import { Wrapper, Modal, IconButton, Top, Title } from "./TradeModal.style";
 import { ModalContext } from "store/context/ModalContext";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";

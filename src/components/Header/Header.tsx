@@ -71,6 +71,7 @@ const Header = () => {
             href="https://github.com/MagicBet"
             target="_blank"
             rel="noreferrer noopener"
+            aria-label="Github"
           >
             <Github />
           </GitHubLink>

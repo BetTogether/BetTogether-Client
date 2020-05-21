@@ -60,25 +60,23 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
       const formatted = utils.formatEther(accruedInterest.toNumber());
       setAccruedInterest(parseFloat(formatted));
     })();
-    //eslint-disable-next-line
-  }, []);
+  }, [MarketStates, marketContract]);
 
   useEffect(() => {
     (async () => {
       let numberOfTokenContracts = await marketContract.tokenContractsCreated();
 
       if (numberOfTokenContracts.toNumber() !== 0) {
-        const DT = await marketContract.outcomeNames(0);
-        const JB = await marketContract.outcomeNames(1);
-        setOutcomes([...outcomes, DT, JB]);
-        // let numberOfOutcomes = (
-        //   await marketContract.numberOfOutcomes()
-        // ).toNumber();
-        // for (let i = 0; i < numberOfOutcomes; i++) {
-        //   let newOutcomeName = await marketContract.eventOutcomes(i);
-        //   console.log("newOutcomeName:", newOutcomeName);
-        //   setOutcomes([...outcomes, newOutcomeName]);
-        // }
+        let numberOfOutcomes = (
+          await marketContract.numberOfOutcomes()
+        ).toNumber();
+
+        let newOutcomes = [];
+        for (let i = 0; i < numberOfOutcomes; i++) {
+          let outcomeName = await marketContract.outcomeNames(i);
+          newOutcomes.unshift(outcomeName);
+        }
+        setOutcomes(newOutcomes);
       }
     })();
     //eslint-disable-next-line
@@ -93,8 +91,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
         if (allowance.toString() !== "0") setDaiApproved(true);
       });
     }
-    //eslint-disable-next-line
-  }, [account, marketContract.address]);
+  }, [account, daiContract, marketContract.address]);
 
   const openInfoModal = () =>
     modalDispatch({
