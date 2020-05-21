@@ -4,6 +4,7 @@ import { ModalContext } from "store/context/ModalContext";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
 import Uniswap from "./Exchanges/Uniswap";
 import PBTC from "./Exchanges/PBTC";
+import { useEscapeKey } from "utils/hooks";
 
 interface ITradeModal {
   isOpen: boolean;
@@ -17,6 +18,9 @@ const TradeModal = ({ isOpen }: ITradeModal) => {
       type: "TOGGLE_TRADE_MODAL",
       payload: !modalState.tradeModalIsOpen,
     });
+
+  // Escape key hook
+  //useEscapeKey(toggleModal);
 
   return (
     <Wrapper isOpen={isOpen}>

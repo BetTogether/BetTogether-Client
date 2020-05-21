@@ -72,36 +72,6 @@ export function useInactiveListener(suppress: boolean = false) {
   }, [active, error, suppress, activate]);
 }
 
-export function useKeyPress({ targetKey }: any) {
-  // State for keeping track of whether key is pressed
-  const [keyPressed, setKeyPressed] = useState(false);
-
-  useEffect(() => {
-    // If pressed key is our target key then set to true
-    function downHandler({ key }: any) {
-      if (key === targetKey) {
-        setKeyPressed(true);
-      }
-    }
-
-    // If released key is our target key then set to false
-    const upHandler = ({ key }: any) => {
-      if (key === targetKey) {
-        setKeyPressed(false);
-      }
-    };
-
-    window.addEventListener("keydown", downHandler);
-    window.addEventListener("keyup", upHandler);
-    return () => {
-      window.removeEventListener("keydown", downHandler);
-      window.removeEventListener("keyup", upHandler);
-    };
-  }, [targetKey]); // Empty array ensures that effect is only run on mount and unmount
-
-  return keyPressed;
-}
-
 export function useOnClickOutside({ ref, handler }: any) {
   useEffect(
     () => {
@@ -156,4 +126,22 @@ export function useContract(
         : undefined,
     [address, ABI, withSigner, library, account]
   );
+}
+
+export function useEscapeKey(
+  onKeyDown: (event?: any) => void,
+  suppress = false
+): void {
+  const downHandler = useCallback(
+    (event) => {
+      if (!suppress && event.keyCode === 27) onKeyDown(event);
+    },
+    [onKeyDown, suppress]
+  );
+  useEffect(() => {
+    window.addEventListener("keydown", downHandler);
+    return (): void => {
+      window.removeEventListener("keydown", downHandler);
+    };
+  }, [downHandler, suppress]);
 }

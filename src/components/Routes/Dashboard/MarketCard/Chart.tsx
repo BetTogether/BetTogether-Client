@@ -77,7 +77,9 @@ const Apex = ({ outcomes, marketContract }: IApex) => {
     },
   });
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+
+  // }, []);
 
   return (
     <Wrapper>

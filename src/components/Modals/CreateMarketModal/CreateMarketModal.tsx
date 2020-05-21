@@ -4,6 +4,7 @@ import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
 import { providers, utils, Contract } from "ethers";
 import BTMarketContract from "abis/BTMarket.json";
+import { useEscapeKey } from "utils/hooks";
 
 import Spinner from "utils/spinner";
 import {
@@ -99,6 +100,9 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
       type: "TOGGLE_CREATE_MARKET_MODAL",
       payload: !modalState.createMarketModalIsOpen,
     });
+
+  // Escape key hook
+  //useEscapeKey(toggleModal);
 
   const [outcomes, setOutcomes] = useState([
     { id: 1, name: "Donald Trump", token: "Trump" },

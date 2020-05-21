@@ -18,6 +18,7 @@ import {
 import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "abis/BTMarket.json";
 import { ContractContext } from "store/context/ContractContext";
+import { useEscapeKey } from "utils/hooks";
 
 interface IInfoModalProps {
   isOpen: boolean;
@@ -96,26 +97,13 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
     })();
   }, [MarketStates, factoryContract]);
 
-  //#region
-  const escFunction = useCallback(
-    (event: any) => {
-      if (event.keyCode === 27)
-        modalDispatch({
-          type: "TOGGLE_INFO_MODAL",
-          payload: !modalState.infoModalIsOpen,
-        });
-    },
-    [modalDispatch, modalState.infoModalIsOpen]
-  );
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("keydown", escFunction, false);
-      return () => {
-        document.removeEventListener("keydown", escFunction, false);
-      };
-    }
-  }, [escFunction, isOpen]);
-  //#endregion
+  // Escape key hook
+  // useEscapeKey(() =>
+  //   modalDispatch({
+  //     type: "TOGGLE_TRADE_MODAL",
+  //     payload: !modalState.tradeModalIsOpen,
+  //   })
+  // );
 
   return (
     <MainWrapper isOpen={isOpen}>
@@ -125,8 +113,8 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
           <IconButton
             onClick={() =>
               modalDispatch({
-                type: "TOGGLE_INFO_MODAL",
-                payload: !modalState.infoModalIsOpen,
+                type: "TOGGLE_TRADE_MODAL",
+                payload: !modalState.tradeModalIsOpen,
               })
             }
           >

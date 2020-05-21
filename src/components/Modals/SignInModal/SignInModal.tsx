@@ -5,10 +5,9 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-//import { useKeyPress, useOnClickOutside } from "utils/hooks";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { injected, portis } from "utils/connectors";
-//import { useEagerConnect } from "utils/hooks";
+import { useEagerConnect, useEscapeKey } from "utils/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import {
@@ -44,12 +43,19 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     Portis: portis,
   };
 
-  const toggleModal = () => {
+  const toggleModal = () =>
     modalDispatch({
       type: "TOGGLE_SIGN_IN_MODAL",
       payload: !modalState.signInModalIsOpen,
     });
-  };
+
+  // Escape key hook
+  useEscapeKey(() =>
+    modalDispatch({
+      type: "TOGGLE_SIGN_IN_MODAL",
+      payload: !modalState.signInModalIsOpen,
+    })
+  );
 
   // const triedEager = useEagerConnect();
   // console.log("triedEager:", triedEager);
@@ -70,27 +76,14 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     [modalDispatch, modalState.signInModalIsOpen]
   );
 
-  const escFunction = useCallback(
-    (event: any) => {
-      if (event.keyCode === 27)
-        modalDispatch({
-          type: "TOGGLE_SIGN_IN_MODAL",
-          payload: !modalState.signInModalIsOpen,
-        });
-    },
-    [modalDispatch, modalState.signInModalIsOpen]
-  );
-
   useEffect(() => {
     if (isOpen) {
-      // document.addEventListener("keydown", escFunction, false);
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
-        // document.removeEventListener("keydown", escFunction, false);
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
-  }, [escFunction, handleClickOutside, isOpen]);
+  }, [handleClickOutside, isOpen]);
   //#endregion
 
   const setConnector = async (currentConnector: any, name: any) => {
@@ -143,28 +136,6 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
                   </ProviderWrapper>
                 );
               })}
-              {/* <ProviderWrapper>
-                <ProviderContent>
-                  <StyledButton onClick={() => setConnector("Injected")}>
-                    <Logo alt="MetaMask" src={metamaskLogo} />
-                    <ProviderTitle>MetaMask</ProviderTitle>
-                    <ProviderDescription>
-                      Connect with your MetaMask account
-                    </ProviderDescription>
-                  </StyledButton>
-                </ProviderContent>
-              </ProviderWrapper>
-              <ProviderWrapper>
-                <ProviderContent>
-                  <StyledButton onClick={() => setConnector("Portis")}>
-                    <Logo alt="Portis" src={portisLogo} />
-                    <ProviderTitle>Portis</ProviderTitle>
-                    <ProviderDescription>
-                      Connect with your Portis account
-                    </ProviderDescription>
-                  </StyledButton>
-                </ProviderContent>
-              </ProviderWrapper> */}
             </Buttons>
           </>
         )}

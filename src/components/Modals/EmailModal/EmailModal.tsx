@@ -14,6 +14,7 @@ import {
 } from "./EmailModal.style";
 import { ModalContext } from "store/context/ModalContext";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
+import { useEscapeKey } from "utils/hooks";
 
 interface IEmailModalProps {
   isOpen: boolean;
@@ -30,6 +31,9 @@ const EmailModal = ({ isOpen }: IEmailModalProps) => {
       type: "TOGGLE_EMAIL_MODAL",
       payload: !modalState.emailModalIsOpen,
     });
+
+  // Escape key hook
+  //useEscapeKey(toggleModal);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
