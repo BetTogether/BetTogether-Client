@@ -44,6 +44,8 @@ const getFormattedNumber = (floatBalance: number, decimals: number) => {
 };
 
 function Aave({ market }: { market: string }) {
+  const [question, setQuestion] = useState<number>(0);
+  const [maxInterests, setMaxInterest] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const [winningOutcome, setWinningOutcome] = useState<number>(0);
 
@@ -56,72 +58,33 @@ function Aave({ market }: { market: string }) {
         BTMarketContract.abi,
         wallet
       );
+      const _question = await marketContract.eventName();
+      const _maxInterests = await marketContract.getMaxTotalInterest();
       const _marketResolutionTime = await marketContract.marketResolutionTime();
       const _winningOutcome = await marketContract.winningOutcome();
+      setQuestion(_question);
+      setMaxInterest(_maxInterests);
       setMarketResolutionTime(_marketResolutionTime);
       setWinningOutcome(_winningOutcome);
     })();
   }, [market]);
 
-  const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_MARKET, {
+  /* const { loading, error, data } = useQuery(GET_LAST_DEPOSITS_FROM_MARKET, {
     variables: { market: market.toLowerCase() },
-  });
+  }); */
 
-  let totalInterestsFormated: string | number = 0;
-
-  if (data && data.users.length > 0 && data.users[0].reserves.length > 0) {
-    const { aTokenBalanceHistory, depositHistory } = data.users[0].reserves[0];
-
-    // TODO use real _marketResolutionTime
-    const fakeMarketResolutionTime =
-      aTokenBalanceHistory.length > 2
-        ? aTokenBalanceHistory[2].timestamp - 2
-        : 0;
-
-    const accruedInterestChanges = aTokenBalanceHistory.filter(
-      (aTokenBalanceChange: any) => {
-        return aTokenBalanceChange.timestamp < fakeMarketResolutionTime;
-      }
-    );
-
-    // filtering deposits probably not required for real contracts?
-    const filteredDeposits = depositHistory.filter((deposit: any) => {
-      return deposit.timestamp < fakeMarketResolutionTime;
-    });
-
-    if (filteredDeposits.length > 0 && accruedInterestChanges.length > 0) {
-      const currentAtokenBalance = parseInt(
-        accruedInterestChanges[accruedInterestChanges.length - 1].balance,
-        10
-      );
-      const totalDeposits = filteredDeposits.reduce(
-        (depositSum: number, currentValue: any) =>
-          depositSum + parseInt(currentValue.amount, 10),
-        0
-      );
-      const totalInterests = currentAtokenBalance - totalDeposits;
-
-      totalInterestsFormated = getFormattedNumber(totalInterests / 1e18, 17);
-    }
-  }
-
-  if (data && !totalInterestsFormated) {
-    totalInterestsFormated = "?";
-  }
 
   return (
     <>
-      {!loading && !error && data && (
+      {(
         <>
-          <th>{shortenAddress(market)}</th>
-          <th>{"TODO Question"}</th>
+          <th><a href={`https://kovan.etherscan.io/address/${market}`}>{shortenAddress(market)}</a></th>
+          <th>{question}</th>
           <th>{winningOutcome.toString()}</th>
           <th>
-            {totalInterestsFormated
-              ? `${totalInterestsFormated} DAI`
-              : "Loading"}
+            { `${getFormattedNumber(maxInterests / 1e18, 18)} DAI` }
           </th>
-          <th>{new Date(marketResolutionTime).toUTCString()}</th>
+          <th>{new Date(marketResolutionTime * 1000).toUTCString()}</th>
         </>
       )}
     </>
