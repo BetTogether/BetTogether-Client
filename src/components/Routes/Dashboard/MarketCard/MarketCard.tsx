@@ -66,11 +66,6 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
     (async () => {
       let numberOfTokenContracts = await marketContract.tokenContractsCreated();
 
-      if (numberOfTokenContracts.toNumber() === 0) {
-        await marketContract.createTokenContract("Trump", "Trump");
-        await marketContract.createTokenContract("Biden", "Biden");
-      }
-
       if (numberOfTokenContracts.toNumber() !== 0) {
         const DT = await marketContract.outcomeNames(0);
         const JB = await marketContract.outcomeNames(1);

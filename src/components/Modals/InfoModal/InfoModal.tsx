@@ -65,7 +65,7 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         setPot(utils.formatUnits(pot.toString(), 18));
 
         let numberOfTokenContracts = await marketContract.tokenContractsCreated();
-        console.log("numberOfTokenContracts:", numberOfTokenContracts);
+        // console.log("numberOfTokenContracts:", numberOfTokenContracts);
         if (numberOfTokenContracts !== 0) {
           const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
           //GOTTA BE A CLEANER WAY TO DO THIS...

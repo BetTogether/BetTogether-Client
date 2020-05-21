@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
 import { providers, utils, Contract } from "ethers";
+import BTMarketContract from "abis/BTMarket.json";
 
 import Spinner from "utils/spinner";
 import {
@@ -43,7 +44,6 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
   const [arbitrator, setArbitrator] = useState<string>(
     "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D"
   );
-  const [numberOfOutcomes, setNumberOfOutcomes] = useState<number>(2);
 
   const createMarket = async (e: any) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
     const TIMEOUT = timeout;
     const ARBITRATOR = arbitrator;
     const REALITIO_QUESTION = realitioQuestion;
-    const NUMBER_OF_OUTCOMES = numberOfOutcomes;
+    const NUMBER_OF_OUTCOMES = outcomes.length;
 
     let tx = await factoryContract.createMarket(
       MARKET_EVENT_NAME,
@@ -69,19 +69,56 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
       REALITIO_QUESTION,
       NUMBER_OF_OUTCOMES
     );
-    let result = await tx.wait();
-    if (result) {
-      setLoading(false);
-      toggleModal();
-    }
+    await tx.wait();
+
+    //!Now create the tokens
+    const provider = new providers.Web3Provider(
+      (window as any).web3.currentProvider
+    );
+    const wallet = provider.getSigner();
+    let deployedMarkets = await factoryContract.getMarkets();
+    let mostRecentlyDeployedAddress =
+      deployedMarkets[deployedMarkets.length - 1];
+
+    let marketContract = new Contract(
+      mostRecentlyDeployedAddress,
+      BTMarketContract.abi,
+      wallet
+    );
+
+    outcomes.forEach(
+      async (outcome) =>
+        await marketContract.createTokenContract(outcome.name, outcome.token)
+    );
+    setLoading(false);
+    toggleModal();
   };
 
-  const toggleModal = () => {
+  const toggleModal = () =>
     modalDispatch({
       type: "TOGGLE_CREATE_MARKET_MODAL",
       payload: !modalState.createMarketModalIsOpen,
     });
+
+  const [outcomes, setOutcomes] = useState([
+    { id: 1, name: "Donald Trump", token: "Trump" },
+    { id: 2, name: "Joe Biden", token: "Biden" },
+  ]);
+  const [newOutcome, setNewOutcome] = useState({ name: "", token: "" });
+
+  const submitOutcome = () => {
+    if (!newOutcome.name || !newOutcome.token) return;
+    const newId = outcomes.length + 1;
+    let freshOutcome = {
+      id: newId,
+      name: newOutcome.name,
+      token: newOutcome.token,
+    };
+    setOutcomes([...outcomes, freshOutcome]);
   };
+
+  const deleteOutcome = ({ id }: any) =>
+    setOutcomes(outcomes.filter((outcome) => outcome.id !== id));
 
   return (
     <Wrapper isOpen={isOpen}>
@@ -107,6 +144,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     onChange={(e: any) => setMarketEventName(e.target.value)}
                   />
                 </InputWrapper>
+              </Section>
+              <Section>
                 <InputWrapper>
                   <Label htmlFor="realitioQuestion">Realit.io Question</Label>
                   <Input
@@ -114,57 +153,6 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     id="realitioQuestion"
                     value={realitioQuestion}
                     onChange={(e: any) => setRealitioQuestion(e.target.value)}
-                  />
-                </InputWrapper>
-              </Section>
-              <Section>
-                <InputWrapper>
-                  <Label htmlFor="marketOpeningTime">Opening Time</Label>
-                  <Input
-                    type="number"
-                    id="marketOpeningTime"
-                    value={marketOpeningTime}
-                    onChange={(e: any) => setMarketOpeningTime(e.target.value)}
-                  />
-                </InputWrapper>
-                <InputWrapper>
-                  <Label htmlFor="marketLockingTime">Locking Time</Label>
-                  <Input
-                    type="number"
-                    id="marketLockingTime"
-                    value={marketLockingTime}
-                    onChange={(e: any) => setMarketLockingTime(e.target.value)}
-                  />
-                </InputWrapper>
-                <InputWrapper>
-                  <Label htmlFor="marketResolutionTime">Resolution Time</Label>
-                  <Input
-                    type="number"
-                    id="marketResolutionTime"
-                    value={marketResolutionTime}
-                    onChange={(e: any) =>
-                      setMarketResolutionTime(e.target.value)
-                    }
-                  />
-                </InputWrapper>
-              </Section>
-              <Section>
-                <InputWrapper>
-                  <Label htmlFor="timeout">Timeout</Label>
-                  <Input
-                    type="number"
-                    id="timeout"
-                    value={timeout}
-                    onChange={(e: any) => setTimeout(e.target.value)}
-                  />
-                </InputWrapper>
-                <InputWrapper>
-                  <Label htmlFor="numberOfOutcomes">Number of Outcomes</Label>
-                  <Input
-                    type="number"
-                    id="numberOfOutcomes"
-                    value={numberOfOutcomes}
-                    onChange={(e: any) => setNumberOfOutcomes(e.target.value)}
                   />
                 </InputWrapper>
               </Section>
@@ -179,6 +167,95 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                   />
                 </InputWrapper>
               </Section>
+              <Section>
+                <InputWrapper>
+                  <Label htmlFor="marketOpeningTime">Opening</Label>
+                  <Input
+                    type="number"
+                    id="marketOpeningTime"
+                    value={marketOpeningTime}
+                    onChange={(e: any) => setMarketOpeningTime(e.target.value)}
+                  />
+                </InputWrapper>
+                <InputWrapper>
+                  <Label htmlFor="marketLockingTime">Locking</Label>
+                  <Input
+                    type="number"
+                    id="marketLockingTime"
+                    value={marketLockingTime}
+                    onChange={(e: any) => setMarketLockingTime(e.target.value)}
+                  />
+                </InputWrapper>
+                <InputWrapper>
+                  <Label htmlFor="marketResolutionTime">Resolution</Label>
+                  <Input
+                    type="number"
+                    id="marketResolutionTime"
+                    value={marketResolutionTime}
+                    onChange={(e: any) =>
+                      setMarketResolutionTime(e.target.value)
+                    }
+                  />
+                </InputWrapper>
+                <InputWrapper>
+                  <Label htmlFor="timeout">Timeout</Label>
+                  <Input
+                    type="number"
+                    id="timeout"
+                    value={timeout}
+                    onChange={(e: any) => setTimeout(e.target.value)}
+                  />
+                </InputWrapper>
+              </Section>
+              <Section>
+                <InputWrapper>
+                  <Label>Outcomes</Label>
+                  <Input
+                    type="text"
+                    placeholder="Name"
+                    value={newOutcome.name}
+                    onChange={(e: any) =>
+                      setNewOutcome({ ...newOutcome, name: e.target.value })
+                    }
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Token"
+                    value={newOutcome.token}
+                    onChange={(e: any) =>
+                      setNewOutcome({ ...newOutcome, token: e.target.value })
+                    }
+                  />
+                </InputWrapper>
+                <IconButton type="button" onClick={() => submitOutcome()}>
+                  +
+                </IconButton>
+              </Section>
+              <Section>
+                {outcomes.length > 0 ? (
+                  <table>
+                    <tbody>
+                      {outcomes.map((outcome) => (
+                        <tr key={outcome.id}>
+                          <td>{outcome.name}</td>
+                          <td>{outcome.token}</td>
+                          <td>
+                            <IconButton
+                              type="button"
+                              onClick={() => deleteOutcome(outcome)}
+                            >
+                              <Clear />
+                            </IconButton>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p>Please add at least two options</p>
+                )}
+              </Section>
+
               <Button>Create Market</Button>
             </Form>
           </>

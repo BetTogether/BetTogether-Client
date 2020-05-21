@@ -26,7 +26,7 @@ export const Modal = styled.div`
   height: auto;
   max-height: calc(100vh - 50px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
+  overflow-y: scroll;
   max-width: 500px;
   min-height: 1rem;
   border: 1px solid #eee;
@@ -196,9 +196,11 @@ export const Section = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  width: 100%;
 `;
 
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
