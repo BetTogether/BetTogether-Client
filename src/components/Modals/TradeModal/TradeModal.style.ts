@@ -47,9 +47,11 @@ export const Title = styled.h3`
 `;
 
 export const IconButton = styled.button`
+  height: 2.5rem;
+  width: 2.5rem;
+  outline: none;
   border: none;
   background: none;
-  cursor: pointer;
   &:hover {
     svg {
       transform: scale(1.3);

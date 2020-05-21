@@ -120,16 +120,18 @@ const Dashboard = () => {
             </CreateMarketButton>
           )}
 
-          <GetDaiButton
-            onClick={() =>
-              modalDispatch({
-                type: "TOGGLE_TRADE_MODAL",
-                payload: !modalState.tradeModalIsOpen,
-              })
-            }
-          >
-            <DaiIcon />
-          </GetDaiButton>
+          {active && (
+            <GetDaiButton
+              onClick={() =>
+                modalDispatch({
+                  type: "TOGGLE_TRADE_MODAL",
+                  payload: !modalState.tradeModalIsOpen,
+                })
+              }
+            >
+              <DaiIcon />
+            </GetDaiButton>
+          )}
         </Wrapper>
       </Content>
     </Container>
