@@ -155,7 +155,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {`Transaction Confirmed`}
+        {`Transaction Sent`}
       </a>,
       {
         position: "bottom-right",
@@ -239,7 +239,7 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
         <GraphFormWrapper>
           <ChartWrapper>
-            <Chart outcomes={outcomes} marketContract={marketContract} />
+            <Chart marketContract={marketContract} />
           </ChartWrapper>
 
           <Form onSubmit={placeBet}>

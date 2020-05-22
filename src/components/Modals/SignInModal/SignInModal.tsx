@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { injected, portis } from "utils/connectors";
-import { useEagerConnect, useEscapeKey } from "utils/hooks";
+import { useEscapeKey } from "utils/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import {
@@ -57,10 +57,6 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     })
   );
 
-  // const triedEager = useEagerConnect();
-  // console.log("triedEager:", triedEager);
-  //useInactiveListener(!triedEager);
-
   //#region
   const node = useRef<any>(null);
   const handleClickOutside = useCallback(
@@ -88,6 +84,8 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
 
   const setConnector = async (currentConnector: any, name: any) => {
     console.log("name:", name);
+    console.log("currentConnector:", currentConnector);
+
     setLoading(true);
     // setActivatingConnector(currentConnector);
     await activate(connectorsByName[name]);
@@ -110,7 +108,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
               {Object.keys(connectorsByName).map((name) => {
                 const currentConnector = connectorsByName[name];
                 const connected = currentConnector === connector;
-                const disabled = connected || !!error;
+                // const disabled = connected || !!error;
 
                 const LogoSrc = name === "Injected" ? metamaskLogo : portisLogo;
 
@@ -118,7 +116,6 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
                   <ProviderWrapper key={name}>
                     <ProviderContent>
                       <StyledButton
-                        // disabled={disabled}
                         onClick={() => setConnector(currentConnector, name)}
                       >
                         <Logo alt="logo" src={LogoSrc} />

@@ -2,7 +2,6 @@ import {
   TOGGLE_CREATE_MARKET_MODAL,
   TOGGLE_SIGN_IN_MODAL,
   TOGGLE_TRADE_MODAL,
-  TOGGLE_EMAIL_MODAL,
   TOGGLE_INFO_MODAL,
   CREATE_MARKET_CONTRACT,
 } from "./Constants";
@@ -24,13 +23,6 @@ export const toggleSignInModal = (value: boolean) => {
 export const toggleTradeModal = (value: any) => {
   return {
     type: TOGGLE_TRADE_MODAL,
-    value,
-  };
-};
-
-export const toggleEmailModal = (value: any) => {
-  return {
-    type: TOGGLE_EMAIL_MODAL,
     value,
   };
 };
