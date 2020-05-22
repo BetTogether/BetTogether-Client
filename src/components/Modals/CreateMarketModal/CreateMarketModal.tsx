@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
-import { providers, utils, Contract } from "ethers";
-import BTMarketContract from "abis/BTMarket.json";
 import { useEscapeKey } from "utils/hooks";
 
 import Spinner from "utils/spinner";
@@ -45,8 +43,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
   const [realitioQuestion, setRealitioQuestion] = useState<string>(
     'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
   );
-  //const [outcomes, setOutcomes] = useState<any>([]);
-  const [testOutcomes, setTestOutcomes] = useState(["Trump", "Biden"]);
+  const [outcomes, setOutcomes] = useState<any[]>(["Trump", "Biden"]);
 
   const createMarket = async (e: any) => {
     e.preventDefault();
@@ -60,7 +57,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
     const TIMEOUT = timeout;
     const ARBITRATOR = arbitrator;
     const REALITIO_QUESTION = realitioQuestion;
-    const OUTCOMES = testOutcomes;
+    const OUTCOMES = outcomes;
 
     let tx = await factoryContract.createMarket(
       MARKET_EVENT_NAME,
@@ -73,26 +70,6 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
       OUTCOMES
     );
     await tx.wait();
-
-    //!Now create the tokens
-    // const provider = new providers.Web3Provider(
-    //   (window as any).web3.currentProvider
-    // );
-    // const wallet = provider.getSigner();
-    // let deployedMarkets = await factoryContract.getMarkets();
-    // let mostRecentlyDeployedAddress =
-    //   deployedMarkets[deployedMarkets.length - 1];
-
-    // let marketContract = new Contract(
-    //   mostRecentlyDeployedAddress,
-    //   BTMarketContract.abi,
-    //   wallet
-    // );
-
-    // outcomes.forEach(
-    //   async (outcome) =>
-    //     await marketContract.createTokenContract(outcome.name, outcome.token)
-    // );
     setLoading(false);
     toggleModal();
   };
@@ -105,26 +82,6 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
 
   // Escape key hook
   //useEscapeKey(toggleModal);
-
-  const [outcomes, setOutcomes] = useState([
-    { id: 1, name: "Donald Trump", token: "Trump" },
-    { id: 2, name: "Joe Biden", token: "Biden" },
-  ]);
-  const [newOutcome, setNewOutcome] = useState({ name: "", token: "" });
-
-  const submitOutcome = () => {
-    if (!newOutcome.name || !newOutcome.token) return;
-    const newId = outcomes.length + 1;
-    let freshOutcome = {
-      id: newId,
-      name: newOutcome.name,
-      token: newOutcome.token,
-    };
-    setOutcomes([...outcomes, freshOutcome]);
-  };
-
-  const deleteOutcome = ({ id }: any) =>
-    setOutcomes(outcomes.filter((outcome) => outcome.id !== id));
 
   return (
     <Wrapper isOpen={isOpen}>
@@ -147,7 +104,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="text"
                     id="marketEventName"
                     value={marketEventName}
-                    onChange={(e: any) => setMarketEventName(e.target.value)}
+                    readOnly
+                    //onChange={(e: any) => setMarketEventName(e.target.value)}
                   />
                 </InputWrapper>
               </Section>
@@ -158,7 +116,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="text"
                     id="realitioQuestion"
                     value={realitioQuestion}
-                    onChange={(e: any) => setRealitioQuestion(e.target.value)}
+                    readOnly
+                    //onChange={(e: any) => setRealitioQuestion(e.target.value)}
                   />
                 </InputWrapper>
               </Section>
@@ -169,7 +128,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="text"
                     id="arbitrator"
                     value={arbitrator}
-                    onChange={(e: any) => setArbitrator(e.target.value)}
+                    readOnly
+                    //onChange={(e: any) => setArbitrator(e.target.value)}
                   />
                 </InputWrapper>
               </Section>
@@ -180,7 +140,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="number"
                     id="marketOpeningTime"
                     value={marketOpeningTime}
-                    onChange={(e: any) => setMarketOpeningTime(e.target.value)}
+                    readOnly
+                    //onChange={(e: any) => setMarketOpeningTime(e.target.value)}
                   />
                 </InputWrapper>
                 <InputWrapper>
@@ -189,7 +150,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="number"
                     id="marketLockingTime"
                     value={marketLockingTime}
-                    onChange={(e: any) => setMarketLockingTime(e.target.value)}
+                    readOnly
+                    // onChange={(e: any) => setMarketLockingTime(e.target.value)}
                   />
                 </InputWrapper>
                 <InputWrapper>
@@ -198,9 +160,10 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="number"
                     id="marketResolutionTime"
                     value={marketResolutionTime}
-                    onChange={(e: any) =>
-                      setMarketResolutionTime(e.target.value)
-                    }
+                    readOnly
+                    // onChange={(e: any) =>
+                    //   setMarketResolutionTime(e.target.value)
+                    // }
                   />
                 </InputWrapper>
                 <InputWrapper>
@@ -209,7 +172,8 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                     type="number"
                     id="timeout"
                     value={timeout}
-                    onChange={(e: any) => setTimeout(e.target.value)}
+                    readOnly
+                    //onChange={(e: any) => setTimeout(e.target.value)}
                   />
                 </InputWrapper>
               </Section>
@@ -218,48 +182,11 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
                   <Label>Outcomes</Label>
                   <Input
                     type="text"
-                    placeholder="Name"
-                    value={newOutcome.name}
-                    onChange={(e: any) =>
-                      setNewOutcome({ ...newOutcome, name: e.target.value })
-                    }
-                  />
-                  <Input
-                    type="text"
                     placeholder="Token"
-                    value={newOutcome.token}
-                    onChange={(e: any) =>
-                      setNewOutcome({ ...newOutcome, token: e.target.value })
-                    }
+                    value={outcomes}
+                    readOnly
                   />
                 </InputWrapper>
-                <IconButton type="button" onClick={() => submitOutcome()}>
-                  +
-                </IconButton>
-              </Section>
-              <Section>
-                {outcomes.length > 0 ? (
-                  <table>
-                    <tbody>
-                      {outcomes.map((outcome) => (
-                        <tr key={outcome.id}>
-                          <td>{outcome.name}</td>
-                          <td>{outcome.token}</td>
-                          <td>
-                            <IconButton
-                              type="button"
-                              onClick={() => deleteOutcome(outcome)}
-                            >
-                              <Clear />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p>Please add at least two options</p>
-                )}
               </Section>
 
               <Button>Create Market</Button>
