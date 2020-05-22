@@ -96,7 +96,8 @@ const Apex = ({ marketContract }: IApex) => {
       }
 
       //!CHART
-      const startPeriod = await marketContract.marketOpeningTimeActual();
+      const start = await marketContract.marketOpeningTimeActual();
+      const startPeriod = start.toNumber();
 
       //!Trump
       let totalTrumpBettingPeriod1 = 0;
@@ -137,6 +138,12 @@ const Apex = ({ marketContract }: IApex) => {
       });
 
       //!Biden
+      // start ...83420
+      // period1 ...83420 - 83480
+      // period2 ...83480 - 83540
+      // period3 ...83540 - 83600 (83552)
+      // period4 ...83600 - 83660 (83628)
+      // period5 ...83660 - 83720
       let totalBidenBettingPeriod1 = 0;
       let totalBidenBettingPeriod2 = 0;
       let totalBidenBettingPeriod3 = 0;
@@ -146,12 +153,12 @@ const Apex = ({ marketContract }: IApex) => {
         if (startPeriod < item.timestamp && item.timestamp < startPeriod + 60) {
           totalBidenBettingPeriod1 = totalBidenBettingPeriod1 + item.amount;
         } else if (
-          startPeriod + 60 < item.timestamp &&
+          startPeriod + 60 < item.timestamp ||
           item.timestamp < startPeriod + 120
         ) {
           totalBidenBettingPeriod2 = totalBidenBettingPeriod2 + item.amount;
         } else if (
-          startPeriod + 120 < item.timestamp &&
+          startPeriod + 120 < item.timestamp ||
           item.timestamp < startPeriod + 180
         ) {
           totalBidenBettingPeriod3 = totalBidenBettingPeriod3 + item.amount;

@@ -55,6 +55,10 @@ export const GlobalStyle = createGlobalStyle`
     textarea:focus, input:focus{
         outline: none;
     }
+    
+    button:focus {
+      outline:0;
+    }
 `;
 
 const client = new ApolloClient({

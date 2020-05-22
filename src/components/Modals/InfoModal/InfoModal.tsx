@@ -35,8 +35,6 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
   const [marketState, setMarketState] = useState<string>("");
   const [totalVotesForTrump, setTotalVotesForTrump] = useState<string>("");
   const [totalVotesForBiden, setTotalVotesForBiden] = useState<string>("");
-  const [addressVotesForTrump, setAddressVotesForTrump] = useState<string>("");
-  const [addressVotesForBiden, setAddressVotesForBiden] = useState<string>("");
   const [numberOfParticipants, setNumberOfParticipants] = useState<number>(0);
   const [pot, setPot] = useState<string>("");
   const [owner, setOwner] = useState<string>("");
@@ -80,18 +78,6 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
           const floatBiden = parseFloat(fortmattedBiden);
           const roundedBiden = Math.ceil(floatBiden);
           setTotalVotesForBiden(roundedBiden.toString());
-
-          const addressVotesForTrump = await marketContract.getParticipantsBet(
-            0
-          );
-          console.log("addressVotesForTrump:", addressVotesForTrump.toString());
-          setAddressVotesForTrump(addressVotesForTrump.toString());
-
-          const addressVotesForBiden = await marketContract.getParticipantsBet(
-            1
-          );
-          console.log("addressVotesForBiden:", addressVotesForBiden.toString());
-          setAddressVotesForBiden(addressVotesForBiden.toString());
         }
       }
     })();
@@ -109,7 +95,6 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
     <MainWrapper isOpen={isOpen}>
       <Modal>
         <Top>
-          <Title>Some important info...</Title>
           <IconButton
             onClick={() =>
               modalDispatch({
@@ -138,16 +123,6 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
             <Item>
               <Detail>{totalVotesForBiden}</Detail>
               <ItemDescription>Votes for Biden</ItemDescription>
-            </Item>
-          </Column>
-          <Column>
-            <Item>
-              <Detail>{addressVotesForTrump}</Detail>
-              <ItemDescription>Your votes for Trump</ItemDescription>
-            </Item>
-            <Item>
-              <Detail>{addressVotesForBiden}</Detail>
-              <ItemDescription>Your votes for Biden</ItemDescription>
             </Item>
             <Item>
               <Detail>{numberOfParticipants}</Detail>
