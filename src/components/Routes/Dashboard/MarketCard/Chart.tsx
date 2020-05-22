@@ -128,6 +128,8 @@ const Apex = ({ marketContract }: IApex) => {
           item.timestamp < startPeriod + 300
         ) {
           totalTrumpBettingPeriod5 = totalTrumpBettingPeriod5 + item.amount;
+        } else {
+          console.log("Transaction Timestamp Extends Charts X-Axis...");
         }
 
         setTrumpBettingPeriod1(totalTrumpBettingPeriod1);
@@ -172,6 +174,8 @@ const Apex = ({ marketContract }: IApex) => {
           item.timestamp < startPeriod + 300
         ) {
           totalBidenBettingPeriod5 = totalBidenBettingPeriod5 + item.amount;
+        } else {
+          console.log("Transaction Timestamp Extends Charts X-Axis...");
         }
 
         setBidenBettingPeriod1(totalBidenBettingPeriod1);
@@ -245,7 +249,7 @@ const Apex = ({ marketContract }: IApex) => {
     },
     yaxis: {
       min: 0,
-      max: 30,
+      max: 25,
     },
     legend: {
       show: true,

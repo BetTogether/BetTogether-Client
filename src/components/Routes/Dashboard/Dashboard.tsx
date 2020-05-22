@@ -3,6 +3,8 @@ import { Dai as DaiIcon } from "@rimble/icons";
 import { providers, Contract } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { NotificationsActive, NotificationsOff } from "@rimble/icons";
+import Switch from "react-switch";
 
 import BTMarketContract from "abis/BTMarket.json";
 import { injected, portis } from "utils/connectors";
@@ -13,16 +15,16 @@ import {
   Content,
   Top,
   Title,
-  SVG,
   Wrapper,
   Button,
   GetDaiButton,
   CreateMarketButton,
-  Label,
   Input,
-  Span,
+  Checkbox,
+  CheckBoxLabel,
 } from "./Dashboard.style";
 import MarketCard from "./MarketCard";
+import styled from "styled-components";
 
 declare let window: any;
 
@@ -42,6 +44,30 @@ const Dashboard = () => {
   const [marketContractInstance, setMarketContractInstance] = useState<any>(
     null
   );
+  const [checked, setChecked] = useState(false);
+
+  const IconStyled = styled.div`
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+  `;
+
+  const IconOn = () => {
+    return (
+      <IconStyled>
+        <NotificationsActive size={15} color="white" />
+      </IconStyled>
+    );
+  };
+
+  const IconOff = () => {
+    return (
+      <IconStyled>
+        <NotificationsOff size={15} color="white" />
+      </IconStyled>
+    );
+  };
 
   useEffect(() => {
     const provider = new providers.Web3Provider(window.web3.currentProvider);
@@ -89,15 +115,23 @@ const Dashboard = () => {
         <Top>
           <Title>Dashboard</Title>
 
-          <Label>
-            <Input
+          {/* <Input
+              id="checkbox"
               type="checkbox"
               // checked={toggleSwitch}
               // onChange={() => setToggleSwitch(!toggleSwitch)}
-            />
-
-            <Span />
-          </Label>
+            /> */}
+          <Switch
+            onColor="#f1404b"
+            offColor="#dddfe6"
+            width={40}
+            height={20}
+            checkedIcon={<IconOn />}
+            uncheckedIcon={<IconOff />}
+            onChange={() => setChecked(!checked)}
+            checked={checked}
+            className="react-switch"
+          />
         </Top>
 
         <Wrapper>

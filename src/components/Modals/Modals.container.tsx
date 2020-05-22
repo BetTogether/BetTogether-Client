@@ -9,7 +9,6 @@ import InfoModal from "./InfoModal";
 
 const ModalsContainer = ({ active }: any) => {
   const { modalState } = useContext(ModalContext);
-  console.log("modalState:", modalState);
 
   return (
     <>

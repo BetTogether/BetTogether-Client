@@ -17,7 +17,7 @@ import {
 import { shortenAddress } from "utils/ShortenAddress";
 import BTMarketContract from "abis/BTMarket.json";
 import { ContractContext } from "store/context/ContractContext";
-import { useEscapeKey } from "utils/hooks";
+//import { useEscapeKey } from "utils/hooks";
 
 interface IInfoModalProps {
   isOpen: boolean;
@@ -26,7 +26,6 @@ interface IInfoModalProps {
 declare let window: any;
 
 const InfoModal = ({ isOpen }: IInfoModalProps) => {
-  console.log("isOpen:", isOpen);
   const { modalState, modalDispatch } = useContext(ModalContext);
   const { contractState } = useContext(ContractContext);
   const factoryContract = contractState[0];

@@ -37,17 +37,6 @@ const shake = keyframes`
   }
 `;
 
-export const SVG = styled.svg`
-  height: 1.5rem;
-  width: 1.5rem;
-  fill: ${(props) => props.theme.palette3.red};
-  color: #edf2f7;
-  &:hover {
-    fill: ${(props) => props.theme.palette3.black};
-    animation: ${shake} 150ms 2 linear;
-  }
-`;
-
 export const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -114,13 +103,6 @@ export const CreateMarketButton = styled.button`
   }
 `;
 
-export const Label = styled.label`
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-`;
-
 export const Input = styled.input<{ switchOn: boolean }>`
   opacity: 0;
   width: 0;
@@ -139,7 +121,33 @@ export const Input = styled.input<{ switchOn: boolean }>`
   `}
 `;
 
-export const Span = styled.span`
+export const CheckBoxLabel = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+`;
+
+// export const CheckBoxLabel = styled.label`
+//   width: 42px;
+//   height: 26px;
+//   border-radius: 15px;
+//   background: #bebebe;
+//   cursor: pointer;
+//   &::after {
+//     content: "";
+//     display: block;
+//     border-radius: 50%;
+//     width: 18px;
+//     height: 18px;
+//     margin: 3px;
+//     background: #ffffff;
+//     box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.2);
+//     transition: 0.2s;
+//   }
+// `;
+
+export const Checkbox = styled.span`
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -162,4 +170,24 @@ export const Span = styled.span`
     transition: 0.4s;
     border-radius: 50%;
   }
+`;
+
+export const CheckBox = styled.input`
+  /* opacity: 0;
+  z-index: 1;
+  border-radius: 15px;
+  width: 42px;
+  height: 26px;
+  &:checked + ${CheckBoxLabel} {
+    background: #4fbe79;
+    &::after {
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      margin-left: 21px;
+      transition: 0.2s;
+    }
+  } */
 `;
