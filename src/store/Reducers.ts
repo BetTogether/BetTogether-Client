@@ -2,7 +2,6 @@ import {
   TOGGLE_CREATE_MARKET_MODAL,
   TOGGLE_SIGN_IN_MODAL,
   TOGGLE_TRADE_MODAL,
-  TOGGLE_EMAIL_MODAL,
   TOGGLE_INFO_MODAL,
   CREATE_MARKET_CONTRACT,
 } from "./Constants";
@@ -25,13 +24,6 @@ export function ModalReducer(state: any, action: any) {
       return {
         ...state,
         tradeModalIsOpen: action.payload,
-      };
-    }
-
-    case TOGGLE_EMAIL_MODAL: {
-      return {
-        ...state,
-        emailModalIsOpen: action.payload,
       };
     }
 

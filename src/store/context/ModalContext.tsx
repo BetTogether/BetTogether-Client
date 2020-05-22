@@ -6,7 +6,6 @@ const initialModalState: any = {
   createMarketModalIsOpen: false,
   signInModalIsOpen: false,
   tradeModalIsOpen: false,
-  emailModalIsOpen: false,
   infoModalIsOpen: false,
 };
 
