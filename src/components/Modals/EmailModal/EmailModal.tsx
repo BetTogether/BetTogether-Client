@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   MainWrapper,
   Modal,
@@ -8,6 +8,9 @@ import {
   Wrapper,
   Container,
   FormWrapper,
+  Label,
+  Input,
+  Span,
 } from "./EmailModal.style";
 import { ModalContext } from "store/context/ModalContext";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
@@ -19,6 +22,7 @@ interface IEmailModalProps {
 
 const EmailModal = ({ isOpen }: IEmailModalProps) => {
   const { modalState, modalDispatch } = useContext(ModalContext);
+  const [toggleSwitch, setToggleSwitch] = useState<boolean>(false);
 
   const toggleModal = () =>
     modalDispatch({
@@ -41,7 +45,16 @@ const EmailModal = ({ isOpen }: IEmailModalProps) => {
         <Wrapper>
           <Container>
             <FormWrapper>
-              Turn on email notifications. Set your email in the account.
+              <Label>
+                <Input
+                  type="checkbox"
+                  checked={toggleSwitch}
+                  onChange={() => setToggleSwitch(!toggleSwitch)}
+                />
+
+                <Span />
+              </Label>
+              {/* Turn on email notifications. Set your email in the account. */}
             </FormWrapper>
           </Container>
         </Wrapper>

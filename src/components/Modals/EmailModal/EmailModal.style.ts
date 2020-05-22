@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const MainWrapper = styled.div<{ isOpen: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
@@ -94,19 +94,6 @@ export const Form = styled.form`
   justify-content: space-evenly;
 `;
 
-export const Input = styled.input`
-  color: #777;
-  border: 2px solid #f0f0f0;
-  border-radius: 4px;
-  display: block;
-  padding: 10px;
-  font-size: 14px;
-  &:focus {
-    outline: 0;
-    border-color: #777;
-  }
-`;
-
 export const Button = styled.button`
   cursor: pointer;
   color: ${(props) => props.theme.palette3.white};
@@ -123,5 +110,55 @@ export const Button = styled.button`
     cursor: not-allowed;
     background-color: gray;
     border: 2px solid gray;
+  }
+`;
+
+export const Label = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+`;
+
+export const Input = styled.input<{ switchOn: boolean }>`
+  opacity: 0;
+  width: 0;
+  height: 0;
+  &:focus {
+    box-shadow: 0 0 1px #2196f3;
+  }
+
+  ${({ switchOn }) =>
+    switchOn &&
+    `
+    background-color: #2196f3;
+    &:before {
+      transform: translateX(26px);
+    }
+  `}
+`;
+
+export const Span = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
+  ::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 50%;
   }
 `;
