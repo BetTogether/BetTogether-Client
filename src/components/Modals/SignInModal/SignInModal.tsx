@@ -118,10 +118,8 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
                   <ProviderWrapper key={name}>
                     <ProviderContent>
                       <StyledButton
-                        disabled={disabled}
-                        onClick={() => {
-                          setConnector(currentConnector, name);
-                        }}
+                        // disabled={disabled}
+                        onClick={() => setConnector(currentConnector, name)}
                       >
                         <Logo alt="logo" src={LogoSrc} />
                         <ProviderTitle>

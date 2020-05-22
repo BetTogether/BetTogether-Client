@@ -31,17 +31,11 @@ const Header = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [imageLink, setImageLink] = useState("");
 
-  // const tried = useEagerConnect();
+  const tried = useEagerConnect();
 
-  // useEffect(() => {
-  //   if (tried && !active) activate(getNetwork(42));
-  // }, [activate, active, tried]);
-
-  // // manage connecting state for injected connector
-  // const [connecting, setConnecting] = useState(false);
-  // useEffect(() => {
-  //   if (active) setConnecting(false);
-  // }, [active]);
+  useEffect(() => {
+    if (tried && !active) activate(getNetwork(42));
+  }, [activate, active, tried]);
 
   useEffect(() => {
     (async () => {

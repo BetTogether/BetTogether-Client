@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import {
   MainWrapper,
   Modal,
@@ -8,9 +8,6 @@ import {
   Wrapper,
   Container,
   FormWrapper,
-  Form,
-  Input,
-  Button,
 } from "./EmailModal.style";
 import { ModalContext } from "store/context/ModalContext";
 import { ReactComponent as CrossIcon } from "assets/cross.svg";
@@ -22,9 +19,6 @@ interface IEmailModalProps {
 
 const EmailModal = ({ isOpen }: IEmailModalProps) => {
   const { modalState, modalDispatch } = useContext(ModalContext);
-  const [box, setBox] = useState("");
-  const [email, setEmail] = useState("");
-  const [newEmail, setNewEmail] = useState("");
 
   const toggleModal = () =>
     modalDispatch({
@@ -34,11 +28,6 @@ const EmailModal = ({ isOpen }: IEmailModalProps) => {
 
   // Escape key hook
   //useEscapeKey(toggleModal);
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    await (box as any).private.set("email", newEmail);
-  };
 
   return (
     <MainWrapper isOpen={isOpen}>
@@ -52,16 +41,7 @@ const EmailModal = ({ isOpen }: IEmailModalProps) => {
         <Wrapper>
           <Container>
             <FormWrapper>
-              <Form onSubmit={handleSubmit}>
-                <Input
-                  type="email"
-                  required
-                  placeholder="joe@gmail.com"
-                  value={newEmail}
-                  onChange={(e: any) => setNewEmail(e.target.value)}
-                />
-                <Button disabled={newEmail === ""}>Save</Button>
-              </Form>
+              Turn on email notifications. Set your email in the account.
             </FormWrapper>
           </Container>
         </Wrapper>
