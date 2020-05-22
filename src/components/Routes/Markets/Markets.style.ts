@@ -51,6 +51,12 @@ export const TableHead = styled.th`
   color: ${(props) => props.theme.palette3.white};
 `;
 
+export const TableHeadTop = styled.thead`
+  border-bottom: 1px solid #ddd;
+  background-color: #dddddd;
+  color: ${(props) => props.theme.palette3.white};
+`;
+
 export const TableRow = styled.tr`
   border-bottom: 1px solid #ddd;
 `;

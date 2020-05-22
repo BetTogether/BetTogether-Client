@@ -10,6 +10,7 @@ import {
   Table,
   TableBody,
   TableHead,
+  TableHeadTop,
   TableRow,
   PastMarkets,
 } from "./Markets.style";
@@ -62,7 +63,7 @@ const Markets = () => {
       <PastMarketsWrapper>
         <PastMarkets>
           <Table>
-            <TableBody>
+            <TableHeadTop>
               <TableRow>
                 <TableHead>Address</TableHead>
                 <TableHead>Question</TableHead>
@@ -70,12 +71,19 @@ const Markets = () => {
                 <TableHead>Winnings</TableHead>
                 <TableHead>Finish Date</TableHead>
               </TableRow>
-              {markets.length &&
-                markets.map((market: string) => (
-                  <TableRow key={market}>
-                    <Aave market={market} />
-                  </TableRow>
-                ))}
+              </TableHeadTop>
+              <TableBody>
+              {
+                markets.length > 0 &&
+                  markets.map((market: string) => {
+                    return (
+                      <TableRow key={market}>
+                        <Aave market={market}/>
+                      </TableRow>
+                    );
+                  }
+                )
+              }
             </TableBody>
           </Table>
         </PastMarkets>
