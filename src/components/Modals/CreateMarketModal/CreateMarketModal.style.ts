@@ -40,7 +40,6 @@ export const Content = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* padding: 2rem 3.5rem; */
 `;
 
 export const IconButton = styled.button`

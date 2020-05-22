@@ -31,7 +31,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MarketCard = ({ marketContract, daiContract }: any) => {
-  console.log("Market Contract: ", marketContract);
+  //console.log("Market Contract: ", marketContract);
   const { modalState, modalDispatch } = useContext(ModalContext);
   const { account, library } = useWeb3React<Web3Provider>();
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+/* eslint-disable */
+import React, { useState, useContext } from "react";
 
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
@@ -81,7 +82,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
     });
 
   // Escape key hook
-  //useEscapeKey(toggleModal);
+  // useEscapeKey(toggleModal);
 
   return (
     <Wrapper isOpen={isOpen}>
@@ -91,7 +92,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
         ) : (
           <>
             <Top>
-              <Title>Create a new market</Title>
+              <Title>Create a Market</Title>
               <IconButton onClick={() => toggleModal()}>
                 <Clear />
               </IconButton>

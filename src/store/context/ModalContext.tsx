@@ -6,7 +6,7 @@ const initialModalState: any = {
   createMarketModalIsOpen: false,
   signInModalIsOpen: false,
   tradeModalIsOpen: false,
-  infoModalIsOpen: false,
+  infoModalIsOpen: true,
 };
 
 export const ModalContext = createContext<{

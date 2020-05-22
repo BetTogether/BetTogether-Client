@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
 import { providers, utils, Contract } from "ethers";
@@ -8,7 +8,6 @@ import {
   Modal,
   IconButton,
   Top,
-  Title,
   Container,
   Column,
   Detail,
@@ -27,6 +26,7 @@ interface IInfoModalProps {
 declare let window: any;
 
 const InfoModal = ({ isOpen }: IInfoModalProps) => {
+  console.log("isOpen:", isOpen);
   const { modalState, modalDispatch } = useContext(ModalContext);
   const { contractState } = useContext(ContractContext);
   const factoryContract = contractState[0];
@@ -86,8 +86,8 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
   // Escape key hook
   // useEscapeKey(() =>
   //   modalDispatch({
-  //     type: "TOGGLE_TRADE_MODAL",
-  //     payload: !modalState.tradeModalIsOpen,
+  //     type: "TOGGLE_INFO_MODAL",
+  //     payload: !modalState.infoModalIsOpen,
   //   })
   // );
 
@@ -98,8 +98,8 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
           <IconButton
             onClick={() =>
               modalDispatch({
-                type: "TOGGLE_TRADE_MODAL",
-                payload: !modalState.tradeModalIsOpen,
+                type: "TOGGLE_INFO_MODAL",
+                payload: !modalState.infoModalIsOpen,
               })
             }
           >
