@@ -64,9 +64,9 @@ const MarketCard = ({ marketContract, daiContract }: any) => {
 
   useEffect(() => {
     (async () => {
-      let numberOfTokenContracts = await marketContract.tokenContractsCreated();
+      let numberOfOutcomes = await marketContract.numberOfOutcomes();
 
-      if (numberOfTokenContracts.toNumber() !== 0) {
+      if (numberOfOutcomes.toNumber() !== 0) {
         let numberOfOutcomes = (
           await marketContract.numberOfOutcomes()
         ).toNumber();

@@ -35,9 +35,6 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
   const [marketEventName, setMarketEventName] = useState<string>(
     "Who will win the 2020 US General Election?"
   );
-  const [realitioQuestion, setRealitioQuestion] = useState<string>(
-    'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
-  );
   const [marketOpeningTime, setMarketOpeningTime] = useState<number>(0);
   const [marketLockingTime, setMarketLockingTime] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<any>(0);
@@ -45,6 +42,11 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
   const [arbitrator, setArbitrator] = useState<string>(
     "0xd47f72a2d1d0E91b0Ec5e5f5d02B2dc26d00A14D"
   );
+  const [realitioQuestion, setRealitioQuestion] = useState<string>(
+    'Who will win the 2020 US General Election␟"Donald Trump","Joe Biden"␟news-politics␟en_US'
+  );
+  //const [outcomes, setOutcomes] = useState<any>([]);
+  const [testOutcomes, setTestOutcomes] = useState(["Trump", "Biden"]);
 
   const createMarket = async (e: any) => {
     e.preventDefault();
@@ -58,7 +60,7 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
     const TIMEOUT = timeout;
     const ARBITRATOR = arbitrator;
     const REALITIO_QUESTION = realitioQuestion;
-    const NUMBER_OF_OUTCOMES = outcomes.length;
+    const OUTCOMES = testOutcomes;
 
     let tx = await factoryContract.createMarket(
       MARKET_EVENT_NAME,
@@ -68,29 +70,29 @@ const CreateMarketModal = ({ isOpen }: ICreateMarketModalProps) => {
       TIMEOUT,
       ARBITRATOR,
       REALITIO_QUESTION,
-      NUMBER_OF_OUTCOMES
+      OUTCOMES
     );
     await tx.wait();
 
     //!Now create the tokens
-    const provider = new providers.Web3Provider(
-      (window as any).web3.currentProvider
-    );
-    const wallet = provider.getSigner();
-    let deployedMarkets = await factoryContract.getMarkets();
-    let mostRecentlyDeployedAddress =
-      deployedMarkets[deployedMarkets.length - 1];
+    // const provider = new providers.Web3Provider(
+    //   (window as any).web3.currentProvider
+    // );
+    // const wallet = provider.getSigner();
+    // let deployedMarkets = await factoryContract.getMarkets();
+    // let mostRecentlyDeployedAddress =
+    //   deployedMarkets[deployedMarkets.length - 1];
 
-    let marketContract = new Contract(
-      mostRecentlyDeployedAddress,
-      BTMarketContract.abi,
-      wallet
-    );
+    // let marketContract = new Contract(
+    //   mostRecentlyDeployedAddress,
+    //   BTMarketContract.abi,
+    //   wallet
+    // );
 
-    outcomes.forEach(
-      async (outcome) =>
-        await marketContract.createTokenContract(outcome.name, outcome.token)
-    );
+    // outcomes.forEach(
+    //   async (outcome) =>
+    //     await marketContract.createTokenContract(outcome.name, outcome.token)
+    // );
     setLoading(false);
     toggleModal();
   };
