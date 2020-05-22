@@ -53,6 +53,7 @@ const getFormattedNumber = (floatBalance: number, decimals: number) => {
 
 function Aave({ market }: { market: string }) {
   const [question, setQuestion] = useState<number>(0);
+  const [questionId, setQuestionId] = useState<number>(0);
   const [maxInterests, setMaxInterest] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const [winningOutcome, setWinningOutcome] = useState<number>(0);
@@ -67,10 +68,18 @@ function Aave({ market }: { market: string }) {
         wallet
       );
       const _question = await marketContract.eventName();
+      const _questionId = await marketContract.questionId();
       const _maxInterests = await marketContract.getMaxTotalInterest();
       const _marketResolutionTime = await marketContract.marketResolutionTime();
-      const _winningOutcome = await marketContract.winningOutcome();
+      const _winningOutcomeId = await marketContract.winningOutcome();
+      let _winningOutcome;
+      
+      if (_winningOutcomeId.toString() !== '69') {
+        _winningOutcome = await marketContract.outcomeNames(_winningOutcomeId);
+      }
+
       setQuestion(_question);
+      setQuestionId(_questionId);
       setMaxInterest(_maxInterests);
       setMarketResolutionTime(_marketResolutionTime);
       setWinningOutcome(_winningOutcome);
@@ -90,8 +99,12 @@ function Aave({ market }: { market: string }) {
               {shortenAddress(market)}
             </Address>
           </th>
-          <th>{question}</th>
-          <th>{winningOutcome.toString()}</th>
+          <th>
+            <Address href={`https://realitio.github.io/#!/question/${questionId}`}>
+              {question}
+            </Address>
+          </th>
+          <th>{winningOutcome ? winningOutcome.toString() : 'Not yet resolved' }</th>
           <th>{`${getFormattedNumber(maxInterests / 1e18, 18)} DAI`}</th>
           <th>{new Date(marketResolutionTime * 1000).toUTCString()}</th>
         </>
