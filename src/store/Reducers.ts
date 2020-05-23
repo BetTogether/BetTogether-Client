@@ -1,7 +1,6 @@
 import {
   TOGGLE_CREATE_MARKET_MODAL,
   TOGGLE_SIGN_IN_MODAL,
-  TOGGLE_TRADE_MODAL,
   TOGGLE_INFO_MODAL,
   CREATE_MARKET_CONTRACT,
 } from "./Constants";
@@ -20,13 +19,6 @@ export function ModalReducer(state: any, action: any) {
         signInModalIsOpen: action.payload,
       };
     }
-    case TOGGLE_TRADE_MODAL: {
-      return {
-        ...state,
-        tradeModalIsOpen: action.payload,
-      };
-    }
-
     case TOGGLE_INFO_MODAL: {
       return {
         ...state,

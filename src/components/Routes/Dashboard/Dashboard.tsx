@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { NotificationsActive, NotificationsOff } from "@rimble/icons";
 import Switch from "react-switch";
-import { providers, Contract } from "ethers";
+import { providers, Contract, utils } from "ethers";
 
 import BTMarketContract from "abis/BTMarket.json";
 import Container from "components/Routes/RoutesContainer";
@@ -28,6 +28,7 @@ const Dashboard = () => {
   const { modalState, modalDispatch } = useContext(ModalContext);
   const { contractState } = useContext(ContractContext);
   const factoryContract = contractState[0];
+  const daiMockupContract = contractState[2];
   const [checked, setChecked] = useState(false);
   const [marketContract, setMarketContract] = useState<any>();
 
@@ -45,6 +46,21 @@ const Dashboard = () => {
         <NotificationsOff size={15} color="white" />
       </IconStyled>
     );
+  };
+
+  const mintDai = async () => {
+    let daiToMint = 100;
+    let formattedDaiToMint = utils.parseUnits(daiToMint.toString(), 18);
+    try {
+      let tx = await daiMockupContract.mint(formattedDaiToMint);
+      // notifyConfirmation(tx.hash);
+      let result = await tx.wait();
+      console.log("result:", result);
+      // notifySuccess(result.transactionHash);
+    } catch (error) {
+      console.error(error);
+      // notifyFailure();
+    }
   };
 
   useEffect(() => {
@@ -110,14 +126,7 @@ const Dashboard = () => {
           )}
 
           {active && (
-            <GetDaiButton
-              onClick={() =>
-                modalDispatch({
-                  type: "TOGGLE_TRADE_MODAL",
-                  payload: !modalState.tradeModalIsOpen,
-                })
-              }
-            >
+            <GetDaiButton onClick={() => mintDai()}>
               <DaiIcon />
             </GetDaiButton>
           )}

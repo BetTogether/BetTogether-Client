@@ -40,6 +40,7 @@ const MarketCard = ({ marketContract }: any) => {
   const daiContract = contractState[1];
   const { modalState, modalDispatch } = useContext(ModalContext);
 
+  const [daiBalance, setDaiBalance] = useState<number>(0);
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
@@ -65,7 +66,7 @@ const MarketCard = ({ marketContract }: any) => {
       const accIntFormatted = utils.formatEther(accruedInterest.toNumber());
       setAccruedInterest(parseFloat(accIntFormatted));
     })();
-  }, [MarketStates, marketContract]);
+  }, [MarketStates, account, marketContract]);
 
   //If there are outcomes, get them
   useEffect(() => {
@@ -102,6 +103,15 @@ const MarketCard = ({ marketContract }: any) => {
     e.preventDefault();
     if (marketState !== "OPEN") {
       console.log("marketState !== OPEN");
+      return;
+    }
+
+    let amountToBetMultiplied = amountToBet * 1000000000000000000;
+
+    let balance = await daiContract.balanceOf(account);
+
+    if (balance < amountToBetMultiplied) {
+      notifyInsufficientDai();
       return;
     }
 
@@ -203,6 +213,18 @@ const MarketCard = ({ marketContract }: any) => {
       progressStyle: { background: "#ff0000" },
     });
   };
+  const notifyInsufficientDai = () => {
+    toast(<span>{`You have insufficient Dai`}</span>, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      progressStyle: { background: "#ff0000" },
+    });
+  };
 
   return !prompt ? null : (
     <>
@@ -213,6 +235,8 @@ const MarketCard = ({ marketContract }: any) => {
             <ItemDescription>
               Current, Potential Winnings (in Dai)
             </ItemDescription>
+            {/* <span>{userBalance?userBalance:"-"}</span> */}
+
             <CountUp
               start={0}
               end={accruedInterest}

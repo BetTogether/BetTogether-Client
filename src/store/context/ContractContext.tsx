@@ -5,6 +5,7 @@ import { ContractReducer } from "../Reducers";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import IERC20 from "abis/IERC20.json";
 import addresses, { KOVAN_ID } from "utils/addresses";
+import DaiMockup from "abis/DaiMockup.json";
 
 declare let window: any;
 
@@ -26,6 +27,9 @@ initialContractState.push(FactoryContract);
 const DaiInstance: any = new Contract(daiAddress, IERC20.abi, wallet);
 
 initialContractState.push(DaiInstance);
+
+const DaiMockupInstance: any = new Contract(daiAddress, DaiMockup.abi, wallet);
+initialContractState.push(DaiMockupInstance);
 
 export const ContractContext = createContext<{
   contractState: any;
