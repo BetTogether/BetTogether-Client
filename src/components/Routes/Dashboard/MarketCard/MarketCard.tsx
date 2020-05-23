@@ -44,7 +44,7 @@ const MarketCard = () => {
 
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
-  const [userBalance, setuserBalance] = useState<number>(0);
+  const [userBalance, setUserBalance] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
   const [marketState, setMarketState] = useState<string>("");
@@ -62,7 +62,8 @@ const MarketCard = () => {
       const owner = await marketContract.owner();
       setOwner(owner);
       const userBalance = await daiContract.balanceOf(account);
-      setuserBalance(userBalance);
+      console.log(userBalance.toString());
+      setUserBalance(userBalance);
       const marketResolutionTime = await marketContract.marketResolutionTime();
       setMarketResolutionTime(marketResolutionTime);
       const eventName = await marketContract.eventName();
@@ -261,7 +262,7 @@ const MarketCard = () => {
       <Content>
         <Header>
           <span>{shortenAddress(marketContract.address)}</span>
-          {/* <span>{userBalance}</span> */}
+          {/* <span>{userBalance?userBalance:"-"}</span> */}
           <span>
             <ItemDescription>
               Current, Potential Winnings (in Dai)
@@ -276,7 +277,7 @@ const MarketCard = () => {
           </span>
           <span><Form onSubmit={mintDai}>
         <Button>
-            Mint $100 Dai
+            Mint Dai
         </Button>
         </Form></span>
           <Wrapper>
@@ -300,7 +301,7 @@ const MarketCard = () => {
           </Wrapper>
         </Header>
         
-        {/* <span>Current balance is {userBalance}</span> */}
+        
         <Prompt>{prompt}</Prompt>
 
         <GraphFormWrapper>
