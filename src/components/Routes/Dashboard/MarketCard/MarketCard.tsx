@@ -50,7 +50,7 @@ const MarketCard = () => {
   const [owner, setOwner] = useState<string>("");
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
-  const [daiApproved, setDaiApproved] = useState<boolean>(false);
+  const [daiApproved, setDaiApproved] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
@@ -86,14 +86,14 @@ const MarketCard = () => {
     })();
   }, [marketContract]);
 
-  // Get the users current Dai allowance
+  // Get the users current Dai allowance 
   useEffect(() => {
     const getAllowance = async () => {
       return await daiContract.allowance(account, marketContract.address);
     };
     if (account) {
-      getAllowance().then((allowance) => {
-        if (allowance.toString() !== "0") setDaiApproved(true);
+        getAllowance().then((allowance) => {
+            setDaiApproved(allowance.toString());
       });
     }
   }, [account, daiContract, marketContract.address]);
@@ -109,14 +109,25 @@ const MarketCard = () => {
     let choiceAsNumber: number;
     choice === "Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
 
-    if (!daiApproved) {
-      let balance = await daiContract.balanceOf(account);
-      await daiContract.approve(marketContract.address, balance);
-      setDaiApproved(true);
+    let amountToBetMultiplied = amountToBet*1000000000000000000;
+
+    if (daiApproved < amountToBetMultiplied) {
+        console.log("Approved amount is", daiApproved);
+        console.log("Bet amount is", amountToBetMultiplied);
+        console.log("Approval insufficient, need approval tx");
+        let onehundredk = 100000;
+        let formatted100k = utils.parseUnits(onehundredk.toString(), 18);
+        await daiContract.approve(marketContract.address, formatted100k); //100k dai
+    }
+
+    if (daiApproved > amountToBetMultiplied) {
+        console.log("Approved amount is", daiApproved);
+        console.log("Bet amount is", amountToBetMultiplied);
+        console.log("Approval sufficient");
     }
 
     let formatted = utils.parseUnits(amountToBet.toString(), 18);
-
+    
     try {
       let tx = await marketContract.placeBet(choiceAsNumber, formatted);
       notifyConfirmation(tx.hash);
