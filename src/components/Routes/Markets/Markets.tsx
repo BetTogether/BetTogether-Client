@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { providers, Contract } from "ethers";
+import React, { useState, useContext } from "react";
+import { ContractContext } from "store/context/ContractContext";
 import Aave from "./Aave";
 import {
   ActiveMarketsWrapper,
@@ -14,18 +14,13 @@ import {
   TableRow,
   PastMarkets,
 } from "./Markets.style";
-import BTMarketFactoryContract from "abis/BTMarketFactory.json";
-
-import addresses, { KOVAN_ID } from "utils/addresses";
-
-declare let window: any;
 
 const Markets = () => {
   const [markets, setMarkets] = useState([]);
+  const { contractState } = useContext(ContractContext);
+  const factory = contractState[0];
 
-  const marketFactoryAddressKovan = addresses[KOVAN_ID].marketFactory;
-
-  const fetchMarkets = async (factory: any) => {
+  const fetchMarkets = async () => {
     try {
       const markets = await factory.getMarkets();
       setMarkets(markets);
@@ -34,17 +29,7 @@ const Markets = () => {
     }
   };
 
-  useEffect(() => {
-    const provider = new providers.Web3Provider(window.web3.currentProvider);
-    const wallet = provider.getSigner();
-    const FactoryInstance: any = new Contract(
-      marketFactoryAddressKovan,
-      BTMarketFactoryContract.abi,
-      wallet
-    );
-
-    fetchMarkets(FactoryInstance);
-  }, [marketFactoryAddressKovan]);
+  fetchMarkets();
 
   return (
     <>
@@ -71,19 +56,16 @@ const Markets = () => {
                 <TableHead>Winnings</TableHead>
                 <TableHead>Finish Date</TableHead>
               </TableRow>
-              </TableHeadTop>
-              <TableBody>
-              {
-                markets.length > 0 &&
-                  markets.map((market: string) => {
-                    return (
-                      <TableRow key={market}>
-                        <Aave market={market}/>
-                      </TableRow>
-                    );
-                  }
-                )
-              }
+            </TableHeadTop>
+            <TableBody>
+              {markets.length > 0 &&
+                markets.map((market: string) => {
+                  return (
+                    <TableRow key={market}>
+                      <Aave market={market} />
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </PastMarkets>

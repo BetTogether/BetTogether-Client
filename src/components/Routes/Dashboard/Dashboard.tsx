@@ -1,10 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Dai as DaiIcon } from "@rimble/icons";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { NotificationsActive, NotificationsOff } from "@rimble/icons";
 import Switch from "react-switch";
+import { providers, Contract } from "ethers";
 
+import BTMarketContract from "abis/BTMarket.json";
 import Container from "components/Routes/RoutesContainer";
 import { ModalContext } from "store/context/ModalContext";
 import { ContractContext } from "store/context/ContractContext";
@@ -19,12 +21,15 @@ import {
 } from "./Dashboard.style";
 import MarketCard from "./MarketCard";
 
+declare let window: any;
+
 const Dashboard = () => {
   const { active } = useWeb3React<Web3Provider>();
   const { modalState, modalDispatch } = useContext(ModalContext);
   const { contractState } = useContext(ContractContext);
-  const marketContractInstance = contractState[2];
+  const factoryContract = contractState[0];
   const [checked, setChecked] = useState(false);
+  const [marketContract, setMarketContract] = useState<any>();
 
   const IconOn = () => {
     return (
@@ -41,6 +46,33 @@ const Dashboard = () => {
       </IconStyled>
     );
   };
+
+  useEffect(() => {
+    (async () => {
+      const provider = new providers.Web3Provider(window.web3.currentProvider);
+      const wallet = provider.getSigner();
+      try {
+        let deployedMarkets = await factoryContract.getMarkets();
+        if (deployedMarkets.length !== 0) {
+          let mostRecentlyDeployedAddress =
+            deployedMarkets[deployedMarkets.length - 1];
+          console.log(
+            "Most Recently Deployed Address:",
+            mostRecentlyDeployedAddress
+          );
+
+          const marketInstance: any = new Contract(
+            mostRecentlyDeployedAddress,
+            BTMarketContract.abi,
+            wallet
+          );
+          setMarketContract(marketInstance);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [factoryContract]);
 
   return (
     <Container>
@@ -61,8 +93,8 @@ const Dashboard = () => {
         </Top>
 
         <Wrapper>
-          {marketContractInstance ? (
-            <MarketCard />
+          {marketContract ? (
+            <MarketCard marketContract={marketContract} />
           ) : (
             <CreateMarketButton
               disabled={!active}

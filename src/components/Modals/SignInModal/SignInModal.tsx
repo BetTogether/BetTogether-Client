@@ -47,8 +47,6 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
     error,
   } = useWeb3React<Web3Provider>();
 
-  console.log("sign in modal active:", active);
-
   const [activatingConnector, setActivatingConnector] = useState<
     AbstractConnector
   >();

@@ -5,7 +5,6 @@ import { ContractReducer } from "../Reducers";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import IERC20 from "abis/IERC20.json";
 import addresses, { KOVAN_ID } from "utils/addresses";
-import BTMarketContract from "abis/BTMarket.json";
 
 declare let window: any;
 
@@ -27,32 +26,6 @@ initialContractState.push(FactoryContract);
 const DaiInstance: any = new Contract(daiAddress, IERC20.abi, wallet);
 
 initialContractState.push(DaiInstance);
-
-async function getMostRecentMarket() {
-  try {
-    let deployedMarkets = await FactoryContract.getMarkets();
-    if (deployedMarkets.length !== 0) {
-      let mostRecentlyDeployedAddress =
-        deployedMarkets[deployedMarkets.length - 1];
-      console.log(
-        "Most Recently Deployed Address:",
-        mostRecentlyDeployedAddress
-      );
-
-      const marketInstance: any = new Contract(
-        mostRecentlyDeployedAddress,
-        BTMarketContract.abi,
-        wallet
-      );
-
-      initialContractState.push(marketInstance);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-getMostRecentMarket();
 
 export const ContractContext = createContext<{
   contractState: any;

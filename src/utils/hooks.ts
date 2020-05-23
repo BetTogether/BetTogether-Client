@@ -150,6 +150,24 @@ export async function useNetworkId() {
   return networkId;
 }
 
+export function useEscapeKey(
+  onKeyDown: (event?: any) => void,
+  suppress = false
+): void {
+  const downHandler = useCallback(
+    (event) => {
+      if (!suppress && event.keyCode === 27) onKeyDown(event);
+    },
+    [onKeyDown, suppress]
+  );
+  useEffect(() => {
+    window.addEventListener("keydown", downHandler);
+    return (): void => {
+      window.removeEventListener("keydown", downHandler);
+    };
+  }, [downHandler, suppress]);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useContract(
   address?: string,
@@ -168,22 +186,4 @@ export function useContract(
         : undefined,
     [address, ABI, withSigner, library, account]
   );
-}
-
-export function useEscapeKey(
-  onKeyDown: (event?: any) => void,
-  suppress = false
-): void {
-  const downHandler = useCallback(
-    (event) => {
-      if (!suppress && event.keyCode === 27) onKeyDown(event);
-    },
-    [onKeyDown, suppress]
-  );
-  useEffect(() => {
-    window.addEventListener("keydown", downHandler);
-    return (): void => {
-      window.removeEventListener("keydown", downHandler);
-    };
-  }, [downHandler, suppress]);
 }

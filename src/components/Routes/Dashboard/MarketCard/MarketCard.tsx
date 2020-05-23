@@ -31,14 +31,13 @@ import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
 import { ContractContext } from "store/context/ContractContext";
 
-const MarketCard = () => {
+const MarketCard = ({ marketContract }: any) => {
   //Web3React dependency to give us access to our current account and Web3Provider
   const { account, library } = useWeb3React<Web3Provider>();
 
   //Pulling out the current market and Dai contract from context state
   const { contractState } = useContext(ContractContext);
   const daiContract = contractState[1];
-  const marketContract = contractState[2];
   const { modalState, modalDispatch } = useContext(ModalContext);
 
   const [amountToBet, setAmountToBet] = useState<number>(0);

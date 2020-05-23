@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
+//import { gql } from "apollo-boost";
+//import { useQuery } from "@apollo/react-hooks";
 import { providers, Contract } from "ethers";
 import styled from "styled-components";
 
@@ -20,22 +20,22 @@ const Address = styled.a`
   }
 `;
 
-const GET_LAST_DEPOSITS_FROM_MARKET = gql`
-  query deposits($market: ID!) {
-    users(where: { id: $market }) {
-      reserves {
-        aTokenBalanceHistory(orderBy: timestamp) {
-          balance
-          timestamp
-        }
-        depositHistory(orderBy: timestamp) {
-          amount
-          timestamp
-        }
-      }
-    }
-  }
-`;
+// const GET_LAST_DEPOSITS_FROM_MARKET = gql`
+//   query deposits($market: ID!) {
+//     users(where: { id: $market }) {
+//       reserves {
+//         aTokenBalanceHistory(orderBy: timestamp) {
+//           balance
+//           timestamp
+//         }
+//         depositHistory(orderBy: timestamp) {
+//           amount
+//           timestamp
+//         }
+//       }
+//     }
+//   }
+// `;
 
 const getFormattedNumber = (floatBalance: number, decimals: number) => {
   if (floatBalance === 0) {
@@ -73,8 +73,8 @@ function Aave({ market }: { market: string }) {
       const _marketResolutionTime = await marketContract.marketResolutionTime();
       const _winningOutcomeId = await marketContract.winningOutcome();
       let _winningOutcome;
-      
-      if (_winningOutcomeId.toString() !== '69') {
+
+      if (_winningOutcomeId.toString() !== "69") {
         _winningOutcome = await marketContract.outcomeNames(_winningOutcomeId);
       }
 
@@ -100,11 +100,15 @@ function Aave({ market }: { market: string }) {
             </Address>
           </th>
           <th>
-            <Address href={`https://realitio.github.io/#!/question/${questionId}`}>
+            <Address
+              href={`https://realitio.github.io/#!/question/${questionId}`}
+            >
               {question}
             </Address>
           </th>
-          <th>{winningOutcome ? winningOutcome.toString() : 'Not yet resolved' }</th>
+          <th>
+            {winningOutcome ? winningOutcome.toString() : "Not yet resolved"}
+          </th>
           <th>{`${getFormattedNumber(maxInterests / 1e18, 18)} DAI`}</th>
           <th>{new Date(marketResolutionTime * 1000).toUTCString()}</th>
         </>
