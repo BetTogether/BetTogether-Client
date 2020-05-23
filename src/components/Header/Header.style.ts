@@ -11,6 +11,18 @@ export const Head = styled.header`
   background-color: ${(props) => props.theme.palette3.black};
 `;
 
+export const LogoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Span = styled.span`
+  font-size: 3rem;
+  width: 100%;
+  margin-right: 0.5rem;
+`;
+
 export const Logo = styled.h1`
   cursor: pointer;
   color: ${(props) => props.theme.palette3.white};

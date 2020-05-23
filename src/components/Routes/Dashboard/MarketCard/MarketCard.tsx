@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Info } from "assets/info.svg";
+import daiIcon from "assets/dai.svg";
+import etherIcon from "assets/eth.svg";
 import {
   Content,
   Header,
@@ -26,6 +28,8 @@ import {
   Input,
   OwnerButton,
   OwnerButtons,
+  BalanceBox,
+  Balance,
 } from "./MarketCard.style";
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
@@ -33,14 +37,13 @@ import { ContractContext } from "store/context/ContractContext";
 
 const MarketCard = ({ marketContract }: any) => {
   //Web3React dependency to give us access to our current account and Web3Provider
-  const { account, library } = useWeb3React<Web3Provider>();
+  const { active, account, library } = useWeb3React<Web3Provider>();
 
   //Pulling out the current market and Dai contract from context state
   const { contractState } = useContext(ContractContext);
   const daiContract = contractState[1];
   const { modalState, modalDispatch } = useContext(ModalContext);
 
-  const [daiBalance, setDaiBalance] = useState<number>(0);
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
@@ -52,6 +55,26 @@ const MarketCard = ({ marketContract }: any) => {
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
   const [forceRerender, setRerender] = useState<boolean>(false);
+  const [etherBalance, setEtherBalance] = useState<any>();
+  const [daiBalance, setDaiBalance] = useState<any>();
+
+  useEffect(() => {
+    (async () => {
+      if (account && library) {
+        library
+          .getBalance(account)
+          .then((etherBalance: { toString: () => string }) => {
+            let formattedEther = utils.formatUnits(etherBalance.toString(), 18);
+            let formattedEtherBalance = parseFloat(formattedEther);
+            setEtherBalance(formattedEtherBalance.toFixed(2));
+          });
+
+        let daiBalance = await daiContract.balanceOf(account);
+        let formattedDai = utils.formatUnits(daiBalance, 18);
+        setDaiBalance(formattedDai);
+      }
+    })();
+  }, [account, daiContract, etherBalance, library]);
 
   useEffect(() => {
     (async () => {
@@ -246,8 +269,6 @@ const MarketCard = ({ marketContract }: any) => {
             <ItemDescription>
               Current, Potential Winnings (in Dai)
             </ItemDescription>
-            {/* <span>{userBalance?userBalance:"-"}</span> */}
-
             <CountUp
               start={0}
               end={accruedInterest}
@@ -282,38 +303,49 @@ const MarketCard = ({ marketContract }: any) => {
           <ChartWrapper>
             <Chart marketContract={marketContract} forceRerender={forceRerender} />
           </ChartWrapper>
+          {active && (
+            <Form onSubmit={placeBet}>
+              <BalanceBox>
+                <Balance>
+                  <img src={etherIcon} alt="eth icon" />
+                  {etherBalance ? etherBalance : "-"}
+                </Balance>
+                <Balance>
+                  <img src={daiIcon} alt="dai icon" />
+                  {daiBalance ? daiBalance : "-"}
+                </Balance>
+              </BalanceBox>
+              <Select
+                value={choice}
+                onChange={(e: any) => setChoice(e.target.value)}
+              >
+                <Option key={uuidv4()} value="" />
+                {outcomes.map((outcome: any) => (
+                  <Option key={uuidv4()} value={outcome}>
+                    {outcome}
+                  </Option>
+                ))}
+              </Select>
 
-          <Form onSubmit={placeBet}>
-            <Select
-              value={choice}
-              onChange={(e: any) => setChoice(e.target.value)}
-            >
-              <Option key={uuidv4()} value="" />
-              {outcomes.map((outcome: any) => (
-                <Option key={uuidv4()} value={outcome}>
-                  {outcome}
-                </Option>
-              ))}
-            </Select>
-
-            <Input
-              type="number"
-              placeholder="0"
-              onChange={(e: any) => setAmountToBet(e.target.value)}
-            />
-            {!!(library && account) && (
-              <>
-                <Button buy disabled={amountToBet <= 0}>
-                  Enter
-                </Button>
-                {marketState === "WITHDRAW" && (
-                  <Button type="button" onClick={() => withdraw()}>
-                    Withdraw
+              <Input
+                type="number"
+                placeholder="0"
+                onChange={(e: any) => setAmountToBet(e.target.value)}
+              />
+              {!!(library && account) && (
+                <>
+                  <Button buy disabled={amountToBet <= 0}>
+                    Enter
                   </Button>
-                )}
-              </>
-            )}
-          </Form>
+                  {marketState === "WITHDRAW" && (
+                    <Button type="button" onClick={() => withdraw()}>
+                      Withdraw
+                    </Button>
+                  )}
+                </>
+              )}
+            </Form>
+          )}
         </GraphFormWrapper>
 
         {checkOwner() && (

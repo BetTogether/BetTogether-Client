@@ -11,6 +11,8 @@ import MobileDropdown from "./MobileDropdown";
 import {
   Head,
   Logo,
+  LogoWrapper,
+  Span,
   GitHubLink,
   RightContent,
   ExpandButton,
@@ -57,7 +59,12 @@ const Header = () => {
     <>
       <Head>
         <Link to="/dashboard">
-          <Logo>MagicBet</Logo>
+          <LogoWrapper>
+            <Span role="img" aria-label="tophat">
+              🎩
+            </Span>
+            <Logo>MagicBet</Logo>
+          </LogoWrapper>
         </Link>
         <RightContent>
           <GitHubLink
