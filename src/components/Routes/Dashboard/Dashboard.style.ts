@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 export const Content = styled.div`
   background-color: ${(props) => props.theme.palette3.white};
@@ -23,18 +23,6 @@ export const Title = styled.h3`
   font-size: 1.5rem;
   font-weight: 500;
   color: ${(props) => props.theme.palette3.black};
-`;
-
-const shake = keyframes` 
-  0% {
-    transform: translate(0.25rem, 0);
-  }
-  50% {
-    transform: translate(-0.25rem, 0);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
 `;
 
 export const Wrapper = styled.div`

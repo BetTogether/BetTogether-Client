@@ -148,3 +148,18 @@ export const OwnerButton = styled.button`
     background-color: ${(props) => props.theme.palette3.red};
   }
 `;
+
+export const BalanceBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+export const Balance = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
