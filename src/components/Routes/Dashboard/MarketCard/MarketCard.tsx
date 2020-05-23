@@ -4,6 +4,9 @@ import CountDown from "react-countdown";
 import { v4 as uuidv4 } from "uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { utils } from "ethers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Info } from "assets/info.svg";
@@ -27,17 +30,16 @@ import {
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
 import { ContractContext } from "store/context/ContractContext";
-import { utils } from "ethers";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const MarketCard = () => {
+  //Web3React dependency to give us access to our current account and Web3Provider
+  const { account, library } = useWeb3React<Web3Provider>();
+
+  //Pulling out the current market and Dai contract from context state
   const { contractState } = useContext(ContractContext);
   const daiContract = contractState[1];
   const marketContract = contractState[2];
-  console.log("marketContract:", marketContract);
   const { modalState, modalDispatch } = useContext(ModalContext);
-  const { account, library } = useWeb3React<Web3Provider>();
 
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
@@ -61,20 +63,19 @@ const MarketCard = () => {
       const eventName = await marketContract.eventName();
       setPrompt(eventName);
       const accruedInterest = await marketContract.getTotalInterest();
-      const formatted = utils.formatEther(accruedInterest.toNumber());
-      setAccruedInterest(parseFloat(formatted));
+      const accIntFormatted = utils.formatEther(accruedInterest.toNumber());
+      setAccruedInterest(parseFloat(accIntFormatted));
     })();
   }, [MarketStates, marketContract]);
 
+  //If there are outcomes, get them
   useEffect(() => {
     (async () => {
       let numberOfOutcomes = await marketContract.numberOfOutcomes();
-
       if (numberOfOutcomes.toNumber() !== 0) {
         let numberOfOutcomes = (
           await marketContract.numberOfOutcomes()
         ).toNumber();
-
         let newOutcomes = [];
         for (let i = 0; i < numberOfOutcomes; i++) {
           let outcomeName = await marketContract.outcomeNames(i);
@@ -83,9 +84,9 @@ const MarketCard = () => {
         setOutcomes(newOutcomes);
       }
     })();
-    //eslint-disable-next-line
-  }, []);
+  }, [marketContract]);
 
+  // Get the users current Dai allowance
   useEffect(() => {
     const getAllowance = async () => {
       return await daiContract.allowance(account, marketContract.address);
@@ -97,15 +98,9 @@ const MarketCard = () => {
     }
   }, [account, daiContract, marketContract.address]);
 
-  const openInfoModal = () =>
-    modalDispatch({
-      type: "TOGGLE_INFO_MODAL",
-      payload: !modalState.infoModalIsOpen,
-    });
-
+  //Place a bet
   const placeBet = async (e: any) => {
     e.preventDefault();
-    //TESTING
     if (marketState !== "OPEN") {
       console.log("marketState !== OPEN");
       return;
@@ -133,6 +128,7 @@ const MarketCard = () => {
     }
   };
 
+  //Withdraw functionality once the smart contract code is available
   const withdraw = async () => {
     try {
       let tx = await marketContract.withdraw();
@@ -143,6 +139,7 @@ const MarketCard = () => {
     }
   };
 
+  //Check if current address is the owner
   const checkOwner = () => {
     if (owner !== null && account !== null) {
       if (account === null) return false;
@@ -152,6 +149,7 @@ const MarketCard = () => {
     }
   };
 
+  //Toast notification popups
   const notifyConfirmation = (txHash: any) => {
     toast(
       <a
@@ -173,7 +171,6 @@ const MarketCard = () => {
       }
     );
   };
-
   const notifySuccess = (txHash: any) => {
     toast(
       <a
@@ -195,7 +192,6 @@ const MarketCard = () => {
       }
     );
   };
-
   const notifyFailure = () => {
     toast(<span>{`Transaction Failed. Try increasing the gas`}</span>, {
       position: "bottom-right",
@@ -235,7 +231,14 @@ const MarketCard = () => {
               )}
             </span>
             <SVG>
-              <Info onClick={() => openInfoModal()} />
+              <Info
+                onClick={() =>
+                  modalDispatch({
+                    type: "TOGGLE_INFO_MODAL",
+                    payload: !modalState.infoModalIsOpen,
+                  })
+                }
+              />
             </SVG>
           </Wrapper>
         </Header>
