@@ -46,7 +46,6 @@ const Account = () => {
           setBox(box);
           await box.syncDone;
           const email = await (box as any).private.get("email");
-          console.log("email:", email);
           setEmail(email);
         }
       }

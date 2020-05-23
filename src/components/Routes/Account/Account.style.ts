@@ -118,6 +118,7 @@ export const ThreeBoxLink = styled.a`
 `;
 
 export const LogoImage = styled.img`
+  margin-left: 0.5rem;
   height: 6rem;
   width: 6rem;
 `;

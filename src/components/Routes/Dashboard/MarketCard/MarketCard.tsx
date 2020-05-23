@@ -26,12 +26,16 @@ import {
 } from "./MarketCard.style";
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
+import { ContractContext } from "store/context/ContractContext";
 import { utils } from "ethers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MarketCard = ({ marketContract, daiContract }: any) => {
-  //console.log("Market Contract: ", marketContract);
+const MarketCard = () => {
+  const { contractState } = useContext(ContractContext);
+  const daiContract = contractState[1];
+  const marketContract = contractState[2];
+  console.log("marketContract:", marketContract);
   const { modalState, modalDispatch } = useContext(ModalContext);
   const { account, library } = useWeb3React<Web3Provider>();
 
