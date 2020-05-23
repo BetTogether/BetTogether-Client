@@ -4,6 +4,7 @@ import { providers, Contract } from "ethers";
 import { ContractReducer } from "../Reducers";
 import BTMarketFactoryContract from "abis/BTMarketFactory.json";
 import IERC20 from "abis/IERC20.json";
+import DaiMockup from "abis/DaiMockup.json";
 import addresses, { KOVAN_ID } from "utils/addresses";
 import BTMarketContract from "abis/BTMarket.json";
 
@@ -46,6 +47,9 @@ async function getMostRecentMarket() {
       );
 
       initialContractState.push(marketInstance);
+      // hacky af:
+      const DaiMockupInstance: any = new Contract(daiAddress, DaiMockup.abi, wallet);
+      initialContractState.push(DaiMockupInstance);
     }
   } catch (error) {
     console.error(error);
@@ -53,6 +57,8 @@ async function getMostRecentMarket() {
 }
 
 getMostRecentMarket();
+
+
 
 export const ContractContext = createContext<{
   contractState: any;

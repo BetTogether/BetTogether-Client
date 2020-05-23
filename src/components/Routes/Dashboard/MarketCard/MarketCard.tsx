@@ -39,10 +39,12 @@ const MarketCard = () => {
   const { contractState } = useContext(ContractContext);
   const daiContract = contractState[1];
   const marketContract = contractState[2];
+  const daiMockupContract = contractState[3];
   const { modalState, modalDispatch } = useContext(ModalContext);
 
   const [amountToBet, setAmountToBet] = useState<number>(0);
   const [accruedInterest, setAccruedInterest] = useState<number>(0);
+  const [userBalance, setuserBalance] = useState<number>(0);
   const [marketResolutionTime, setMarketResolutionTime] = useState<number>(0);
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
   const [marketState, setMarketState] = useState<string>("");
@@ -51,6 +53,7 @@ const MarketCard = () => {
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<number>(0);
+  
 
   useEffect(() => {
     (async () => {
@@ -58,6 +61,8 @@ const MarketCard = () => {
       setMarketState(MarketStates[marketState]);
       const owner = await marketContract.owner();
       setOwner(owner);
+      const userBalance = await daiContract.balanceOf(account);
+      setuserBalance(userBalance);
       const marketResolutionTime = await marketContract.marketResolutionTime();
       setMarketResolutionTime(marketResolutionTime);
       const eventName = await marketContract.eventName();
@@ -104,7 +109,7 @@ const MarketCard = () => {
     let formattedDaiToMint = utils.parseUnits(daiToMint.toString(), 18);
     console.log("test");
     try {
-      let tx = await daiContract.mint(formattedDaiToMint);
+      let tx = await daiMockupContract.mint(formattedDaiToMint);
       notifyConfirmation(tx.hash);
       let result = await tx.wait();
       notifySuccess(result.transactionHash);
@@ -256,6 +261,7 @@ const MarketCard = () => {
       <Content>
         <Header>
           <span>{shortenAddress(marketContract.address)}</span>
+          {/* <span>{userBalance}</span> */}
           <span>
             <ItemDescription>
               Current, Potential Winnings (in Dai)
@@ -268,6 +274,11 @@ const MarketCard = () => {
               duration={5}
             />
           </span>
+          <span><Form onSubmit={mintDai}>
+        <Button>
+            Mint $100 Dai
+        </Button>
+        </Form></span>
           <Wrapper>
             <span>
               {marketResolutionTime ? (
@@ -288,6 +299,8 @@ const MarketCard = () => {
             </SVG>
           </Wrapper>
         </Header>
+        
+        {/* <span>Current balance is {userBalance}</span> */}
         <Prompt>{prompt}</Prompt>
 
         <GraphFormWrapper>
@@ -326,15 +339,7 @@ const MarketCard = () => {
               </>
             )}
           </Form>
-          <Form onSubmit={mintDai}>
-
-
-                <Button>
-                  MintDai
-                </Button>
-  
-
-          </Form>
+          
         </GraphFormWrapper>
 
         {checkOwner() && (
