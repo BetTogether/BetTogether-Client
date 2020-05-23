@@ -106,10 +106,17 @@ const MarketCard = () => {
       return;
     }
 
+    let amountToBetMultiplied = amountToBet*1000000000000000000;
+
+    let balance = await daiContract.balanceOf(account);
+    
+    if (balance < amountToBetMultiplied) {
+        notifyInsufficientDai();
+        return;
+    } 
+
     let choiceAsNumber: number;
     choice === "Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
-
-    let amountToBetMultiplied = amountToBet*1000000000000000000;
 
     if (daiApproved < amountToBetMultiplied) {
         console.log("Approved amount is", daiApproved);
@@ -205,6 +212,18 @@ const MarketCard = () => {
   };
   const notifyFailure = () => {
     toast(<span>{`Transaction Failed. Try increasing the gas`}</span>, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      progressStyle: { background: "#ff0000" },
+    });
+  };
+  const notifyInsufficientDai = () => {
+    toast(<span>{`You have insufficient Dai`}</span>, {
       position: "bottom-right",
       autoClose: 5000,
       hideProgressBar: false,
