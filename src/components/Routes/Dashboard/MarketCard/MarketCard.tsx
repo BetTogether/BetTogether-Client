@@ -98,6 +98,22 @@ const MarketCard = () => {
     }
   }, [account, daiContract, marketContract.address]);
 
+  const mintDai = async (e: any) => {
+    e.preventDefault();
+    let daiToMint = 100;
+    let formattedDaiToMint = utils.parseUnits(daiToMint.toString(), 18);
+    console.log("test");
+    try {
+      let tx = await daiContract.mint(formattedDaiToMint);
+      notifyConfirmation(tx.hash);
+      let result = await tx.wait();
+      notifySuccess(result.transactionHash);
+    } catch (error) {
+      console.error(error);
+      notifyFailure();
+    }
+  };
+
   //Place a bet
   const placeBet = async (e: any) => {
     e.preventDefault();
@@ -309,6 +325,15 @@ const MarketCard = () => {
                 )}
               </>
             )}
+          </Form>
+          <Form onSubmit={mintDai}>
+
+
+                <Button>
+                  MintDai
+                </Button>
+  
+
           </Form>
         </GraphFormWrapper>
 
