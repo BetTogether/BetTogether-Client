@@ -9,9 +9,10 @@ const Wrapper = styled.div`
 
 interface IApex {
   marketContract: any;
+  forceRerender: boolean;
 }
 
-const Apex = ({ marketContract }: IApex) => {
+const Apex = ({ marketContract, forceRerender }: IApex) => {
   const [painted, setPainted] = useState(false);
   const [TrumpBettingPeriod1, setTrumpBettingPeriod1] = useState<number>(0);
   const [TrumpBettingPeriod2, setTrumpBettingPeriod2] = useState<number>(0);
@@ -23,6 +24,10 @@ const Apex = ({ marketContract }: IApex) => {
   const [BidenBettingPeriod3, setBidenBettingPeriod3] = useState<number>(0);
   const [BidenBettingPeriod4, setBidenBettingPeriod4] = useState<number>(0);
   const [BidenBettingPeriod5, setBidenBettingPeriod5] = useState<number>(0);
+
+  if (forceRerender) {
+    console.log({ forceRerender })
+  }
 
   useEffect(() => {
     (async () => {
@@ -186,7 +191,7 @@ const Apex = ({ marketContract }: IApex) => {
       });
       setPainted(true);
     })();
-  }, [marketContract]);
+  }, [marketContract, forceRerender]);
 
   let series = [
     {

@@ -51,6 +51,7 @@ const MarketCard = ({ marketContract }: any) => {
   const [choice, setChoice] = useState<string>("");
   const [outcomes, setOutcomes] = useState<any>([]);
   const [daiApproved, setDaiApproved] = useState<boolean>(false);
+  const [forceRerender, setRerender] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -118,19 +119,29 @@ const MarketCard = ({ marketContract }: any) => {
     let choiceAsNumber: number;
     choice === "Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
 
-    if (!daiApproved) {
+    /* if (!daiApproved) {
       let balance = await daiContract.balanceOf(account);
       await daiContract.approve(marketContract.address, balance);
       setDaiApproved(true);
-    }
+    } */
 
     let formatted = utils.parseUnits(amountToBet.toString(), 18);
 
+    const increaseByFactor = (number: utils.BigNumber) => number.mul(utils.bigNumberify(120)).div(utils.bigNumberify(100));
+
+    const estimatedWei = await marketContract.getEstimatedETHforDAI(formatted);
+    const estimatedWeiWithMargin = increaseByFactor(estimatedWei[0]);
+    const estimatedGas = await marketContract.estimate.placeBet(choiceAsNumber, formatted, { value: estimatedWeiWithMargin });
+
     try {
-      let tx = await marketContract.placeBet(choiceAsNumber, formatted);
+      let tx = await marketContract.placeBet(choiceAsNumber, formatted, {
+        gasLimit: increaseByFactor(estimatedGas),
+        value: estimatedWeiWithMargin
+      });
       notifyConfirmation(tx.hash);
       let result = await tx.wait();
       notifySuccess(result.transactionHash);
+      setRerender(!forceRerender);
     } catch (error) {
       console.error(error);
       notifyFailure();
@@ -269,7 +280,7 @@ const MarketCard = ({ marketContract }: any) => {
 
         <GraphFormWrapper>
           <ChartWrapper>
-            <Chart marketContract={marketContract} />
+            <Chart marketContract={marketContract} forceRerender={forceRerender} />
           </ChartWrapper>
 
           <Form onSubmit={placeBet}>
