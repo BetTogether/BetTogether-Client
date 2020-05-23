@@ -24,13 +24,13 @@ import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
 
 const Header = () => {
-  const context = useWeb3React<Web3Provider>();
-  const { active, error, account, activate, deactivate } = context;
+  const { active, error, account, activate, deactivate } = useWeb3React<
+    Web3Provider
+  >();
 
   const { modalState, modalDispatch } = useContext(ModalContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [imageLink, setImageLink] = useState("");
-
+  const [image, setImage] = useState<any>();
   const tried = useEagerConnect();
 
   useEffect(() => {
@@ -43,9 +43,8 @@ const Header = () => {
         try {
           const profile = await Box.getProfile(account);
           if (profile.image) {
-            let imageLink = profile.image[0]["contentUrl"]["/"];
-            let newLink = `https://ipfs.infura.io/ipfs/${imageLink}`;
-            setImageLink(newLink);
+            let image = profile.image[0]["contentUrl"]["/"];
+            setImage(image);
           }
         } catch (error) {
           console.error(error);
@@ -74,9 +73,12 @@ const Header = () => {
             <>
               {account !== null && (
                 <>
-                  {imageLink ? (
+                  {image ? (
                     <ImageButton onClick={() => deactivate()}>
-                      <Image src={imageLink} alt="3Box profile picture" />
+                      <Image
+                        src={`https://ipfs.infura.io/ipfs/${image}`}
+                        alt="3Box profile picture"
+                      />
                     </ImageButton>
                   ) : (
                     <ConnectionButton onClick={() => deactivate()}>

@@ -32,16 +32,34 @@ interface ISignInModalProps {
   isOpen: boolean;
 }
 
+const connectorsByName: { [name: string]: AbstractConnector } = {
+  Injected: injected,
+  Portis: portis,
+};
+
 const SignInModal = ({ isOpen }: ISignInModalProps) => {
-  const { connector, activate, error } = useWeb3React<Web3Provider>();
+  const {
+    account,
+    active,
+    activate,
+    connector,
+    deactivate,
+    error,
+  } = useWeb3React<Web3Provider>();
+
+  console.log("sign in modal active:", active);
+
+  const [activatingConnector, setActivatingConnector] = useState<
+    AbstractConnector
+  >();
+
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector)
+      setActivatingConnector(undefined);
+  }, [activatingConnector, connector]);
 
   const { modalState, modalDispatch } = useContext(ModalContext);
   const [loading, setLoading] = useState(false);
-
-  const connectorsByName: { [name: string]: AbstractConnector } = {
-    Injected: injected,
-    Portis: portis,
-  };
 
   const toggleModal = () =>
     modalDispatch({
@@ -83,14 +101,11 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
   //#endregion
 
   const setConnector = async (currentConnector: any, name: any) => {
-    console.log("name:", name);
-    console.log("currentConnector:", currentConnector);
-
     setLoading(true);
-    // setActivatingConnector(currentConnector);
+    setActivatingConnector(currentConnector);
     await activate(connectorsByName[name]);
-    setLoading(false);
-    toggleModal();
+    // setLoading(false);
+    // toggleModal();
   };
 
   return (
@@ -108,7 +123,7 @@ const SignInModal = ({ isOpen }: ISignInModalProps) => {
               {Object.keys(connectorsByName).map((name) => {
                 const currentConnector = connectorsByName[name];
                 const connected = currentConnector === connector;
-                // const disabled = connected || !!error;
+                const disabled = connected || !!error;
 
                 const LogoSrc = name === "Injected" ? metamaskLogo : portisLogo;
 
