@@ -1,31 +1,28 @@
-<h1 align="center">
-  MagicBet - Client
-</h1>
-<h2 align="center">Loseless Ethereum Betting</h2>
+# MagicBet - Client
 
-<br/>
+_Lossless Ethereum Betting_
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c995206c-1474-44fd-859d-c43c483fbb40/deploy-status)](https://app.netlify.com/sites/magicbet/deploys)
 
-[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://MagicBet.github.io/MagicBet-Client)
+MagicBet is a no loss betting platform, built on the Ethereum ecosystem. It allows users to bet on real life future events and outcomes without risking to lose their stake. 
 
-# [Corresponding Contracts](https://github.com/MagicBet/MagicBet-Contracts)
+All stakes accrue interest until the event which is bet on happens. The interest payment is then shared among the winners, and all participants (winners and losers) get their stakes back - thus allowing users to save money in a fun manner. 
 
-## Description
+This project contains the client code, the Ethereum smart contracts can be found under the following link.
 
-- [insert historical facts, reasons for the need of such a product]
-- MagicBet is a no-loss betting platform, allowing users to save money in a fun manner.
+[Corresponding Contracts](https://github.com/BetTogether/MagicBet-Contracts)
 
-## Installation
 
-With [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed, run `npm install` inside the root directory.
-After compiling the contracts, add the ABI's into the client by storing them inside the src folder.
-If you deployed the factory contract, grab the address it was deployed to and paste it into utils/address under the corresponding network and variable name.
+## Setup
+
+Given that [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) are installed, clone the repo and then run `npm install` inside the root directory to install the dependencies. 
+
+Now follow the Setup instructions in the Contracts repo (link above), including copying the application binary interface files in the `abis/` folder over here. 
+
+After you deployed the factory contract, grab the address it was deployed to and paste it into `utils/addresses.ts` under the corresponding network and variable name.
 
 ## Usage
 
 Run `npm start`
 
-## Issues
-
-## License
+Your browser will now open the platform site.
