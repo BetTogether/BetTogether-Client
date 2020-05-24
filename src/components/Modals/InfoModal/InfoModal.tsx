@@ -117,11 +117,11 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
             </Item>
             <Item>
               <Detail>{totalVotesForTrump}</Detail>
-              <ItemDescription>Votes for Trump</ItemDescription>
+              <ItemDescription>Bets for Trump</ItemDescription>
             </Item>
             <Item>
               <Detail>{totalVotesForBiden}</Detail>
-              <ItemDescription>Votes for Biden</ItemDescription>
+              <ItemDescription>Bets for Biden</ItemDescription>
             </Item>
             <Item>
               <Detail>{numberOfParticipants}</Detail>
