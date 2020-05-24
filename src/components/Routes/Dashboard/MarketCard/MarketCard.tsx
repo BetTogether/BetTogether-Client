@@ -10,8 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Info } from "assets/info.svg";
-import daiIcon from "assets/dai.svg";
-import etherIcon from "assets/eth.svg";
 import {
   Content,
   Header,
@@ -28,11 +26,8 @@ import {
   Input,
   OwnerButton,
   OwnerButtons,
-  BalanceBox,
   Balance,
   SelectInput,
-  SelectSection,
-  SelectCurrency,
   ToggleButton,
 } from "./MarketCard.style";
 import Chart from "./Chart";
@@ -116,7 +111,7 @@ const MarketCard = ({ marketContract }: any) => {
         let newOutcomes = [];
         for (let i = 0; i < numberOfOutcomes; i++) {
           let outcomeName = await marketContract.outcomeNames(i);
-          newOutcomes.unshift(outcomeName);
+          newOutcomes.push(outcomeName);
         }
         setOutcomes(newOutcomes);
       }
@@ -152,8 +147,10 @@ const MarketCard = ({ marketContract }: any) => {
       return;
     }
 
-    let choiceAsNumber: number;
-    choice === "Trump" ? (choiceAsNumber = 0) : (choiceAsNumber = 1);
+    console.log(outcomes);
+    console.log("choice:", choice);
+
+    let indexOfChoice: number = outcomes.indexOf(choice);
 
     /* if (!daiApproved) {
       let balance = await daiContract.balanceOf(account);
@@ -169,13 +166,13 @@ const MarketCard = ({ marketContract }: any) => {
     const estimatedWei = await marketContract.getEstimatedETHforDAI(formatted);
     const estimatedWeiWithMargin = increaseByFactor(estimatedWei[0]);
     const estimatedGas = await marketContract.estimate.placeBet(
-      choiceAsNumber,
+      indexOfChoice,
       formatted,
       { value: estimatedWeiWithMargin }
     );
 
     try {
-      let tx = await marketContract.placeBet(choiceAsNumber, formatted, {
+      let tx = await marketContract.placeBet(indexOfChoice, formatted, {
         gasLimit: increaseByFactor(estimatedGas),
         value: estimatedWeiWithMargin,
       });

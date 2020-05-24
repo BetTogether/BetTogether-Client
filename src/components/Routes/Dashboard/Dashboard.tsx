@@ -107,6 +107,7 @@ const Dashboard = () => {
             onChange={() => setChecked(!checked)}
             checked={checked}
             className="react-switch"
+            aria-label="Notification Switch"
           />
         </Top>
 
@@ -128,7 +129,7 @@ const Dashboard = () => {
           )}
 
           {active && (
-            <GetDaiButton onClick={() => mintDai()}>
+            <GetDaiButton aria-label="Mint Dai" onClick={() => mintDai()}>
               <DaiIcon />
             </GetDaiButton>
           )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ModalContext } from "store/context/ModalContext";
 import { Clear } from "@rimble/icons";
 import { providers, utils, Contract } from "ethers";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   MainWrapper,
@@ -23,6 +24,11 @@ interface IInfoModalProps {
   isOpen: boolean;
 }
 
+interface IOutcomeObject {
+  name: string;
+  bets: number;
+}
+
 declare let window: any;
 
 const InfoModal = ({ isOpen }: IInfoModalProps) => {
@@ -32,11 +38,10 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
 
   const MarketStates = ["SETUP", "WAITING", "OPEN", "LOCKED", "WITHDRAW"];
   const [marketState, setMarketState] = useState<string>("");
-  const [totalVotesForTrump, setTotalVotesForTrump] = useState<string>("");
-  const [totalVotesForBiden, setTotalVotesForBiden] = useState<string>("");
-  const [numberOfParticipants, setNumberOfParticipants] = useState<number>(0);
   const [pot, setPot] = useState<string>("");
   const [owner, setOwner] = useState<string>("");
+  const [numberOfParticipants, setNumberOfParticipants] = useState<number>(0);
+  const [outcomeNamesAndAmounts, setOutcomeNamesAndAmounts] = useState<any>([]);
 
   useEffect(() => {
     (async () => {
@@ -64,19 +69,24 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
         setPot(utils.formatUnits(pot.toString(), 18));
 
         let numberOfOutcomes = await marketContract.numberOfOutcomes();
-        if (numberOfOutcomes !== 0) {
-          const DTNumberOfBets = await marketContract.totalBetsPerOutcome(0);
-          //GOTTA BE A CLEANER WAY TO DO THIS...
-          const fortmattedTrump = utils.formatUnits(DTNumberOfBets, 18);
-          const floatTrump = parseFloat(fortmattedTrump);
-          const roundedTrump = Math.ceil(floatTrump);
-          setTotalVotesForTrump(roundedTrump.toString());
 
-          const JBNumberOfBets = await marketContract.totalBetsPerOutcome(1);
-          const fortmattedBiden = utils.formatUnits(JBNumberOfBets, 18);
-          const floatBiden = parseFloat(fortmattedBiden);
-          const roundedBiden = Math.ceil(floatBiden);
-          setTotalVotesForBiden(roundedBiden.toString());
+        if (numberOfOutcomes !== 0) {
+          let newOutcomesArray = [];
+          for (let i = 0; i < numberOfOutcomes; i++) {
+            let newOutcome: IOutcomeObject = { name: "", bets: 0 };
+
+            const outcomeName = await marketContract.outcomeNames(i);
+            newOutcome.name = outcomeName;
+
+            //outcome bets
+            const numberOfBets = await marketContract.totalBetsPerOutcome(i);
+            const fortmatted = utils.formatUnits(numberOfBets, 18);
+            const float = parseFloat(fortmatted);
+            const bet = Math.ceil(float);
+            newOutcome.bets = bet;
+            newOutcomesArray.push(newOutcome);
+          }
+          setOutcomeNamesAndAmounts(newOutcomesArray);
         }
       }
     })();
@@ -115,14 +125,14 @@ const InfoModal = ({ isOpen }: IInfoModalProps) => {
               <Detail>{marketState}</Detail>
               <ItemDescription>Market State</ItemDescription>
             </Item>
-            <Item>
-              <Detail>{totalVotesForTrump}</Detail>
-              <ItemDescription>Bets for Trump</ItemDescription>
-            </Item>
-            <Item>
-              <Detail>{totalVotesForBiden}</Detail>
-              <ItemDescription>Bets for Biden</ItemDescription>
-            </Item>
+            {outcomeNamesAndAmounts &&
+              outcomeNamesAndAmounts.map((outcome: any) => (
+                <Item key={uuidv4()}>
+                  <Detail>{outcome.bets}</Detail>
+                  <ItemDescription>Bets for {outcome.name}</ItemDescription>
+                </Item>
+              ))}
+
             <Item>
               <Detail>{numberOfParticipants}</Detail>
               <ItemDescription>Number of Participants</ItemDescription>
