@@ -164,3 +164,52 @@ export const Balance = styled.div`
   align-items: center;
   color: ${(props) => props.theme.palette3.black};
 `;
+
+export const SelectInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SelectSection = styled.div`
+  position: relative;
+  &&:before {
+    position: absolute;
+    content: "";
+    right: 10px;
+    top: 12px;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-top: 15px solid gray;
+  }
+`;
+
+export const SelectCurrency = styled.select`
+  width: 25%;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  white-space: normal;
+  background-color: transparent;
+  color: ${(props) => props.theme.palette3.black};
+  font-size: 1rem;
+  border: 1px solid ${(props) => props.theme.palette3.gray};
+  outline: none;
+`;
+
+export const ToggleButton = styled.button`
+  cursor: pointer;
+  color: #777;
+  margin-top: 10px;
+  border: 1px solid ${(props) => props.theme.palette3.gray};
+  font-size: 1rem;
+  border-radius: 4px;
+  width: 5rem;
+  &:hover {
+    transition: 1s;
+    border: 1px solid #${(props) => props.theme.palette3.red};
+  }
+  &:focus {
+    outline: 0;
+  }
+`;

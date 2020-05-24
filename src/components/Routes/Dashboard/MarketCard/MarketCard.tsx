@@ -30,6 +30,10 @@ import {
   OwnerButtons,
   BalanceBox,
   Balance,
+  SelectInput,
+  SelectSection,
+  SelectCurrency,
+  ToggleButton,
 } from "./MarketCard.style";
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
@@ -57,6 +61,7 @@ const MarketCard = ({ marketContract }: any) => {
   const [forceRerender, setRerender] = useState<boolean>(false);
   const [etherBalance, setEtherBalance] = useState<any>();
   const [daiBalance, setDaiBalance] = useState<any>();
+  const [usingDai, setUsingDai] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
@@ -150,16 +155,21 @@ const MarketCard = ({ marketContract }: any) => {
 
     let formatted = utils.parseUnits(amountToBet.toString(), 18);
 
-    const increaseByFactor = (number: utils.BigNumber) => number.mul(utils.bigNumberify(120)).div(utils.bigNumberify(100));
+    const increaseByFactor = (number: utils.BigNumber) =>
+      number.mul(utils.bigNumberify(120)).div(utils.bigNumberify(100));
 
     const estimatedWei = await marketContract.getEstimatedETHforDAI(formatted);
     const estimatedWeiWithMargin = increaseByFactor(estimatedWei[0]);
-    const estimatedGas = await marketContract.estimate.placeBet(choiceAsNumber, formatted, { value: estimatedWeiWithMargin });
+    const estimatedGas = await marketContract.estimate.placeBet(
+      choiceAsNumber,
+      formatted,
+      { value: estimatedWeiWithMargin }
+    );
 
     try {
       let tx = await marketContract.placeBet(choiceAsNumber, formatted, {
         gasLimit: increaseByFactor(estimatedGas),
-        value: estimatedWeiWithMargin
+        value: estimatedWeiWithMargin,
       });
       notifyConfirmation(tx.hash);
       let result = await tx.wait();
@@ -301,37 +311,48 @@ const MarketCard = ({ marketContract }: any) => {
 
         <GraphFormWrapper>
           <ChartWrapper>
-            <Chart marketContract={marketContract} forceRerender={forceRerender} />
+            <Chart
+              marketContract={marketContract}
+              forceRerender={forceRerender}
+            />
           </ChartWrapper>
           {active && (
             <Form onSubmit={placeBet}>
-              <BalanceBox>
-                <Balance>
-                  <img src={etherIcon} alt="eth icon" />
-                  {etherBalance ? etherBalance : "-"}
-                </Balance>
-                <Balance>
-                  <img src={daiIcon} alt="dai icon" />
-                  {daiBalance ? daiBalance : "-"}
-                </Balance>
-              </BalanceBox>
               <Select
                 value={choice}
                 onChange={(e: any) => setChoice(e.target.value)}
               >
-                <Option key={uuidv4()} value="" />
+                <Option disabled value="Select Option">
+                  Select Option
+                </Option>
                 {outcomes.map((outcome: any) => (
                   <Option key={uuidv4()} value={outcome}>
                     {outcome}
                   </Option>
                 ))}
               </Select>
+              <ToggleButton onClick={() => setUsingDai(!usingDai)}>
+                {usingDai ? "Dai" : "Ether"}
+              </ToggleButton>
+              <SelectInput>
+                {usingDai ? (
+                  <Balance>{daiBalance ? daiBalance : "-"}</Balance>
+                ) : (
+                  <Balance>{etherBalance ? etherBalance : "-"}</Balance>
+                )}
+                <Input
+                  type="number"
+                  placeholder="0"
+                  onChange={(e: any) => setAmountToBet(e.target.value)}
+                  onKeyDown={(e: any) =>
+                    (e.key === "e" && e.preventDefault()) ||
+                    (e.key === "+" && e.preventDefault()) ||
+                    (e.key === "." && e.preventDefault()) ||
+                    (e.key === "-" && e.preventDefault())
+                  }
+                />
+              </SelectInput>
 
-              <Input
-                type="number"
-                placeholder="0"
-                onChange={(e: any) => setAmountToBet(e.target.value)}
-              />
               {!!(library && account) && (
                 <>
                   <Button buy disabled={amountToBet <= 0}>
