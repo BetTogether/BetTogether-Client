@@ -17,9 +17,13 @@
 
 <br/>
 
-MagicBet is a lossless, Ethereum-based betting platform, utilizing core DeFi infrastructure found within the Ethereum ecosystem. By allowing users to make money market predictions using solely their generated interest rates, more can experience the benefits of a decentralized technology.
+MagicBet is a no loss betting platform, built on the Ethereum ecosystem. It allows users to bet on real life future events and outcomes without risking their stake.
 
-All stakes accrue interest until the event which is bet on occurs. The interest payment is then shared among the winners, and all participants (winners and losers) get their stakes back - thus saving money in a fun manner.
+All stakes accrue interest until the event which is bet on happens. The interest payment is then shared among the winners, and all participants (winners and losers) get their stakes back - thus allowing users to save money in a fun manner.
+
+Users are minted ERC20 tokens equalling the Dai bet, which must be burnt when receiving their stake back (and winnings, if any).
+
+This project contains the Ethereum smart contracts, the client code can be found under the following link.
 
 [Corresponding Contracts](https://github.com/BetTogether/MagicBet-Contracts)
 
