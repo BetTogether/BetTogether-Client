@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Link } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 import Box from "3box";
 
-import { getNetwork } from "utils/connectors";
-import { useEagerConnect } from "utils/hooks";
+import { useEagerConnect, useInactiveListener } from "utils/hooks";
 import MenuIcon from "./MenuIcon";
 import MobileDropdown from "./MobileDropdown";
 import {
@@ -21,23 +20,32 @@ import {
   Image,
   ImageButton,
 } from "./Header.style";
-import { ModalContext } from "store/context/ModalContext";
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
+import { injected } from "utils/connectors";
 
 const Header = () => {
-  const { active, error, account, activate, deactivate } = useWeb3React<
-    Web3Provider
-  >();
+  const context = useWeb3React();
+  const { account, active, activate, connector, deactivate, error } = context;
 
-  const { modalState, modalDispatch } = useContext(ModalContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [image, setImage] = useState<any>();
-  const tried = useEagerConnect();
 
+  const [activatingConnector, setActivatingConnector] = useState<
+    AbstractConnector
+  >();
   useEffect(() => {
-    if (tried && !active) activate(getNetwork(42));
-  }, [activate, active, tried]);
+    if (activatingConnector && activatingConnector === connector)
+      setActivatingConnector(undefined);
+  }, [activatingConnector, connector]);
+
+  const triedEager = useEagerConnect();
+
+  useInactiveListener(!triedEager || !!activatingConnector);
+
+  const currentConnector = injected;
+  const connected = currentConnector === connector;
+  const disabled = connected || !!error;
 
   useEffect(() => {
     (async () => {
@@ -60,6 +68,7 @@ const Header = () => {
       <Head>
         <Link to="/dashboard">
           <LogoWrapper>
+            {/* eslint-disable-next-line */}
             <Span role="img" aria-label="tophat">
               🎩
             </Span>
@@ -97,12 +106,11 @@ const Header = () => {
             </>
           ) : (
             <ConnectionButton
-              onClick={() =>
-                modalDispatch({
-                  type: "TOGGLE_SIGN_IN_MODAL",
-                  payload: !modalState.signInModalIsOpen,
-                })
-              }
+              disabled={disabled}
+              onClick={() => {
+                setActivatingConnector(currentConnector);
+                activate(injected);
+              }}
             >
               Connect
             </ConnectionButton>

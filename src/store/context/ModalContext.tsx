@@ -4,7 +4,6 @@ import { ModalReducer } from "../Reducers";
 
 const initialModalState: any = {
   createMarketModalIsOpen: false,
-  signInModalIsOpen: false,
   infoModalIsOpen: false,
 };
 

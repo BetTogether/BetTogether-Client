@@ -22,6 +22,7 @@ const configs = {
 };
 // corresponsing eth address = 0xdf3B180694aB22C577f7114D822D28b92cadFd75
 const pTokenContractRopsten = "0xEB770B1883Dcce11781649E8c4F1ac5F4B40C978";
+const pTokenContractKovan = "0xEB770B1883Dcce11781649E8c4F1ac5F4B40C978";
 const ETH_TESTING_ADDRESS = "0xdf3B180694aB22C577f7114D822D28b92cadFd75";
 
 const BTC_TESTING_PRIVATE_KEY =

@@ -162,4 +162,5 @@ export const Balance = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${(props) => props.theme.palette3.black};
 `;
