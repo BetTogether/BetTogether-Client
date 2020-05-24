@@ -23,7 +23,7 @@ All stakes accrue interest until the event which is bet on happens. The interest
 
 Users are minted ERC20 tokens equalling the Dai bet, which must be burnt when receiving their stake back (and winnings, if any).
 
-This project contains the Ethereum smart contracts, the client code can be found under the following link.
+This repo contains the front end client, the smart contracts code can be found under the following link.
 
 [Corresponding Contracts](https://github.com/BetTogether/MagicBet-Contracts)
 
