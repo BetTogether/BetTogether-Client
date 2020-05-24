@@ -331,7 +331,10 @@ const MarketCard = ({ marketContract }: any) => {
                   </Option>
                 ))}
               </Select>
-              <ToggleButton onClick={() => setUsingDai(!usingDai)}>
+              <ToggleButton
+                type="button"
+                onClick={() => setUsingDai(!usingDai)}
+              >
                 {usingDai ? "Dai" : "Ether"}
               </ToggleButton>
               <SelectInput>
@@ -347,7 +350,6 @@ const MarketCard = ({ marketContract }: any) => {
                   onKeyDown={(e: any) =>
                     (e.key === "e" && e.preventDefault()) ||
                     (e.key === "+" && e.preventDefault()) ||
-                    (e.key === "." && e.preventDefault()) ||
                     (e.key === "-" && e.preventDefault())
                   }
                 />
