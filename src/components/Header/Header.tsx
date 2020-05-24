@@ -22,7 +22,7 @@ import {
 } from "./Header.style";
 import { shortenAddress } from "utils/ShortenAddress";
 import { ReactComponent as Github } from "assets/github.svg";
-import { injected } from "utils/connectors";
+import { injected, portis } from "utils/connectors";
 
 const Header = () => {
   const context = useWeb3React();
@@ -105,15 +105,26 @@ const Header = () => {
               )}
             </>
           ) : (
-            <ConnectionButton
-              disabled={disabled}
-              onClick={() => {
-                setActivatingConnector(currentConnector);
-                activate(injected);
-              }}
-            >
-              Connect
-            </ConnectionButton>
+            <>
+              <ConnectionButton
+                disabled={disabled}
+                onClick={() => {
+                  setActivatingConnector(currentConnector);
+                  activate(injected);
+                }}
+              >
+                Connect
+              </ConnectionButton>
+              <ConnectionButton
+                disabled={disabled}
+                onClick={() => {
+                  setActivatingConnector(currentConnector);
+                  activate(portis);
+                }}
+              >
+                Connect with Portis
+              </ConnectionButton>
+            </>
           )}
           {active && (
             <ExpandButton onClick={() => setIsExpanded(!isExpanded)}>

@@ -4,7 +4,7 @@ import CountDown from "react-countdown";
 import { v4 as uuidv4 } from "uuid";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { utils } from "ethers";
+import { utils, Contract, providers } from "ethers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,10 +33,12 @@ import {
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
 import { ContractContext } from "store/context/ContractContext";
+import { portis } from "utils/connectors";
+import BTMarketContract from "abis/BTMarket.json";
 
-const MarketCard = ({ marketContract }: any) => {
+const MarketCard = ({ marketContract, mostRecentlyDeployedAddress }: any) => {
   //Web3React dependency to give us access to our current account and Web3Provider
-  const { active, account, library } = useWeb3React<Web3Provider>();
+  const { active, account, library, connector } = useWeb3React<Web3Provider>();
 
   //Pulling out the current market and Dai contract from context state
   const { contractState } = useContext(ContractContext);
@@ -171,18 +173,37 @@ const MarketCard = ({ marketContract }: any) => {
       { value: estimatedWeiWithMargin }
     );
 
-    try {
-      let tx = await marketContract.placeBet(indexOfChoice, formatted, {
-        gasLimit: increaseByFactor(estimatedGas),
-        value: estimatedWeiWithMargin,
-      });
-      notifyConfirmation(tx.hash);
-      let result = await tx.wait();
-      notifySuccess(result.transactionHash);
-      setRerender(!forceRerender);
-    } catch (error) {
-      console.error(error);
-      notifyFailure();
+    if (connector === portis) {
+      try {
+        const provider = new providers.Web3Provider(portis.portis.provider);
+
+        const wallet = provider.getSigner();
+        const instance = new Contract(
+          mostRecentlyDeployedAddress,
+          BTMarketContract.abi,
+          wallet
+        );
+
+        await instance.placeBet(indexOfChoice, formatted, {
+          value: estimatedWeiWithMargin,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        let tx = await marketContract.placeBet(indexOfChoice, formatted, {
+          gasLimit: increaseByFactor(estimatedGas),
+          value: estimatedWeiWithMargin,
+        });
+        notifyConfirmation(tx.hash);
+        let result = await tx.wait();
+        notifySuccess(result.transactionHash);
+        setRerender(!forceRerender);
+      } catch (error) {
+        console.error(error);
+        notifyFailure();
+      }
     }
   };
 
@@ -251,7 +272,7 @@ const MarketCard = ({ marketContract }: any) => {
     );
   };
   const notifyFailure = () => {
-    toast(<span>{`Transaction Failed. Try increasing the gas`}</span>, {
+    toast(<span>{`Transaction Failed. Increase the gas if needed.`}</span>, {
       position: "bottom-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -327,9 +348,7 @@ const MarketCard = ({ marketContract }: any) => {
                 value={choice}
                 onChange={(e: any) => setChoice(e.target.value)}
               >
-                <Option disabled value="Select Option">
-                  Select Option
-                </Option>
+                <Option disabled value="" />
                 {outcomes.map((outcome: any) => (
                   <Option key={uuidv4()} value={outcome}>
                     {outcome}
