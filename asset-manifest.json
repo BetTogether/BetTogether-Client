@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.js": "./main.560faabaf577108ad1e3.bundle.js",
+    "main.js.map": "./main.560faabaf577108ad1e3.bundle.js.map",
+    "runtime~main.js": "./runtime~main.560faabaf577108ad1e3.bundle.js",
+    "runtime~main.js.map": "./runtime~main.560faabaf577108ad1e3.bundle.js.map",
+    "vendors~main.css": "./static/css/vendors~main.d34346ea.chunk.css",
+    "vendors~main.js": "./vendors~main.560faabaf577108ad1e3.bundle.js",
+    "vendors~main.css.map": "./static/css/vendors~main.d34346ea.chunk.css.map",
+    "vendors~main.js.map": "./vendors~main.560faabaf577108ad1e3.bundle.js.map",
+    "iframe.html": "./iframe.html",
+    "precache-manifest.40e138ded58fb0d9bfce37aaee2ff569.js": "./precache-manifest.40e138ded58fb0d9bfce37aaee2ff569.js",
+    "service-worker.js": "./service-worker.js",
+    "static/media/github.d3a8efc5.svg": "./static/media/github.d3a8efc5.svg",
+    "static/media/info.e21717cc.svg": "./static/media/info.e21717cc.svg",
+    "static/media/threebox.svg": "./static/media/threebox.92858099.svg",
+    "vendors~main.560faabaf577108ad1e3.bundle.js.LICENSE.txt": "./vendors~main.560faabaf577108ad1e3.bundle.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "runtime~main.560faabaf577108ad1e3.bundle.js",
+    "static/css/vendors~main.d34346ea.chunk.css",
+    "vendors~main.560faabaf577108ad1e3.bundle.js",
+    "main.560faabaf577108ad1e3.bundle.js"
+  ]
+}
