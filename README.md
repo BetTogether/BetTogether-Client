@@ -4,14 +4,32 @@ _Lossless Ethereum Betting_
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c995206c-1474-44fd-859d-c43c483fbb40/deploy-status)](https://app.netlify.com/sites/magicbet/deploys)
 
-MagicBet is a no loss betting platform, built on the Ethereum ecosystem. It allows users to bet on real life future events and outcomes without risking to lose their stake. 
+MagicBet is a no loss betting platform, built on the Ethereum ecosystem. It allows users to bet on real life future events without risking their stake. 
+
+<h1 align="center">
+  <Span role="img" aria-label="tophat">
+    🎩
+  </Span>
+  MagicBet - Client
+</h1>
+<h2 align="center">Loseless Ethereum Betting</h2>
+
+<p align="center">
+    <a href="https://MagicBet.github.io/MagicBet-Client">
+    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="Netlify" />
+    </a>
+    <a href="https://app.netlify.com/sites/magicbet/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/c995206c-1474-44fd-859d-c43c483fbb40/deploy-status" alt="Netlify" />
+    </a>
+</p>
+
+<br/>
 
 All stakes accrue interest until the event which is bet on happens. The interest payment is then shared among the winners, and all participants (winners and losers) get their stakes back - thus allowing users to save money in a fun manner. 
 
 This project contains the client code, the Ethereum smart contracts can be found under the following link.
 
 [Corresponding Contracts](https://github.com/BetTogether/MagicBet-Contracts)
-
 
 ## Setup
 
