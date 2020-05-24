@@ -31,13 +31,13 @@ Originally, only a factory contract will be deployed. To deploy a market, click 
 
 You will be given a set of options to complete. They are pre-filled with a sample market (November 2020 US Election). 
 
-* Event name: self explanatory. 
-* Realit.io question: this is the string that is passed to the oracle when the market contract is deployed. It is in a specific format, as outlined in the realit.io documentation. 
-* Arbitrator: who ultimate decides the outcome in the case of continued disputes
+* Event name: self explanatory
+* Realit.io question: this is the string that is passed to the oracle when the market contract is deployed. It is in a specific format, as outlined in the realit.io documentation
+* Arbitrator: who ultimately decides the outcome in the case of continued disputes
 * Opening: the timestamp when betting opens
 * Locking: the timestamp when betting ends
-* Resolution: sent to the oracle, when the the question can first be answered (i.e. the date of the event itself)
-* Timeout: how many seconds the oracle waits for a dispute, before finalising an answer
+* Resolution: the timestamp of when the event itself occurs, sent to the oracle
+* Timeout: Sent to the oracle, = how many seconds the oracle waits for a dispute, before finalising an answer
 * Outcomes: this is an array of strings, with each outcome name. This variable is also used to name the ERC20 token for each outcome. 
 
 After a market is created, it will be in the 'WAITING' state. The state must be incremented before it will move to the OPEN state, which can be achieved by selecting 'increment state'. Note that this tx will revert if the Opening timestamp is in the future. 
@@ -48,11 +48,8 @@ Once the market is in the OPEN state, you are free to make bets, by selecting th
 
 To conclude the event, first change the state to LOCKED, again by selecting 'increment state'. This tx will revert if the Locking timestamp is in the future. 
 
-At this point, the contract needs to know who won the event. This is achieved by selecing 'determine winner' at which point the contract will ask the Oracle if the event has resolved, and if so, who won. If the event has not yet resolved, the tx will not revert, but it will not change the state, and will have to be called again. If the market has resolved, calling this function will take note of the winner, and move to the WITHDRAW state. 
+At this point, the contract needs to know who won the event. This is achieved by selecing 'determine winner' at which point the contract will ask the Oracle if the event has resolved, and if so, who won. If the event has not yet resolved, the tx will not revert, but it will not change the state, and will have to be called again. If the market has resolved, calling this function will take note of the winner, and move the contract to the WITHDRAW state. 
 
 For testing purposees, the oracle can be resolved by visiting https://realitio.github.io/ (for Kovan), selecting the event, and submitting the correct answer. This is only possible if the Resolution timestamp is in the past. After submitting a correct answer, you must wait until Timeout seconds have passed, before it is finalised. 
 
 Once the contract is in the withdraw state, a WITHDRAW button will appear. Selecting this will always return your original bet, if you bet on the winning outcome it will also send you your share of the accumulated interest.  
-
-
-T
