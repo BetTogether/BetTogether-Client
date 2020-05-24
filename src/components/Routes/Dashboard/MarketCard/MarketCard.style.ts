@@ -76,10 +76,8 @@ export const Select = styled.select`
   margin: 0rem;
   border-radius: 1rem;
   white-space: normal;
-  background: ${(props) => props.theme.palette3.white};
-  color: ${(props) => props.theme.palette3.black};
+  color: #777;
   font-size: 1rem;
-  border: 1px solid ${(props) => props.theme.palette3.red};
   outline: none;
 `;
 
@@ -89,7 +87,6 @@ export const Option = styled.option`
   display: flex;
   min-height: 2rem;
   padding: 0px 2px 1px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 0.33rem 1rem;
   cursor: pointer;
 `;
 
@@ -207,7 +204,7 @@ export const ToggleButton = styled.button`
   width: 5rem;
   &:hover {
     transition: 1s;
-    border: 1px solid #${(props) => props.theme.palette3.red};
+    border: 1px solid ${(props) => props.theme.palette3.red};
   }
   &:focus {
     outline: 0;

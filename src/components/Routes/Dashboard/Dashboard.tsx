@@ -31,6 +31,11 @@ const Dashboard = () => {
   const daiMockupContract = contractState[2];
   const [checked, setChecked] = useState(false);
   const [marketContract, setMarketContract] = useState<any>();
+  const [newMarketAddress, setNewMarketAddress] = useState();
+
+  factoryContract.on("MarketCreated", (address: any) =>
+    setNewMarketAddress(address)
+  );
 
   const IconOn = () => {
     return (
@@ -53,13 +58,10 @@ const Dashboard = () => {
     let formattedDaiToMint = utils.parseUnits(daiToMint.toString(), 18);
     try {
       let tx = await daiMockupContract.mint(formattedDaiToMint);
-      // notifyConfirmation(tx.hash);
       let result = await tx.wait();
       console.log("result:", result);
-      // notifySuccess(result.transactionHash);
     } catch (error) {
       console.error(error);
-      // notifyFailure();
     }
   };
 
@@ -88,7 +90,7 @@ const Dashboard = () => {
         console.error(error);
       }
     })();
-  }, [factoryContract]);
+  }, [factoryContract, newMarketAddress]);
 
   return (
     <Container>

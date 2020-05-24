@@ -63,6 +63,14 @@ const MarketCard = ({ marketContract }: any) => {
   const [daiBalance, setDaiBalance] = useState<any>();
   const [usingDai, setUsingDai] = useState<boolean>(true);
 
+  //!FOR EVENTS
+  const [eventState, setEventState] = useState();
+  const [eventBet, setEventBet] = useState();
+  marketContract.on("StateChanged", (state: any) => setEventState(state));
+  marketContract.on("ParticipantEntered", (address: any) =>
+    setEventBet(address)
+  );
+
   useEffect(() => {
     (async () => {
       if (account && library) {
@@ -95,7 +103,7 @@ const MarketCard = ({ marketContract }: any) => {
       const accIntFormatted = utils.formatEther(accruedInterest.toNumber());
       setAccruedInterest(parseFloat(accIntFormatted));
     })();
-  }, [MarketStates, account, marketContract]);
+  }, [MarketStates, account, marketContract, eventState, eventBet]);
 
   //If there are outcomes, get them
   useEffect(() => {
