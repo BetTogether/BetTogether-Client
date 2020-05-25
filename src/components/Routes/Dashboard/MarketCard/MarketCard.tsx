@@ -33,12 +33,10 @@ import {
 import Chart from "./Chart";
 import { ModalContext } from "store/context/ModalContext";
 import { ContractContext } from "store/context/ContractContext";
-import { portis } from "utils/connectors";
-import BTMarketContract from "abis/BTMarket.json";
 
-const MarketCard = ({ marketContract, mostRecentlyDeployedAddress }: any) => {
+const MarketCard = ({ marketContract }: any) => {
   //Web3React dependency to give us access to our current account and Web3Provider
-  const { active, account, library, connector } = useWeb3React<Web3Provider>();
+  const { active, account, library } = useWeb3React<Web3Provider>();
 
   //Pulling out the current market and Dai contract from context state
   const { contractState } = useContext(ContractContext);
@@ -173,37 +171,18 @@ const MarketCard = ({ marketContract, mostRecentlyDeployedAddress }: any) => {
       { value: estimatedWeiWithMargin }
     );
 
-    if (connector === portis) {
-      try {
-        const provider = new providers.Web3Provider(portis.portis.provider);
-
-        const wallet = provider.getSigner();
-        const instance = new Contract(
-          mostRecentlyDeployedAddress,
-          BTMarketContract.abi,
-          wallet
-        );
-
-        await instance.placeBet(indexOfChoice, formatted, {
-          value: estimatedWeiWithMargin,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      try {
-        let tx = await marketContract.placeBet(indexOfChoice, formatted, {
-          gasLimit: increaseByFactor(estimatedGas),
-          value: estimatedWeiWithMargin,
-        });
-        notifyConfirmation(tx.hash);
-        let result = await tx.wait();
-        notifySuccess(result.transactionHash);
-        setRerender(!forceRerender);
-      } catch (error) {
-        console.error(error);
-        notifyFailure();
-      }
+    try {
+      let tx = await marketContract.placeBet(indexOfChoice, formatted, {
+        gasLimit: increaseByFactor(estimatedGas),
+        value: estimatedWeiWithMargin,
+      });
+      notifyConfirmation(tx.hash);
+      let result = await tx.wait();
+      notifySuccess(result.transactionHash);
+      setRerender(!forceRerender);
+    } catch (error) {
+      console.error(error);
+      notifyFailure();
     }
   };
 

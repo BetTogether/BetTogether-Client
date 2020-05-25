@@ -32,10 +32,6 @@ const Dashboard = () => {
   const [checked, setChecked] = useState(false);
   const [marketContract, setMarketContract] = useState<any>();
   const [newMarketAddress, setNewMarketAddress] = useState();
-  const [
-    mostRecentlyDeployedAddress,
-    setMostRecentlyDeployedAddress,
-  ] = useState();
 
   factoryContract.on("MarketCreated", (address: any) =>
     setNewMarketAddress(address)
@@ -82,7 +78,6 @@ const Dashboard = () => {
             "Most Recently Deployed Address:",
             mostRecentlyDeployedAddress
           );
-          setMostRecentlyDeployedAddress(mostRecentlyDeployedAddress);
 
           const marketInstance: any = new Contract(
             mostRecentlyDeployedAddress,
@@ -118,10 +113,7 @@ const Dashboard = () => {
 
         <Wrapper>
           {marketContract ? (
-            <MarketCard
-              marketContract={marketContract}
-              mostRecentlyDeployedAddress={mostRecentlyDeployedAddress}
-            />
+            <MarketCard marketContract={marketContract} />
           ) : (
             <CreateMarketButton
               disabled={!active}
