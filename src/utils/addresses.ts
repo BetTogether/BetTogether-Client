@@ -3,7 +3,7 @@ export const MAINNET_ID = 1;
 
 export default {
   [KOVAN_ID]: {
-    marketFactory: "0xe1EC8459Efde45f377912C4E62798d2C93C0466D",
+    marketFactory: "0x48aa0557E45293fD45Ad6091AA2AAB7D1304d1A0",
     lendingPoolAddressesProvider: "0x506B0B2CF20FAA8f38a4E2B524EE43e1f4458Cc5",
     lendingPool: "0x580D4Fdc4BF8f9b5ae2fb9225D584fED4AD5375c",
     lendingPoolCore: "0x95D1189Ed88B380E319dF73fF00E479fcc4CFa45",

@@ -381,21 +381,21 @@ const MarketCard = ({ marketContract }: any) => {
 
         {checkOwner() && (
           <OwnerButtons>
-            <OwnerButton
+            {/* <OwnerButton
               onClick={async () => await marketContract.incrementState()}
             >
               Increment Market State
-            </OwnerButton>
+            </OwnerButton> */}
             <OwnerButton
               onClick={async () => await marketContract.determineWinner()}
             >
-              Determine Winner
+              Get winner from Oracle
             </OwnerButton>
-            <OwnerButton
+            {/* <OwnerButton
               onClick={async () => await marketContract.disableContract()}
             >
               Pause (Disable) Contract
-            </OwnerButton>
+            </OwnerButton> */}
           </OwnerButtons>
         )}
       </Content>

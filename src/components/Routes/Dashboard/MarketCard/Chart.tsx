@@ -254,7 +254,7 @@ const Apex = ({ marketContract, forceRerender }: IApex) => {
     },
     yaxis: {
       min: 0,
-      max: 25,
+      max: 10,
     },
     legend: {
       show: true,
