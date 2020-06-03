@@ -1,3 +1,6 @@
+# **_IMPORTANT NOTE_**
+**This repository is to be considered _DEPRECATED_. Check out the current client at [MagicBet-Client](https://github.com/BetTogether/MagicBet-Client).**
+
 <h1 align="center">
   <span role="img" aria-label="tophat">
     🎩
